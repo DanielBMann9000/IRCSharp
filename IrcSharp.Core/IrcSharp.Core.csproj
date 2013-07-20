@@ -44,6 +44,7 @@
     <Compile Include="Connectivity\IConnectionManager.cs" />
     <Compile Include="Connectivity\MessageReceivedEventArgs.cs" />
     <Compile Include="Connectivity\IrcConnection.cs" />
+    <Compile Include="Messages\Propagation\MessagePropagator.cs" />
     <Compile Include="Messages\Sendable\NoticeMessage.cs" />
     <Compile Include="Messages\Sendable\PartMessage.cs" />
     <Compile Include="Messages\Sendable\PrivMsgMessage.cs" />

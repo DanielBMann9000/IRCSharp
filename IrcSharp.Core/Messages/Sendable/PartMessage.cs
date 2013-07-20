@@ -15,6 +15,12 @@ namespace IrcSharp.Core.Messages.Sendable
             this.PartingMessage = partingMessage;
         }
 
+        public PartMessage(string channel, string partingMessage = null)
+        {
+            this.Channels = new ReadOnlyCollection<string>(new List<string>{channel});
+            this.PartingMessage = partingMessage;
+        }
+
         public override string ToString()
         {
             var message = new StringBuilder();

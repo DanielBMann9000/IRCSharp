@@ -6,8 +6,8 @@ namespace IrcSharp.Core.Messages.Propagation
 {
     internal static class MessagePropagatorReflector
     {
-        public static IEnumerable<Tuple<TAttribute, TDelegate>> GetMessagePropagators<TAttribute, TDelegate>(this object obj)
-            where TAttribute : Attribute
+        public static IEnumerable<Tuple<string, TDelegate>> GetMessagePropagators<TAttribute, TDelegate>(this object obj)
+            where TAttribute : MessagePropagatorAttribute
             where TDelegate : class
         {
             var messageProcessorsMethods = obj.GetType().GetMethods(BindingFlags.Instance | BindingFlags.NonPublic);
@@ -23,7 +23,7 @@ namespace IrcSharp.Core.Messages.Propagation
                 // Get each attribute applied to method.
                 foreach (var attribute in methodAttributes)
                 {
-                    yield return Tuple.Create(attribute, methodDelegate);
+                    yield return Tuple.Create(attribute.CommandName, methodDelegate);
                 }
             }
         }

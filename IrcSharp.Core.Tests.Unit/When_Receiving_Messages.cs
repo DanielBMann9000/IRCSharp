@@ -19,7 +19,7 @@ namespace IrcSharp.Core.Tests.Unit
             {
                 await con.ConnectAsync(null, null, null, 0);
                 UnknownMessage actual = null;
-                con.OnUnknownMessage += (sender, args) =>
+                con.MessagePropagator.OnUnknownMessage += (sender, args) =>
                 {
                     actual = args;
                     mre.Set();
@@ -41,7 +41,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             PingMessage actual = null;
-            con.OnPingMessage += (sender, args) =>
+            con.MessagePropagator.OnPingMessage += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
@@ -63,7 +63,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             NickMessage actual = null;
-            con.OnNickMessage += (sender, args) =>
+            con.MessagePropagator.OnNickMessage += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
@@ -88,7 +88,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             GenericNumericResponseMessage actual = null;
-            con.OnWelcomeResponseMessage += (sender, args) =>
+            con.MessagePropagator.OnWelcomeResponseMessage += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
@@ -111,7 +111,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             NotRegisteredNumericResponseMessage actual = null;
-            con.OnNotRegisteredResponseMessage += (sender, args) =>
+            con.MessagePropagator.OnNotRegisteredResponseMessage += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
