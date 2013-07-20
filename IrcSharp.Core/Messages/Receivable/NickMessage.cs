@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Receivable
+﻿using IrcSharp.Core.Model;
+
+namespace IrcSharp.Core.Messages.Receivable
 {
     public class NickMessage : IReceivableMessage
     {
@@ -7,12 +9,12 @@
         public string Identity { get; private set; }
         public string Host { get; private set; }
 
-        public NickMessage(string originalNick, string newNick, string identity, string host)
+        public NickMessage(IrcUserInfo userIdentity, string newNick)
         {
-            this.Original = originalNick;
+            this.Original = userIdentity.Nick;
             this.New = newNick;
-            this.Identity = identity;
-            this.Host = host;
+            this.Identity = userIdentity.Identity;
+            this.Host = userIdentity.Host;
         }
     }
 }

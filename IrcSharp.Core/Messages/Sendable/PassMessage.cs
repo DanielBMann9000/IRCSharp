@@ -2,7 +2,12 @@
 {
     public class PassMessage : ISendableMessage
     {
-        public string Password { get; set; }
+        public string Password { get; private set; }
+
+        public PassMessage(string password)
+        {
+            this.Password = password;
+        }
 
         public override string ToString()
         {

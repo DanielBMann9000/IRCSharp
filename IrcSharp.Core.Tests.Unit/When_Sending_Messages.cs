@@ -17,7 +17,7 @@ namespace IrcSharp.Core.Tests.Unit
         public async Task A_Nick_Message_Is_Successfully_Generated_And_Sent()
         {
             var expected = "NICK TestUser\r\n";
-            ISendableMessage testMessage = new NickMessage { Nick = "TestUser" };
+            ISendableMessage testMessage = new NickMessage("TestUser");
             await this.RunSendMessageTest(expected, testMessage);
         }
 
@@ -25,7 +25,7 @@ namespace IrcSharp.Core.Tests.Unit
         public async Task A_Pass_Message_Is_Successfully_Generated_And_Sent()
         {
             var expected = "PASS foobar\r\n";
-            ISendableMessage testMessage = new PassMessage { Password = "foobar" };
+            ISendableMessage testMessage = new PassMessage("foobar");
             await this.RunSendMessageTest(expected, testMessage);
         }
 
@@ -33,12 +33,7 @@ namespace IrcSharp.Core.Tests.Unit
         public async Task A_User_Message_Is_Successfully_Generated_And_Sent()
         {
             var expected = "USER UserName 3 * :Test User\r\n";
-            ISendableMessage testMessage = new UserMessage
-                                           {
-                                               UserName = "UserName",
-                                               UserMode = UserMessage.Mode.Invisible | UserMessage.Mode.Wallops,
-                                               RealName = "Test User"
-                                           };
+            ISendableMessage testMessage = new UserMessage("UserName", UserMessage.Mode.Invisible | UserMessage.Mode.Wallops, "Test User");
             await this.RunSendMessageTest(expected, testMessage);
         }
 

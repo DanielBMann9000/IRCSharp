@@ -55,7 +55,7 @@ namespace IrcSharp.Core.Connectivity
         private readonly IConnectionManager connectionManager;
         private bool canSend;
 
-        internal delegate void MessagePropagator(IrcIdentity identity, string arguments);
+        internal delegate void MessagePropagator(IrcUserInfo identity, string arguments);
 
         private readonly IEnumerable<Tuple<MessagePropagatorAttribute, MessagePropagator>> Propagators;
 
@@ -73,8 +73,8 @@ namespace IrcSharp.Core.Connectivity
             await this.connectionManager.ConnectAsync(server, port);
             if (this.connectionManager.Connected)
             {
-                await this.SendMessageInternalAsync(new Messages.Sendable.NickMessage { Nick = nick });
-                await this.SendMessageInternalAsync(new UserMessage { UserName = nick, UserMode = UserMessage.Mode.None, RealName = realName });
+                await this.SendMessageInternalAsync(new Messages.Sendable.NickMessage(nick));
+                await this.SendMessageInternalAsync(new UserMessage(nick, UserMessage.Mode.None, realName));
             }
         }
 
@@ -121,7 +121,7 @@ namespace IrcSharp.Core.Connectivity
         {
             string command;
             var commandArguments = string.Empty;
-            IrcIdentity parsedIdentity = null;
+            IrcUserInfo parsedIdentity = null;
 
             if (message.StartsWith(":"))
             {
@@ -135,11 +135,11 @@ namespace IrcSharp.Core.Connectivity
                     var nick = originator.Substring(0, exclaimationLocation);
                     var identity = originator.Substring(exclaimationLocation + 1, atSignLocation - exclaimationLocation - 1);
                     var host = originator.Substring(atSignLocation + 1, originator.Length - atSignLocation - 1);
-                    parsedIdentity = new IrcIdentity(nick, identity, host);
+                    parsedIdentity = new IrcUserInfo(nick, identity, host);
                 }
                 else
                 {
-                    parsedIdentity = new IrcIdentity(originator);
+                    parsedIdentity = new IrcUserInfo(originator);
                 }
             }
             else
@@ -169,7 +169,7 @@ namespace IrcSharp.Core.Connectivity
         #region Message Propagation
         [MessagePropagator("001")]
         // ReSharper disable once UnusedMember.Local
-        private void PropagateWelcomeNumericResponseMessage(IrcIdentity identity, string arguments)
+        private void PropagateWelcomeNumericResponseMessage(IrcUserInfo identity, string arguments)
         {
             if (this.OnWelcomeResponseMessage != null)
             {
@@ -180,7 +180,7 @@ namespace IrcSharp.Core.Connectivity
 
         [MessagePropagator("451")]
         // ReSharper disable once UnusedMember.Local
-        private void PropagateNotRegisteredNumericResponseMessage(IrcIdentity identity, string arguments)
+        private void PropagateNotRegisteredNumericResponseMessage(IrcUserInfo identity, string arguments)
         {
             if (this.OnNotRegisteredResponseMessage != null)
             {
@@ -191,7 +191,7 @@ namespace IrcSharp.Core.Connectivity
 
         [MessagePropagator("PING")]
         // ReSharper disable once UnusedMember.Local
-        private void PropagatePingMessage(IrcIdentity identity, string arguments)
+        private void PropagatePingMessage(IrcUserInfo identity, string arguments)
         {
             if (this.OnPingMessage != null)
             {
@@ -201,12 +201,12 @@ namespace IrcSharp.Core.Connectivity
 
         [MessagePropagator("NICK")]
         // ReSharper disable once UnusedMember.Local
-        private void PropagateNickMessage(IrcIdentity identity, string arguments)
+        private void PropagateNickMessage(IrcUserInfo identity, string arguments)
         {
             if (this.OnNickMessage != null)
             {
                 var tokenizedArguments = TokenizeArguments(arguments);
-                this.OnNickMessage(this, new Messages.Receivable.NickMessage(identity.Nick, tokenizedArguments[0], identity.Identity, identity.Host));
+                this.OnNickMessage(this, new Messages.Receivable.NickMessage(identity, tokenizedArguments[0]));
             }
         }
         #endregion Message Propagation

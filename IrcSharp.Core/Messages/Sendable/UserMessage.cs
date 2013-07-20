@@ -4,9 +4,16 @@ namespace IrcSharp.Core.Messages.Sendable
 {
     public class UserMessage : ISendableMessage
     {
-        public string UserName { get; set; }
-        public Mode UserMode { get; set; }
-        public string RealName { get; set; }
+        public string UserName { get; private set; }
+        public Mode UserMode { get; private set; }
+        public string RealName { get; private set; }
+
+        public UserMessage(string userName, Mode userMode, string realName)
+        {
+            this.UserName = userName;
+            this.UserMode = userMode;
+            this.RealName = realName;
+        }
 
         public override string ToString()
         {
