@@ -1,0 +1,8 @@
+*.vspx
+*.user
+*.suo
+*.psess
+bin/
+obj/
+TestResults/
+*TestHarness/
