@@ -14,10 +14,10 @@ namespace IrcSharp.Core.Tests.Unit
         public async Task A_Message_That_Falls_Into_No_Other_Categories_Results_In_An_Unknown_Message_Event()
         {
             var mre = new ManualResetEvent(false);
-            var cm = new FakeConnectionManager();
+            var cm = new FakeSocketConnection();
             using (var con = new IrcConnection(cm))
             {
-                await con.ConnectAsync(null, null, null, 0);
+                await con.ConnectAsync("foo", "bar", "baz", 0);
                 UnknownMessage actual = null;
                 con.MessagePropagator.OnUnknownMessage += (sender, args) =>
                 {
@@ -37,7 +37,7 @@ namespace IrcSharp.Core.Tests.Unit
         [TestMethod]
         public async Task A_Ping_Message_Results_In_A_Ping_Event()
         {
-            var cm = new FakeConnectionManager();
+            var cm = new FakeSocketConnection();
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             PingMessage actual = null;
@@ -47,7 +47,7 @@ namespace IrcSharp.Core.Tests.Unit
                 mre.Set();
             };
 
-            await con.ConnectAsync(null, null, null, 0);
+            await con.ConnectAsync("foo", "bar", "baz", 0);
             cm.SendFakeMessage("PING :12345678");
             if (!mre.WaitOne(1000))
             {
@@ -59,7 +59,7 @@ namespace IrcSharp.Core.Tests.Unit
         [TestMethod]
         public async Task A_Nick_Message_Results_In_A_Nick_Event()
         {
-            var cm = new FakeConnectionManager();
+            var cm = new FakeSocketConnection();
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             NickMessage actual = null;
@@ -69,7 +69,7 @@ namespace IrcSharp.Core.Tests.Unit
                 mre.Set();
             };
 
-            await con.ConnectAsync(null, null, null, 0);
+            await con.ConnectAsync("foo", "bar", "baz", 0);
             cm.SendFakeMessage(":Test!daniel@foo.bar.com NICK NewNick");
             if (!mre.WaitOne(1000))
             {
@@ -84,7 +84,7 @@ namespace IrcSharp.Core.Tests.Unit
         [TestMethod]
         public async Task A_Numeric_Response_Message_With_A_Code_Of_001_Results_In_A_GenericNumericResponse_Message()
         {
-            var cm = new FakeConnectionManager();
+            var cm = new FakeSocketConnection();
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             GenericNumericResponseMessage actual = null;
@@ -94,7 +94,7 @@ namespace IrcSharp.Core.Tests.Unit
                 mre.Set();
             };
 
-            await con.ConnectAsync(null, null, null, 0);
+            await con.ConnectAsync("foo", "bar", "baz", 0);
             cm.SendFakeMessage(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
             if (!mre.WaitOne(1000))
             {
@@ -107,7 +107,7 @@ namespace IrcSharp.Core.Tests.Unit
         [TestMethod]
         public async Task A_Numeric_Response_Message_With_A_Code_Of_451_Results_In_A_NotRegisteredResponse_Message()
         {
-            var cm = new FakeConnectionManager();
+            var cm = new FakeSocketConnection();
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             NotRegisteredNumericResponseMessage actual = null;
@@ -117,7 +117,7 @@ namespace IrcSharp.Core.Tests.Unit
                 mre.Set();
             };
 
-            await con.ConnectAsync(null, null, null, 0);
+            await con.ConnectAsync("foo", "bar", "baz", 0);
             cm.SendFakeMessage(":localhost.com 451 DBM JOIN :Register first.");
             if (!mre.WaitOne(1000))
             {

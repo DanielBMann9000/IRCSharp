@@ -6,7 +6,7 @@ namespace IrcSharp.Core.Messages.Propagation
 {
     internal static class MessagePropagatorReflector
     {
-        public static IEnumerable<Tuple<string, TDelegate>> GetMessagePropagators<TAttribute, TDelegate>(this object obj)
+        internal static IEnumerable<Tuple<string, TDelegate>> GetMessagePropagators<TAttribute, TDelegate>(this object obj)
             where TAttribute : MessagePropagatorAttribute
             where TDelegate : class
         {

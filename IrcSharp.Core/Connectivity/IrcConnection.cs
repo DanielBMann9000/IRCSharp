@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Propagation;
@@ -9,11 +10,18 @@ namespace IrcSharp.Core.Connectivity
 {
     public class IrcConnection : IDisposable
     {
-        public MessagePropagator MessagePropagator { get; private set; }
-        private readonly IConnectionManager connectionManager;
+        private readonly ISocketConnection connectionManager;
         private bool canSend;
 
-        public IrcConnection(IConnectionManager connectionManager)
+        public MessagePropagator MessagePropagator { get; private set; }
+        public bool Connected 
+        {
+            get
+            {
+                return connectionManager.Connected;
+            }
+        }
+        public IrcConnection(ISocketConnection connectionManager)
         {
             this.connectionManager = connectionManager;
             this.connectionManager.OnMessageReceived += this.ParseMessage;
@@ -21,12 +29,32 @@ namespace IrcSharp.Core.Connectivity
 
             this.MessagePropagator.OnWelcomeResponseMessage += this.ReadyToSendCommands;
             this.MessagePropagator.OnPingMessage += SendPongResponse;
+        }
+
+        public IrcConnection() : this(new SocketConnection())
+        {
             
         }
 
         public async Task ConnectAsync(string nick, string realName, string server, int port)
         {
             await this.connectionManager.ConnectAsync(server, port);
+            await InitializeConnection(nick, realName);
+        }
+
+        public async Task ConnectAsync(string nick, string realName, IPAddress server, int port)
+        {
+            await this.connectionManager.ConnectAsync(server, port);
+            await InitializeConnection(nick, realName);
+        }
+
+        public async Task DisconnectAsync()
+        {
+            await this.connectionManager.DisconnectAsync();
+        }
+
+        private async Task InitializeConnection(string nick, string realName)
+        {
             if (this.connectionManager.Connected)
             {
                 await this.SendMessageInternalAsync(new Messages.Sendable.NickMessage(nick));

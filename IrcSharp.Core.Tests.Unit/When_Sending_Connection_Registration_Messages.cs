@@ -47,9 +47,9 @@ namespace IrcSharp.Core.Tests.Unit
         [TestMethod]
         public async Task A_Ping_Message_Is_Automatically_Responded_To_With_An_Appropriate_Pong()
         {
-            var cm = new FakeConnectionManager();
+            var cm = new FakeSocketConnection();
             var con = new IrcConnection(cm);
-            await con.ConnectAsync(null, null, null, 0);
+            await con.ConnectAsync("foo", "bar", "baz", 0);
             var expected = "PONG 12345678\r\n";
             cm.SendFakeMessage("PING :12345678");
             Assert.IsTrue(cm.Messages.Any(m => m == expected));

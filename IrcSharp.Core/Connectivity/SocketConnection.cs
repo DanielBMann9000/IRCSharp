@@ -8,7 +8,7 @@ using IrcSharp.Core.Messages;
 
 namespace IrcSharp.Core.Connectivity
 {
-    public class ConnectionManager : IConnectionManager
+    public class SocketConnection : ISocketConnection
     {
         public event EventHandler<MessageReceivedEventArgs> OnMessageReceived;
 
@@ -23,6 +23,10 @@ namespace IrcSharp.Core.Connectivity
             {
                 return this.client.Connected;
             } 
+        }
+
+        internal SocketConnection()
+        {
         }
 
         public async Task ConnectAsync(IPAddress ipAddress, int port)

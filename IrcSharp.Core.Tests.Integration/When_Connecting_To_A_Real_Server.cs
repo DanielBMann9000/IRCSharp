@@ -24,55 +24,55 @@ namespace IrcSharp.Core.Tests.Integration
         [TestMethod]
         public async Task Can_Initiate_A_Connection_By_Providing_A_Hostname()
         {
-            using (var cm = new ConnectionManager())
+            using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync(server, port);
-                Assert.AreEqual(true, cm.Connected);
+                Assert.AreEqual(false, con.Connected);
+                await con.ConnectAsync("Foo", "Bar", server, port);
+                Assert.AreEqual(true, con.Connected);
             }
         }
 
         [TestMethod]
         public async Task Can_Initiate_A_Connection_By_Providing_An_IP()
         {
-            using (var cm = new ConnectionManager())
+            using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync(IPAddress.Parse("127.0.0.1"), port);
-                Assert.AreEqual(true, cm.Connected);
+                Assert.AreEqual(false, con.Connected);
+                await con.ConnectAsync("Foo", "Bar", IPAddress.Parse("127.0.0.1"), port);
+                Assert.AreEqual(true, con.Connected);
             }
         }
 
         [TestMethod]
         public async Task Can_Disconnect()
         {
-            using (var cm = new ConnectionManager())
+            using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync(server, port);
-                Assert.AreEqual(true, cm.Connected);
-                await cm.DisconnectAsync();
-                Assert.AreEqual(false, cm.Connected);
+                Assert.AreEqual(false, con.Connected);
+                await con.ConnectAsync("Foo", "Bar", server, port);
+                Assert.AreEqual(true, con.Connected);
+                await con.DisconnectAsync();
+                Assert.AreEqual(false, con.Connected);
             }
         }
 
         [TestMethod]
         public async Task Can_Receive_A_Message()
         {
-            using (var cm = new ConnectionManager())
+            using (var con = new IrcConnection())
             {
                 var mre = new ManualResetEvent(false);
                 string message = string.Empty;
 
-                cm.OnMessageReceived += (sender, args) =>
+                con.MessagePropagator.OnRawMessage += (sender, args) =>
                 {
-                    message = args.Message;
+                    message = args.UnparsedMessage;
                     mre.Set();
                 };
 
-                Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync(server, port);
-                Assert.AreEqual(true, cm.Connected);
+                Assert.AreEqual(false, con.Connected);
+                await con.ConnectAsync("Foo", "Bar", server, port);
+                Assert.AreEqual(true, con.Connected);
                 mre.WaitOne(1000);
                 Assert.AreEqual("NOTICE AUTH :*** Checking Ident", message);
             }
@@ -82,11 +82,11 @@ namespace IrcSharp.Core.Tests.Integration
         [ExpectedException(typeof(ConnectionFailedException))]
         public async Task Throws_An_Appropriate_Exception_If_The_Server_Is_Not_Available()
         {
-            using (var cm = new ConnectionManager())
+            using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync("localhostxxx", 12343);
-                Assert.AreEqual(false, cm.Connected);
+                Assert.AreEqual(false, con.Connected);
+                await con.ConnectAsync("Foo", "Bar", "localhostxxx", port);
+                Assert.AreEqual(false, con.Connected);
             }
         }    
     }

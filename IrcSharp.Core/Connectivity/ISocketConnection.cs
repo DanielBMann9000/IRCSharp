@@ -5,7 +5,7 @@ using IrcSharp.Core.Messages;
 
 namespace IrcSharp.Core.Connectivity
 {
-    public interface IConnectionManager : IDisposable
+    public interface ISocketConnection : IDisposable
     {
         event EventHandler<MessageReceivedEventArgs> OnMessageReceived;
         bool Connected { get; }

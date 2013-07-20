@@ -40,8 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Connectivity\ConnectionFailedException.cs" />
-    <Compile Include="Connectivity\ConnectionManager.cs" />
-    <Compile Include="Connectivity\IConnectionManager.cs" />
+    <Compile Include="Connectivity\SocketConnection.cs" />
+    <Compile Include="Connectivity\ISocketConnection.cs" />
     <Compile Include="Connectivity\MessageReceivedEventArgs.cs" />
     <Compile Include="Connectivity\IrcConnection.cs" />
     <Compile Include="Messages\Propagation\MessagePropagator.cs" />

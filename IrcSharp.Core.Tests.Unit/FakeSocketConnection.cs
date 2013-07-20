@@ -8,7 +8,7 @@ using IrcSharp.Core.Messages;
 
 namespace IrcSharp.Core.Tests.Unit
 {
-    public class FakeConnectionManager : IConnectionManager
+    public class FakeSocketConnection : ISocketConnection
     {
         public readonly List<string> messages = new List<string>();
 
