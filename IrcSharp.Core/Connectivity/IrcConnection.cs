@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IrcSharp.Core.Messages;
-using IrcSharp.Core.Messages.Propogation;
+using IrcSharp.Core.Messages.Propagation;
 using IrcSharp.Core.Messages.Receivable;
 using IrcSharp.Core.Messages.Sendable;
 using IrcSharp.Core.Model;
@@ -55,9 +55,9 @@ namespace IrcSharp.Core.Connectivity
         private readonly IConnectionManager connectionManager;
         private bool canSend;
 
-        internal delegate void MessagePropogator(IrcIdentity identity, string arguments);
+        internal delegate void MessagePropagator(IrcIdentity identity, string arguments);
 
-        private readonly IEnumerable<Tuple<MessagePropogatorAttribute, MessagePropogator>> propogators;
+        private readonly IEnumerable<Tuple<MessagePropagatorAttribute, MessagePropagator>> Propagators;
 
         public IrcConnection(IConnectionManager connectionManager)
         {
@@ -65,7 +65,7 @@ namespace IrcSharp.Core.Connectivity
             this.connectionManager.OnMessageReceived += this.ParseMessage;
             this.OnWelcomeResponseMessage += this.ReadyToSendCommands;
             this.OnPingMessage += SendPongResponse;
-            propogators = this.GetMessagePropogators<MessagePropogatorAttribute, MessagePropogator>();
+            Propagators = this.GetMessagePropagators<MessagePropagatorAttribute, MessagePropagator>();
         }
 
         public async Task ConnectAsync(string nick, string realName, string server, int port)
@@ -113,11 +113,11 @@ namespace IrcSharp.Core.Connectivity
                 this.OnRawMessage(this, new UnknownMessage(e.Message));
             }
             
-            this.PropogateMessage(e.Message);
+            this.PropagateMessage(e.Message);
         }
 
         // todo: this method is horrible. refactor with great enthusiasm.
-        public void PropogateMessage(string message)
+        public void PropagateMessage(string message)
         {
             string command;
             var commandArguments = string.Empty;
@@ -151,10 +151,10 @@ namespace IrcSharp.Core.Connectivity
                 }
             }
 
-            var propogator = this.propogators.Where(p => p.Item1.CommandName == command);
-            if (propogator.Any())
+            var Propagator = this.Propagators.Where(p => p.Item1.CommandName == command);
+            if (Propagator.Any())
             {
-                propogator.First().Item2(parsedIdentity, commandArguments);
+                Propagator.First().Item2(parsedIdentity, commandArguments);
             }
             else
             {
@@ -166,10 +166,10 @@ namespace IrcSharp.Core.Connectivity
         }
 
         //TODO: need to start splitting this class up, it's getting huge
-        #region Message propogation
-        [MessagePropogator("001")]
+        #region Message Propagation
+        [MessagePropagator("001")]
         // ReSharper disable once UnusedMember.Local
-        private void PropogateWelcomeNumericResponseMessage(IrcIdentity identity, string arguments)
+        private void PropagateWelcomeNumericResponseMessage(IrcIdentity identity, string arguments)
         {
             if (this.OnWelcomeResponseMessage != null)
             {
@@ -178,9 +178,9 @@ namespace IrcSharp.Core.Connectivity
             }
         }
 
-        [MessagePropogator("451")]
+        [MessagePropagator("451")]
         // ReSharper disable once UnusedMember.Local
-        private void PropogateNotRegisteredNumericResponseMessage(IrcIdentity identity, string arguments)
+        private void PropagateNotRegisteredNumericResponseMessage(IrcIdentity identity, string arguments)
         {
             if (this.OnNotRegisteredResponseMessage != null)
             {
@@ -189,9 +189,9 @@ namespace IrcSharp.Core.Connectivity
             }
         }
 
-        [MessagePropogator("PING")]
+        [MessagePropagator("PING")]
         // ReSharper disable once UnusedMember.Local
-        private void PropogatePingMessage(IrcIdentity identity, string arguments)
+        private void PropagatePingMessage(IrcIdentity identity, string arguments)
         {
             if (this.OnPingMessage != null)
             {
@@ -199,9 +199,9 @@ namespace IrcSharp.Core.Connectivity
             }
         }
 
-        [MessagePropogator("NICK")]
+        [MessagePropagator("NICK")]
         // ReSharper disable once UnusedMember.Local
-        private void PropogateNickMessage(IrcIdentity identity, string arguments)
+        private void PropagateNickMessage(IrcIdentity identity, string arguments)
         {
             if (this.OnNickMessage != null)
             {
@@ -209,7 +209,7 @@ namespace IrcSharp.Core.Connectivity
                 this.OnNickMessage(this, new Messages.Receivable.NickMessage(identity.Nick, tokenizedArguments[0], identity.Identity, identity.Host));
             }
         }
-        #endregion Message propogation
+        #endregion Message Propagation
 
         // this method belongs somewhere else, and I'm not 100% sure it will tokenize every IRC message properly
         private static List<string> TokenizeArguments(string arguments)

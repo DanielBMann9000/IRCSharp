@@ -45,12 +45,12 @@
     <Compile Include="Connectivity\MessageReceivedEventArgs.cs" />
     <Compile Include="Connectivity\IrcConnection.cs" />
     <Compile Include="Model\IrcIdentity.cs" />
-    <Compile Include="Messages\Propogation\MessagePropogatorAttribute.cs" />
+    <Compile Include="Messages\Propagation\MessagePropagatorAttribute.cs" />
     <Compile Include="Messages\Receivable\GenericNumericResponseMessage.cs" />
     <Compile Include="Messages\Receivable\NickMessage.cs" />
     <Compile Include="Messages\Receivable\NotRegisteredNumericResponseMessage.cs" />
     <Compile Include="Messages\Receivable\NumericReponseMessageBase.cs" />
-    <Compile Include="Messages\Propogation\MessagePropogatorReflector.cs" />
+    <Compile Include="Messages\Propagation\MessagePropagatorReflector.cs" />
     <Compile Include="Messages\Sendable\JoinMessage.cs" />
     <Compile Include="Messages\IReceivableMessage.cs" />
     <Compile Include="Messages\Sendable\PassMessage.cs" />

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace IrcSharp.Core.Messages.Propogation
+namespace IrcSharp.Core.Messages.Propagation
 {
-    internal static class MessagePropogatorReflector
+    internal static class MessagePropagatorReflector
     {
-        public static IEnumerable<Tuple<TAttribute, TDelegate>> GetMessagePropogators<TAttribute, TDelegate>(this object obj)
+        public static IEnumerable<Tuple<TAttribute, TDelegate>> GetMessagePropagators<TAttribute, TDelegate>(this object obj)
             where TAttribute : Attribute
             where TDelegate : class
         {

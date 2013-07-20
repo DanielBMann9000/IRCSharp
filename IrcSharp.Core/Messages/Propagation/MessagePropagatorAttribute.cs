@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace IrcSharp.Core.Messages.Propogation
+namespace IrcSharp.Core.Messages.Propagation
 {
-    internal class MessagePropogatorAttribute : Attribute
+    internal class MessagePropagatorAttribute : Attribute
     {
-        internal MessagePropogatorAttribute(string commandName)
+        internal MessagePropagatorAttribute(string commandName)
         {
             this.CommandName = commandName;
         }
