@@ -57,7 +57,7 @@ namespace IrcSharp.Core.Connectivity
 
         internal delegate void MessagePropagator(IrcUserInfo identity, string arguments);
 
-        private readonly IEnumerable<Tuple<MessagePropagatorAttribute, MessagePropagator>> Propagators;
+        private readonly IEnumerable<Tuple<MessagePropagatorAttribute, MessagePropagator>> propagators;
 
         public IrcConnection(IConnectionManager connectionManager)
         {
@@ -65,7 +65,7 @@ namespace IrcSharp.Core.Connectivity
             this.connectionManager.OnMessageReceived += this.ParseMessage;
             this.OnWelcomeResponseMessage += this.ReadyToSendCommands;
             this.OnPingMessage += SendPongResponse;
-            Propagators = this.GetMessagePropagators<MessagePropagatorAttribute, MessagePropagator>();
+            propagators = this.GetMessagePropagators<MessagePropagatorAttribute, MessagePropagator>();
         }
 
         public async Task ConnectAsync(string nick, string realName, string server, int port)
@@ -151,10 +151,10 @@ namespace IrcSharp.Core.Connectivity
                 }
             }
 
-            var Propagator = this.Propagators.Where(p => p.Item1.CommandName == command);
-            if (Propagator.Any())
+            var propagator = this.propagators.Where(p => p.Item1.CommandName == command);
+            if (propagator.Any())
             {
-                Propagator.First().Item2(parsedIdentity, commandArguments);
+                propagator.First().Item2(parsedIdentity, commandArguments);
             }
             else
             {

@@ -21,6 +21,16 @@ namespace IrcSharp.Core.Messages.Sendable
             this.Keys = keys != null ? new ReadOnlyCollection<string>(keys) : new ReadOnlyCollection<string>(new string[0]);
         }
 
+        public JoinMessage(string channel, string key = null)
+        {
+            if (string.IsNullOrWhiteSpace(channel))
+            {
+                this.LeaveAllChannels = true;
+            }
+            this.Channels = channel != null ? new ReadOnlyCollection<string>(new List<string>{channel}) : new ReadOnlyCollection<string>(new string[0]);
+            this.Keys = key != null ? new ReadOnlyCollection<string>(new List<string>{key}) : new ReadOnlyCollection<string>(new string[0]);
+        }
+
         public override string ToString()
         {
             var joinMessage = new StringBuilder("JOIN ");
