@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Configuration;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using IrcSharp.Core.Connectivity;
@@ -10,13 +11,23 @@ namespace IrcSharp.Core.Tests.Integration
     [TestClass]
     public class When_Interacting_With_A_Real_Server
     {
+        private static string server;
+        private static int port;
+
+        [ClassInitialize]
+        public static void ClassInit(TestContext context)
+        {
+            server = ConfigurationManager.AppSettings["Server"];
+            port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+        }
+
         [TestMethod]
         public async Task Can_Initiate_A_Connection_By_Providing_A_Hostname()
         {
             using (var cm = new ConnectionManager())
             {
                 Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync("localhost", 5454);
+                await cm.ConnectAsync(server, port);
                 Assert.AreEqual(true, cm.Connected);
             }
         }
@@ -27,7 +38,7 @@ namespace IrcSharp.Core.Tests.Integration
             using (var cm = new ConnectionManager())
             {
                 Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync(IPAddress.Parse("127.0.0.1"), 5454);
+                await cm.ConnectAsync(IPAddress.Parse("127.0.0.1"), port);
                 Assert.AreEqual(true, cm.Connected);
             }
         }
@@ -38,7 +49,7 @@ namespace IrcSharp.Core.Tests.Integration
             using (var cm = new ConnectionManager())
             {
                 Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync("localhost", 5454);
+                await cm.ConnectAsync(server, port);
                 Assert.AreEqual(true, cm.Connected);
                 await cm.DisconnectAsync();
                 Assert.AreEqual(false, cm.Connected);
@@ -60,7 +71,7 @@ namespace IrcSharp.Core.Tests.Integration
                 };
 
                 Assert.AreEqual(false, cm.Connected);
-                await cm.ConnectAsync("localhost", 5454);
+                await cm.ConnectAsync(server, port);
                 Assert.AreEqual(true, cm.Connected);
                 mre.WaitOne(1000);
                 Assert.AreEqual("NOTICE AUTH :*** Checking Ident", message);
