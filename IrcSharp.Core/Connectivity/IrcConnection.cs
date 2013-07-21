@@ -30,8 +30,8 @@ namespace IrcSharp.Core.Connectivity
             this.connectionManager.OnMessageReceived += this.ParseMessage;
             this.MessagePropagator = new MessagePropagator();
 
-            this.MessagePropagator.OnWelcomeResponseMessage += this.ReadyToSendCommands;
-            this.MessagePropagator.OnPingMessage += SendPongResponse;
+            this.MessagePropagator.OnWelcomeResponseMessageReceived += this.ReadyToSendCommands;
+            this.MessagePropagator.OnPingMessageReceived += SendPongResponse;
         }
 
         public IrcConnection() : this(new SocketConnection())
@@ -83,7 +83,9 @@ namespace IrcSharp.Core.Connectivity
             {
                 this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToString()));
             }
+            this.MessagePropagator.RouteSendingMessage(messageToSend);
             await this.connectionManager.SendMessageAsync(messageToSend);
+            this.MessagePropagator.RouteSentMessage(messageToSend);
         }
 
         // i hate this
@@ -107,7 +109,7 @@ namespace IrcSharp.Core.Connectivity
             {
                 this.OnRawMessageReceived(this, new UnknownMessage(e.Message));
             }
-            this.MessagePropagator.RouteMessage(e.Message);
+            this.MessagePropagator.RouteReceivedMessage(e.Message);
         }
 
         #region IDisposable implementation
@@ -122,7 +124,7 @@ namespace IrcSharp.Core.Connectivity
             if (disposing)
             {
                 this.connectionManager.OnMessageReceived -= this.ParseMessage;
-                this.MessagePropagator.OnPingMessage -= this.SendPongResponse;
+                this.MessagePropagator.OnPingMessageReceived -= this.SendPongResponse;
                 this.connectionManager.Dispose();
             }
         }

@@ -42,7 +42,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             PingMessage actual = null;
-            con.MessagePropagator.OnPingMessage += (sender, args) =>
+            con.MessagePropagator.OnPingMessageReceived += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
@@ -64,7 +64,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             NickMessage actual = null;
-            con.MessagePropagator.OnNickMessage += (sender, args) =>
+            con.MessagePropagator.OnNickMessageReceived += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
@@ -89,7 +89,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             GenericNumericResponseMessage actual = null;
-            con.MessagePropagator.OnWelcomeResponseMessage += (sender, args) =>
+            con.MessagePropagator.OnWelcomeResponseMessageReceived += (sender, args) =>
             {
                 actual = args;
                 mre.Set();
@@ -112,7 +112,7 @@ namespace IrcSharp.Core.Tests.Unit
             var mre = new ManualResetEvent(false);
             var con = new IrcConnection(cm);
             NotRegisteredNumericResponseMessage actual = null;
-            con.MessagePropagator.OnNotRegisteredResponseMessage += (sender, args) =>
+            con.MessagePropagator.OnNotRegisteredResponseMessageReceived += (sender, args) =>
             {
                 actual = args;
                 mre.Set();

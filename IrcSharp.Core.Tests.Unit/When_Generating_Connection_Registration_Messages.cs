@@ -11,7 +11,7 @@ namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
     [TestClass]
-    public class When_Sending_Connection_Registration_Messages
+    public class When_Generating_Connection_Registration_Messages
     {
         /*
          * todo:
@@ -22,27 +22,27 @@ namespace IrcSharp.Core.Tests.Unit
          * squit
          */
         [TestMethod]
-        public async Task A_Nick_Message_Is_Successfully_Generated_And_Sent()
+        public void A_Nick_Message_Is_Successfully_Generated_And_Sent()
         {
             var expected = "NICK TestUser\r\n";
             ISendableMessage testMessage = new NickMessage("TestUser");
-            await TestHelpers.RunSendMessageTest(expected, testMessage);
+            Assert.AreEqual(expected, testMessage.ToString());
         }
 
         [TestMethod]
-        public async Task A_Pass_Message_Is_Successfully_Generated_And_Sent()
+        public void A_Pass_Message_Is_Successfully_Generated_And_Sent()
         {
             var expected = "PASS foobar\r\n";
             ISendableMessage testMessage = new PassMessage("foobar");
-            await TestHelpers.RunSendMessageTest(expected, testMessage);
+            Assert.AreEqual(expected, testMessage.ToString());
         }
 
         [TestMethod]
-        public async Task A_User_Message_Is_Successfully_Generated_And_Sent()
+        public void A_User_Message_Is_Successfully_Generated_And_Sent()
         {
             var expected = "USER UserName 3 * :Test User\r\n";
             ISendableMessage testMessage = new UserMessage("UserName", UserMessage.Mode.Invisible | UserMessage.Mode.Wallops, "Test User");
-            await TestHelpers.RunSendMessageTest(expected, testMessage);
+            Assert.AreEqual(expected, testMessage.ToString());
         }
 
         [TestMethod]

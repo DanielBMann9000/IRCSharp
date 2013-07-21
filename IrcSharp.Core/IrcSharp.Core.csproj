@@ -56,7 +56,7 @@
     <Compile Include="Messages\Sendable\PrivMsgMessage.cs" />
     <Compile Include="Messages\Sendable\TopicMessage.cs" />
     <Compile Include="Model\IrcUserInfo.cs" />
-    <Compile Include="Messages\Propagation\MessagePropagatorAttribute.cs" />
+    <Compile Include="Messages\Propagation\ReceivedMessagePropagatorAttribute.cs" />
     <Compile Include="Messages\Receivable\GenericNumericResponseMessage.cs" />
     <Compile Include="Messages\Receivable\NickMessage.cs" />
     <Compile Include="Messages\Receivable\NotRegisteredNumericResponseMessage.cs" />

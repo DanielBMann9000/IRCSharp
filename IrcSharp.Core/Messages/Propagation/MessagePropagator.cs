@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
-using IrcSharp.Core.Messages.Receivable;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages.Propagation
@@ -10,16 +8,55 @@ namespace IrcSharp.Core.Messages.Propagation
     public class MessagePropagator
     {
         #region Events
-        public event EventHandler<UnknownMessage> OnUnknownMessage;
+        public event EventHandler<Receivable.UnknownMessage> OnUnknownMessage;
         #region Message Details (3)
         #region Connection Registration  (3.1)
-        public event EventHandler<NickMessage> OnNickMessage;
+
+        public event EventHandler<Sendable.PassMessage> OnPassMessageSending;
+        public event EventHandler<Sendable.PassMessage> OnPassMessageSent;
+
+        public event EventHandler<Receivable.NickMessage> OnNickMessageReceived;
+        public event EventHandler<Sendable.NickMessage> OnNickMessageSending;
+        public event EventHandler<Sendable.NickMessage> OnNickMessageSent;
+
+        public event EventHandler<Sendable.UserMessage> OnUserMessageSending;
+        public event EventHandler<Sendable.UserMessage> OnUserMessageSent;
+
         #endregion Connection Registration (3.1)
 
         #region Channel Operations (3.2)
+        public event EventHandler<Sendable.JoinMessage> OnJoinMessageSending;
+        public event EventHandler<Sendable.JoinMessage> OnJoinMessageSent;
+
+        public event EventHandler<Sendable.PartMessage> OnPartMessageSending;
+        public event EventHandler<Sendable.PartMessage> OnPartMessageSent;
+
+        public event EventHandler<Sendable.ModeMessage> OnModeMessageSending;
+        public event EventHandler<Sendable.ModeMessage> OnModeMessageSent;
+
+        public event EventHandler<Sendable.TopicMessage> OnTopicMessageSending;
+        public event EventHandler<Sendable.TopicMessage> OnTopicMessageSent;
+
+        public event EventHandler<Sendable.NamesMessage> OnNamesMessageSending;
+        public event EventHandler<Sendable.NamesMessage> OnNamesMessageSent;
+
+        public event EventHandler<Sendable.ListMessage> OnListMessageSending;
+        public event EventHandler<Sendable.ListMessage> OnListMessageSent;
+
+        public event EventHandler<Sendable.InviteMessage> OnInviteMessageSending;
+        public event EventHandler<Sendable.InviteMessage> OnInviteMessageSent;
+
+        public event EventHandler<Sendable.KickMessage> OnKickMessageSending;
+        public event EventHandler<Sendable.KickMessage> OnKickMessageSent;
+        
         #endregion Channel Operations (3.2)
 
         #region Sending messages (3.3)
+        public event EventHandler<Sendable.PrivMsgMessage> OnPrivMsgMessageSending;
+        public event EventHandler<Sendable.PrivMsgMessage> OnPrivMsgMessageSent;
+
+        public event EventHandler<Sendable.NoticeMessage> OnNoticeMessageSending;
+        public event EventHandler<Sendable.NoticeMessage> OnNoticeMessageSent;
         #endregion Sending messages (3.3)
 
         #region Server queries and commands (3.4)
@@ -32,31 +69,74 @@ namespace IrcSharp.Core.Messages.Propagation
         #endregion User based queries (3.6)
 
         #region Miscellaneous messages (3.7)
-        public event EventHandler<PingMessage> OnPingMessage;
+        public event EventHandler<Receivable.PingMessage> OnPingMessageReceived;
+        public event EventHandler<Sendable.PongMessage> OnPongMessageSending;
+        public event EventHandler<Sendable.PongMessage> OnPongMessageSent;
         #endregion Miscellaneous messages (3.7)
         #endregion Message Details (3)
 
         #region Replies (5)
         #region Command responses (5.1)
-        public event EventHandler<GenericNumericResponseMessage> OnWelcomeResponseMessage;
+        public event EventHandler<Receivable.GenericNumericResponseMessage> OnWelcomeResponseMessageReceived;
         #endregion Command responses (5.1)
 
         #region Error replies (5.2)
-        public event EventHandler<NotRegisteredNumericResponseMessage> OnNotRegisteredResponseMessage;
+        public event EventHandler<Receivable.NotRegisteredNumericResponseMessage> OnNotRegisteredResponseMessageReceived;
         #endregion Error replies (5.2)
 
         #endregion Replies (5)
         #endregion Events
 
-        internal delegate void Propagator(IrcUserInfo identity, string arguments);
-        private readonly IEnumerable<Tuple<string, Propagator>> propagators;
-
+        internal delegate void ReceivedPropagator(IrcUserInfo identity, string arguments);
+        
+        private readonly IEnumerable<Tuple<string, ReceivedPropagator>> receivedPropagators;
+        private readonly Dictionary<Type, Action<ISendableMessage>> sendingPropagators;
+        private readonly Dictionary<Type, Action<ISendableMessage>> sentPropagators;
+        
         internal MessagePropagator()
         {
-            propagators = this.GetMessagePropagators<MessagePropagatorAttribute, Propagator>();
+            this.receivedPropagators = this.GetReceivedMessagePropagators<ReceivedMessagePropagatorAttribute, ReceivedPropagator>();
+
+            //not a fan of this, but i want sending/sent message propagation in place even if it's not great. 
+            this.sendingPropagators = new Dictionary<Type, Action<ISendableMessage>>
+                                  {
+                                      { typeof(Sendable.PassMessage), msg => this.RouteSendableMessage(msg, this.OnPassMessageSending) },
+                                      { typeof(Sendable.NickMessage), msg => this.RouteSendableMessage(msg, this.OnNickMessageSending) },
+                                      { typeof(Sendable.UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSending) },
+                                      { typeof(Sendable.JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSending) },
+                                      { typeof(Sendable.PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSending) },
+                                      { typeof(Sendable.ModeMessage), msg => this.RouteSendableMessage(msg, this.OnModeMessageSending) },
+                                      { typeof(Sendable.TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSending) },
+                                      { typeof(Sendable.NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSending) },
+                                      { typeof(Sendable.ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSending) },
+                                      { typeof(Sendable.InviteMessage), msg => this.RouteSendableMessage(msg, this.OnInviteMessageSending) },
+                                      { typeof(Sendable.KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSending) },
+                                      { typeof(Sendable.PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSending) },
+                                      { typeof(Sendable.NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSending) },
+                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSending) }
+                                  };
+
+            this.sentPropagators = new Dictionary<Type, Action<ISendableMessage>>
+                                  {
+                                      { typeof(Sendable.PassMessage), msg => this.RouteSendableMessage(msg, this.OnPassMessageSent) },
+                                      { typeof(Sendable.NickMessage), msg => this.RouteSendableMessage(msg, this.OnNickMessageSent) },
+                                      { typeof(Sendable.UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSent) },
+                                      { typeof(Sendable.JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSent) },
+                                      { typeof(Sendable.PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSent) },
+                                      { typeof(Sendable.ModeMessage), msg => this.RouteSendableMessage(msg, this.OnModeMessageSent) },
+                                      { typeof(Sendable.TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSent) },
+                                      { typeof(Sendable.NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSent) },
+                                      { typeof(Sendable.ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSent) },
+                                      { typeof(Sendable.InviteMessage), msg => this.RouteSendableMessage(msg, this.OnInviteMessageSent) },
+                                      { typeof(Sendable.KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSent) },
+                                      { typeof(Sendable.PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSent) },
+                                      { typeof(Sendable.NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSent) },
+                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSent) }
+                                  };
+
         }
 
-        internal void RouteMessage(string message)
+        internal void RouteReceivedMessage(string message)
         {
             string command;
             var commandArguments = string.Empty;
@@ -90,13 +170,13 @@ namespace IrcSharp.Core.Messages.Propagation
                 }
             }
 
-            var messagePropagators = this.propagators.Where(p => p.Item1 == command).ToList();
+            var messagePropagators = this.receivedPropagators.Where(p => p.Item1 == command).ToList();
 
             if (messagePropagators.Count == 0)
             {
                 if (this.OnUnknownMessage != null)
                 {
-                    this.OnUnknownMessage(this, new UnknownMessage(message));
+                    this.OnUnknownMessage(this, new Receivable.UnknownMessage(message));
                 }
             }
             else
@@ -109,51 +189,68 @@ namespace IrcSharp.Core.Messages.Propagation
             }
         }
 
-        //TODO: need to start splitting this class up, it's getting huge
-        #region Message Propagation
-        [MessagePropagator("001")]
+        internal void RouteSendingMessage(ISendableMessage message)
+        {
+            sendingPropagators[message.GetType()](message);
+        }
+
+        internal void RouteSentMessage(ISendableMessage message)
+        {
+            sentPropagators[message.GetType()](message);
+        }
+
+        private void RouteSendableMessage<T>(ISendableMessage message, EventHandler<T> eh)
+        {
+            if (eh != null)
+            {
+                eh(this, (T)message);
+            }
+        }
+
+        #region Received Message Propagation
+        [ReceivedMessagePropagator("001")]
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once UnusedParameter.Local
         private void PropagateWelcomeNumericResponseMessage(IrcUserInfo identity, string arguments)
         {
-            if (this.OnWelcomeResponseMessage != null)
+            if (this.OnWelcomeResponseMessageReceived != null)
             {
                 var startIndex = arguments.IndexOf(":", StringComparison.Ordinal);
-                this.OnWelcomeResponseMessage(this, new GenericNumericResponseMessage("001", arguments.Substring(startIndex + 1, arguments.Length - startIndex - 1)));
+                this.OnWelcomeResponseMessageReceived(this, new Receivable.GenericNumericResponseMessage("001", arguments.Substring(startIndex + 1, arguments.Length - startIndex - 1)));
             }
         }
 
-        [MessagePropagator("451")]
+        [ReceivedMessagePropagator("451")]
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once UnusedParameter.Local
         private void PropagateNotRegisteredNumericResponseMessage(IrcUserInfo identity, string arguments)
         {
-            if (this.OnNotRegisteredResponseMessage != null)
+            if (this.OnNotRegisteredResponseMessageReceived != null)
             {
                 var args = TokenizeArguments(arguments);
-                this.OnNotRegisteredResponseMessage(this, new NotRegisteredNumericResponseMessage(args[1], args[2]));
+                this.OnNotRegisteredResponseMessageReceived(this, new Receivable.NotRegisteredNumericResponseMessage(args[1], args[2]));
             }
         }
 
-        [MessagePropagator("PING")]
+        [ReceivedMessagePropagator("PING")]
         // ReSharper disable once UnusedMember.Local
         // ReSharper disable once UnusedParameter.Local
         private void PropagatePingMessage(IrcUserInfo identity, string arguments)
         {
-            if (this.OnPingMessage != null)
+            if (this.OnPingMessageReceived != null)
             {
-                this.OnPingMessage(this, new PingMessage(arguments.Remove(0, 1)));
+                this.OnPingMessageReceived(this, new Receivable.PingMessage(arguments.Remove(0, 1)));
             }
         }
 
-        [MessagePropagator("NICK")]
+        [ReceivedMessagePropagator("NICK")]
         // ReSharper disable once UnusedMember.Local
         private void PropagateNickMessage(IrcUserInfo identity, string arguments)
         {
-            if (this.OnNickMessage != null)
+            if (this.OnNickMessageReceived != null)
             {
                 var tokenizedArguments = TokenizeArguments(arguments);
-                this.OnNickMessage(this, new Messages.Receivable.NickMessage(identity, tokenizedArguments[0]));
+                this.OnNickMessageReceived(this, new Receivable.NickMessage(identity, tokenizedArguments[0]));
             }
         }
         #endregion Message Propagation

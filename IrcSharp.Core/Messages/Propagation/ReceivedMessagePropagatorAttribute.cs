@@ -2,9 +2,9 @@
 
 namespace IrcSharp.Core.Messages.Propagation
 {
-    internal class MessagePropagatorAttribute : Attribute
+    internal class ReceivedMessagePropagatorAttribute : Attribute
     {
-        internal MessagePropagatorAttribute(string commandName)
+        internal ReceivedMessagePropagatorAttribute(string commandName)
         {
             this.CommandName = commandName;
         }

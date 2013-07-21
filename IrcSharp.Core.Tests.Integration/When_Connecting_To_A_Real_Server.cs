@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IrcSharp.Core.Tests.Integration
 {
+    // ReSharper disable InconsistentNaming
     [TestClass]
     public class When_Interacting_With_A_Real_Server
     {

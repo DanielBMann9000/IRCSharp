@@ -10,7 +10,7 @@ namespace IrcSharp.Core.Tests.Unit
 {
     public class FakeSocketConnection : ISocketConnection
     {
-        public readonly List<string> messages = new List<string>();
+        private readonly List<string> messages = new List<string>();
 
         public ReadOnlyCollection<string> Messages
         {
