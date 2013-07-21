@@ -2,7 +2,7 @@
 
 namespace IrcSharp.Core.Connectivity
 {
-    public class MessageReceivedEventArgs : EventArgs
+    public class MessageEventArgs : EventArgs
     {
         public string Message { get; set; }
     }

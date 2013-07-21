@@ -64,7 +64,7 @@ namespace IrcSharp.Core.Tests.Integration
                 var mre = new ManualResetEvent(false);
                 string message = string.Empty;
 
-                con.MessagePropagator.OnRawMessage += (sender, args) =>
+                con.OnRawMessageReceived += (sender, args) =>
                 {
                     message = args.UnparsedMessage;
                     mre.Set();

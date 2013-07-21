@@ -20,8 +20,8 @@ namespace IrcSharp.Core.Tests.Unit
             }
         }
 
-        public event EventHandler<MessageReceivedEventArgs> OnMessageReceived;
-
+        public event EventHandler<MessageEventArgs> OnMessageReceived;
+        public event EventHandler<MessageEventArgs> OnMessageSent;
         public bool Connected { get; private set; }
 
         
@@ -52,6 +52,10 @@ namespace IrcSharp.Core.Tests.Unit
             {
                 throw new ConnectionFailedException(null, null);
             }
+            if (this.OnMessageSent != null)
+            {
+                this.OnMessageSent(this, new MessageEventArgs { Message = message.ToString() });
+            }
             messages.Add(message.ToString());
         }
 
@@ -70,7 +74,7 @@ namespace IrcSharp.Core.Tests.Unit
         {
             if (OnMessageReceived != null)
             {
-                OnMessageReceived(this, new MessageReceivedEventArgs { Message = fakeMessage });
+                OnMessageReceived(this, new MessageEventArgs { Message = fakeMessage });
             }   
         }
     }

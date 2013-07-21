@@ -10,11 +10,10 @@ namespace IrcSharp.Core.Messages.Propagation
     public class MessagePropagator
     {
         #region Events
-        public event EventHandler<UnknownMessage> OnRawMessage;
         public event EventHandler<UnknownMessage> OnUnknownMessage;
         #region Message Details (3)
         #region Connection Registration  (3.1)
-        public event EventHandler<Messages.Receivable.NickMessage> OnNickMessage;
+        public event EventHandler<NickMessage> OnNickMessage;
         #endregion Connection Registration (3.1)
 
         #region Channel Operations (3.2)
@@ -59,11 +58,6 @@ namespace IrcSharp.Core.Messages.Propagation
 
         internal void RouteMessage(string message)
         {
-            if (this.OnRawMessage != null)
-            {
-                this.OnRawMessage(this, new UnknownMessage(message));
-            }
-
             string command;
             var commandArguments = string.Empty;
             IrcUserInfo parsedIdentity = null;

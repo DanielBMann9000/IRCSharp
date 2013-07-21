@@ -10,6 +10,9 @@ namespace IrcSharp.Core.Connectivity
 {
     public class IrcConnection : IDisposable
     {
+        public event EventHandler<UnknownMessage> OnRawMessageReceived;
+        public event EventHandler<UnknownMessage> OnRawMessageSent;
+
         private readonly ISocketConnection connectionManager;
         private bool canSend;
 
@@ -76,12 +79,20 @@ namespace IrcSharp.Core.Connectivity
                 await Task.Delay(500);
             }
 
+            if (this.OnRawMessageSent != null)
+            {
+                this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToString()));
+            }
             await this.connectionManager.SendMessageAsync(messageToSend);
         }
 
         // i hate this
         private async Task SendMessageInternalAsync(ISendableMessage messageToSend)
         {
+            if (this.OnRawMessageSent != null)
+            {
+                this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToString()));
+            }
             await this.connectionManager.SendMessageAsync(messageToSend);
         }
 
@@ -90,8 +101,12 @@ namespace IrcSharp.Core.Connectivity
             await this.SendMessageInternalAsync(new PongMessage(e.Value));
         }
 
-        private void ParseMessage(object sender, MessageReceivedEventArgs e)
+        private void ParseMessage(object sender, MessageEventArgs e)
         {
+            if (this.OnRawMessageReceived != null)
+            {
+                this.OnRawMessageReceived(this, new UnknownMessage(e.Message));
+            }
             this.MessagePropagator.RouteMessage(e.Message);
         }
 

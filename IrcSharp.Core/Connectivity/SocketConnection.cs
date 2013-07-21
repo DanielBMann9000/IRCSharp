@@ -10,7 +10,8 @@ namespace IrcSharp.Core.Connectivity
 {
     public class SocketConnection : ISocketConnection
     {
-        public event EventHandler<MessageReceivedEventArgs> OnMessageReceived;
+        public event EventHandler<MessageEventArgs> OnMessageReceived;
+        public event EventHandler<MessageEventArgs> OnMessageSent;
 
         private readonly TcpClient client = new TcpClient();
         private readonly CancellationTokenSource pollerCancellationTokenSource = new CancellationTokenSource();
@@ -45,9 +46,11 @@ namespace IrcSharp.Core.Connectivity
             await Task.Run(() => this.client.Close());
         }
 
-        public async Task SendMessageAsync(ISendableMessage message)
+        public async Task SendMessageAsync(ISendableMessage sendableMessage)
         {
-            await this.outgoingMessageStream.WriteAsync(message.ToString());
+            var message = sendableMessage.ToString();
+            await this.outgoingMessageStream.WriteAsync(message);
+            this.RaiseMessageSentEvent(message);
         }
 
         public void Dispose()
@@ -112,7 +115,14 @@ namespace IrcSharp.Core.Connectivity
         {
             if (this.OnMessageReceived != null)
             {
-                this.OnMessageReceived(this, new MessageReceivedEventArgs { Message = message });
+                this.OnMessageReceived(this, new MessageEventArgs { Message = message });
+            }
+        }
+        private void RaiseMessageSentEvent(string message)
+        {
+            if (this.OnMessageSent != null)
+            {
+                this.OnMessageSent(this, new MessageEventArgs { Message = message });
             }
         }
     }
