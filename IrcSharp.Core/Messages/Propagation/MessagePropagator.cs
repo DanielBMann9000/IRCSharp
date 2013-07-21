@@ -31,8 +31,8 @@ namespace IrcSharp.Core.Messages.Propagation
         public event EventHandler<Sendable.PartMessage> OnPartMessageSending;
         public event EventHandler<Sendable.PartMessage> OnPartMessageSent;
 
-        public event EventHandler<Sendable.ModeMessage> OnModeMessageSending;
-        public event EventHandler<Sendable.ModeMessage> OnModeMessageSent;
+        public event EventHandler<Sendable.ChannelModeMessage> OnChannelModeMessageSending;
+        public event EventHandler<Sendable.ChannelModeMessage> OnChannelModeMessageSent;
 
         public event EventHandler<Sendable.TopicMessage> OnTopicMessageSending;
         public event EventHandler<Sendable.TopicMessage> OnTopicMessageSent;
@@ -105,7 +105,7 @@ namespace IrcSharp.Core.Messages.Propagation
                                       { typeof(Sendable.UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSending) },
                                       { typeof(Sendable.JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSending) },
                                       { typeof(Sendable.PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSending) },
-                                      { typeof(Sendable.ModeMessage), msg => this.RouteSendableMessage(msg, this.OnModeMessageSending) },
+                                      { typeof(Sendable.ChannelModeMessage), msg => this.RouteSendableMessage(msg, this.OnChannelModeMessageSending) },
                                       { typeof(Sendable.TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSending) },
                                       { typeof(Sendable.NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSending) },
                                       { typeof(Sendable.ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSending) },
@@ -123,7 +123,7 @@ namespace IrcSharp.Core.Messages.Propagation
                                       { typeof(Sendable.UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSent) },
                                       { typeof(Sendable.JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSent) },
                                       { typeof(Sendable.PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSent) },
-                                      { typeof(Sendable.ModeMessage), msg => this.RouteSendableMessage(msg, this.OnModeMessageSent) },
+                                      { typeof(Sendable.ChannelModeMessage), msg => this.RouteSendableMessage(msg, this.OnChannelModeMessageSent) },
                                       { typeof(Sendable.TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSent) },
                                       { typeof(Sendable.NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSent) },
                                       { typeof(Sendable.ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSent) },

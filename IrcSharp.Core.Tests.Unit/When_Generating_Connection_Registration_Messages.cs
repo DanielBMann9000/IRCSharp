@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
+    // ReSharper disable ConvertToConstant.Local
     [TestClass]
     public class When_Generating_Connection_Registration_Messages
     {

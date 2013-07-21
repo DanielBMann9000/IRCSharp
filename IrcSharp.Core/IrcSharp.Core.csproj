@@ -49,7 +49,7 @@
     <Compile Include="Messages\Sendable\InviteMessage.cs" />
     <Compile Include="Messages\Sendable\KickMessage.cs" />
     <Compile Include="Messages\Sendable\ListMessage.cs" />
-    <Compile Include="Messages\Sendable\ModeMessage.cs" />
+    <Compile Include="Messages\Sendable\ChannelModeMessage.cs" />
     <Compile Include="Messages\Sendable\NamesMessage.cs" />
     <Compile Include="Messages\Sendable\NoticeMessage.cs" />
     <Compile Include="Messages\Sendable\PartMessage.cs" />

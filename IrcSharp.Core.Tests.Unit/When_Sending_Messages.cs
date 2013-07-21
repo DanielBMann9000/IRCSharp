@@ -75,15 +75,15 @@ namespace IrcSharp.Core.Tests.Unit
         }
 
         [TestMethod]
-        public async Task OnModeMessageSending_Event_Fires()
+        public async Task OnChannelModeMessageSending_Event_Fires()
         {
-            await RunEventFiringTest(new ModeMessage("foo"), (con, mre) => con.MessagePropagator.OnModeMessageSending += (sender, args) => mre.Set());
+            await RunEventFiringTest(new ChannelModeMessage("foo"), (con, mre) => con.MessagePropagator.OnChannelModeMessageSending += (sender, args) => mre.Set());
         }
 
         [TestMethod]
-        public async Task OnModeMessageSent_Event_Fires()
+        public async Task OnChannelModeMessageSent_Event_Fires()
         {
-            await RunEventFiringTest(new ModeMessage("foo"), (con, mre) => con.MessagePropagator.OnModeMessageSent += (sender, args) => mre.Set());
+            await RunEventFiringTest(new ChannelModeMessage("foo"), (con, mre) => con.MessagePropagator.OnChannelModeMessageSent += (sender, args) => mre.Set());
         }
 
         [TestMethod]

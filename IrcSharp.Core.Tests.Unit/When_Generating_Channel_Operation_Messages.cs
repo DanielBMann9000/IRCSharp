@@ -1,19 +1,16 @@
 ﻿using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Sendable;
+using IrcSharp.Core.Model;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
+    // ReSharper disable ConvertToConstant.Local
     [TestClass]
     public class When_Generating_Channel_Operation_Messages
     {
-        /*
-         * todo: 
-         * Channel Mode
-         */
-
         [TestMethod]
         public void A_Join_Message_For_A_Single_Keyless_Channel_Is_Successfully_Generated()
         {
@@ -270,10 +267,33 @@ namespace IrcSharp.Core.Tests.Unit
         public void A_Mode_Message_With_A_Channel_Parameter_Is_Successfully_Generated()
         {
             var expected = "MODE #helloworld\r\n";
-            ISendableMessage testMessage = new ModeMessage("#helloworld");
+            ISendableMessage testMessage = new ChannelModeMessage("#helloworld");
             Assert.AreEqual(expected, testMessage.ToString());
         }
 
-        //todo: lots of mode tests
+        [TestMethod]
+        public void A_Mode_Message_With_A_Channel_Parameter_And_A_Single_Mode_Setting_Is_Successfully_Generated()
+        {
+            var expected = "MODE #helloworld\r\n";
+            ISendableMessage testMessage = new ChannelModeMessage("#helloworld");
+            Assert.AreEqual(expected, testMessage.ToString());
+        }
+
+        [TestMethod]
+        public void A_Mode_Message_With_A_Channel_Parameter_And_A_Single_Mode_Change_With_No_Target_Is_Successfully_Generated()
+        {
+            var expected = "MODE #helloworld +s\r\n";
+            ISendableMessage testMessage = new ChannelModeMessage("#helloworld", "+s");
+            Assert.AreEqual(expected, testMessage.ToString());
+        }
+
+        [TestMethod]
+        public void A_Mode_Message_With_A_Channel_Parameter_And_A_Single_Mode_Change_With_A_Target_Is_Successfully_Generated()
+        {
+            var expected = "MODE #helloworld +o Daniel\r\n";
+            ISendableMessage testMessage = new ChannelModeMessage("#helloworld", "+o Daniel");
+            Assert.AreEqual(expected, testMessage.ToString());
+        }
+        
     }
 }
