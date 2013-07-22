@@ -53,7 +53,7 @@ namespace IrcSharp.Core.Tests.Unit
             var con = new IrcConnection(cm);
             await con.ConnectAsync("foo", "bar", "baz", 0);
             var expected = "PONG 12345678\r\n";
-            cm.SendFakeMessage("PING :12345678");
+            cm.SimulateMessageReceipt("PING :12345678");
             Assert.IsTrue(cm.Messages.Any(m => m == expected));
         }
     }

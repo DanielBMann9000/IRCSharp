@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+
 using IrcSharp.Core.Connectivity;
 using IrcSharp.Core.Messages.Receivable;
 
@@ -9,34 +10,10 @@ namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
     [TestClass]
-    public class When_Receiving_Messages
+    public class When_Parsing_Received_Messages
     {
         [TestMethod]
-        public async Task A_Message_That_Falls_Into_No_Other_Categories_Fires_An_Unknown_Message_Event()
-        {
-            var mre = new ManualResetEvent(false);
-            using (var cm = new FakeSocketConnection()) 
-            using (var con = new IrcConnection(cm))
-            {
-                await con.ConnectAsync("foo", "bar", "baz", 0);
-                UnknownMessage actual = null;
-                con.MessagePropagator.OnUnknownMessage += (sender, args) =>
-                {
-                    actual = args;
-                    mre.Set();
-                };
-                cm.SimulateMessageReceipt("garbage");
-                if (!mre.WaitOne(1000))
-                {
-                    Assert.Fail("The event was never received.");
-                }
-                Assert.IsNotNull(actual);
-                Assert.AreEqual("garbage", actual.UnparsedMessage);
-            }
-        }
-
-        [TestMethod]
-        public async Task A_Ping_Message_Fires_A_Ping_Event()
+        public async Task A_Parsed_Ping_Message_Has_The_Value_Property_Filled()
         {
             var mre = new ManualResetEvent(false);
             using (var cm = new FakeSocketConnection())
@@ -55,11 +32,12 @@ namespace IrcSharp.Core.Tests.Unit
                 {
                     Assert.Fail("The event was never received.");
                 }
+                Assert.AreEqual("12345678", actual.Value);
             }
         }
 
         [TestMethod]
-        public async Task A_Nick_Message_Fires_A_Nick_Event()
+        public async Task A_Parsed_Nick_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
             using (var cm = new FakeSocketConnection())
@@ -78,11 +56,15 @@ namespace IrcSharp.Core.Tests.Unit
                 {
                     Assert.Fail("The event was never received.");
                 }
+                Assert.AreEqual("Test", actual.Original);
+                Assert.AreEqual("daniel", actual.Identity);
+                Assert.AreEqual("foo.bar.com", actual.Host);
+                Assert.AreEqual("NewNick", actual.New);
             }
         }
 
         [TestMethod]
-        public async Task A_Numeric_Response_Message_With_A_Code_Of_001_Fires_A_GenericNumericResponse_Message()
+        public async Task A_Parsed_Generic_Numeric_Response_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
             using (var cm = new FakeSocketConnection())
@@ -101,11 +83,13 @@ namespace IrcSharp.Core.Tests.Unit
                 {
                     Assert.Fail("The event was never received.");
                 }
+                Assert.AreEqual("001", actual.ResponseCode);
+                Assert.AreEqual("Welcome to the Internet Relay Network DBM", actual.ResponseText);
             }
         }
 
         [TestMethod]
-        public async Task A_Numeric_Response_Message_With_A_Code_Of_451_Fires_A_NotRegisteredResponse_Message()
+        public async Task A_Parsed_A_NotRegisteredResponse_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
             using (var cm = new FakeSocketConnection())
@@ -124,6 +108,8 @@ namespace IrcSharp.Core.Tests.Unit
                 {
                     Assert.Fail("The event was never received.");
                 }
+                Assert.AreEqual("JOIN", actual.Command);
+                Assert.AreEqual("Register first.", actual.Message);
             }
         }
     }

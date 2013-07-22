@@ -30,7 +30,7 @@ namespace IrcSharp.Core.Tests.Unit
 #pragma warning restore 1998
         {
             //Fire a fake "welcome" event so that the client starts sending commands normally
-            this.SendFakeMessage(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
+            this.SimulateMessageReceipt(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
             this.Connected = true;
         }
 
@@ -40,7 +40,7 @@ namespace IrcSharp.Core.Tests.Unit
 #pragma warning restore 1998
         {
             //Fire a fake "welcome" event so that the client starts sending commands normally
-            this.SendFakeMessage(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
+            this.SimulateMessageReceipt(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
             this.Connected = true;
         }
 
@@ -70,7 +70,7 @@ namespace IrcSharp.Core.Tests.Unit
         {
         }
 
-        public void SendFakeMessage(string fakeMessage)
+        public void SimulateMessageReceipt(string fakeMessage)
         {
             if (OnMessageReceived != null)
             {
