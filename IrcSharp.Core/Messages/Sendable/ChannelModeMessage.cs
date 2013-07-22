@@ -24,7 +24,11 @@ namespace IrcSharp.Core.Messages.Sendable
         public override string ToString()
         {
             var message = new StringBuilder();
-            message.AppendFormat("MODE {0} {1}", this.Channel, this.RawCommand);
+            message.AppendFormat("MODE {0}", this.Channel);
+            if (!string.IsNullOrWhiteSpace(this.RawCommand))
+            {
+                message.AppendFormat(" {0}", this.RawCommand);
+            }
             message.Append("\r\n");
             return message.ToString();
         }

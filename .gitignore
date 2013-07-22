@@ -2,6 +2,7 @@
 *.user
 *.suo
 *.psess
+stdout.txt
 bin/
 obj/
 TestResults/

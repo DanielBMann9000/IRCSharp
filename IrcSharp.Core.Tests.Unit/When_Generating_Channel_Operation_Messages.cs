@@ -272,14 +272,6 @@ namespace IrcSharp.Core.Tests.Unit
         }
 
         [TestMethod]
-        public void A_Mode_Message_With_A_Channel_Parameter_And_A_Single_Mode_Setting_Is_Successfully_Generated()
-        {
-            var expected = "MODE #helloworld\r\n";
-            ISendableMessage testMessage = new ChannelModeMessage("#helloworld");
-            Assert.AreEqual(expected, testMessage.ToString());
-        }
-
-        [TestMethod]
         public void A_Mode_Message_With_A_Channel_Parameter_And_A_Single_Mode_Change_With_No_Target_Is_Successfully_Generated()
         {
             var expected = "MODE #helloworld +s\r\n";
