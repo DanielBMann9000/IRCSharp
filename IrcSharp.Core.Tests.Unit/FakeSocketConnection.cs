@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading.Tasks;
 using IrcSharp.Core.Connectivity;
@@ -8,6 +9,7 @@ using IrcSharp.Core.Messages;
 
 namespace IrcSharp.Core.Tests.Unit
 {
+    [ExcludeFromCodeCoverage]
     public class FakeSocketConnection : ISocketConnection
     {
         private readonly List<string> messages = new List<string>();

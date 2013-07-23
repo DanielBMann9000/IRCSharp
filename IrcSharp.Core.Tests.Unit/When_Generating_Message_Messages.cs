@@ -1,4 +1,6 @@
-﻿using IrcSharp.Core.Messages;
+﻿using System.Diagnostics.CodeAnalysis;
+
+using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Sendable;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -7,6 +9,7 @@ namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
     // ReSharper disable ConvertToConstant.Local
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class When_Generating_Message_Messages
     {

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 
 using IrcSharp.Core.Connectivity;
@@ -9,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class When_Parsing_Received_Messages
     {

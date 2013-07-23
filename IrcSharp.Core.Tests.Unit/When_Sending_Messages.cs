@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 using IrcSharp.Core.Messages.Sendable;
 
@@ -7,6 +8,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class When_Sending_Messages
     {
@@ -164,6 +166,18 @@ namespace IrcSharp.Core.Tests.Unit
         public async Task OnPongMessageSent_Event_Fires()
         {
             await TestHelpers.RunSendableEventFiringTest(new PongMessage("bar"), (con, mre) => con.MessagePropagator.OnPongMessageSent += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnTopicMessageSending_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new TopicMessage("bar"), (con, mre) => con.MessagePropagator.OnTopicMessageSending += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnTopicMessageSent_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new TopicMessage("bar"), (con, mre) => con.MessagePropagator.OnTopicMessageSent += (sender, args) => mre.Set());
         }
 
     }

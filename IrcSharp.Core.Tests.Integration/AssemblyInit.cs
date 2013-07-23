@@ -1,9 +1,11 @@
 ﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IrcSharp.Core.Tests.Integration
 {
+    [ExcludeFromCodeCoverage]
     [TestClass]
     internal class AssemblyInit
     {

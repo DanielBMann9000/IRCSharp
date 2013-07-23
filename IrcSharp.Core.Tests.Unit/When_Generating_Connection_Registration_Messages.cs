@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 
 using IrcSharp.Core.Connectivity;
@@ -11,6 +12,7 @@ namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
     // ReSharper disable ConvertToConstant.Local
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class When_Generating_Connection_Registration_Messages
     {

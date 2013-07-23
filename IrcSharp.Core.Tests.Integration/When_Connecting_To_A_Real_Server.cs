@@ -1,4 +1,5 @@
 ﻿using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace IrcSharp.Core.Tests.Integration
 {
     // ReSharper disable InconsistentNaming
+    [ExcludeFromCodeCoverage]
     [TestClass]
     public class When_Interacting_With_A_Real_Server
     {
