@@ -66,6 +66,33 @@ namespace IrcSharp.Core.Tests.Unit
         }
 
         [TestMethod]
+        public async Task A_Parsed_Join_Message_Has_The_Appropriate_Properties_Filled()
+        {
+            var mre = new ManualResetEvent(false);
+            using (var cm = new FakeSocketConnection())
+            using (var con = new IrcConnection(cm))
+            {
+                JoinMessage actual = null;
+                con.MessagePropagator.OnJoinMessageReceived += (sender, args) =>
+                {
+                    actual = args;
+                    mre.Set();
+                };
+
+                await con.ConnectAsync("foo", "bar", "baz", 0);
+                cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com JOIN #helloworld");
+                if (!mre.WaitOne(1000))
+                {
+                    Assert.Fail("The event was never received.");
+                }
+                Assert.AreEqual("Test", actual.UserInfo.Nick);
+                Assert.AreEqual("daniel", actual.UserInfo.Identity);
+                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
+                Assert.AreEqual("#helloworld", actual.Channels[0]);
+            }
+        }
+
+        [TestMethod]
         public async Task A_Parsed_Generic_Numeric_Response_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);

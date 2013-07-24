@@ -4,14 +4,22 @@ using System.Linq;
 using System.Text;
 
 using IrcSharp.Core.Messages.Interfaces;
+using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages
 {
-    public class JoinMessage : ISendableMessage
+    public class JoinMessage : ISendableMessage, IReceivableMessage
     {
+        public IrcUserInfo UserInfo { get; private set; }
         public ReadOnlyCollection<string> Channels { get; private set; }
         public ReadOnlyCollection<string> Keys { get; private set; }
         public bool LeaveAllChannels { get; private set; }
+
+        internal JoinMessage(IrcUserInfo userInfo, string channel)
+        {
+            this.UserInfo = userInfo;
+            this.Channels = new ReadOnlyCollection<string>(new [] { channel });
+        }
 
         public JoinMessage(IList<string> channels = null, IList<string> keys = null)
         {

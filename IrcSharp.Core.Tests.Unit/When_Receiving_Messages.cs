@@ -84,6 +84,29 @@ namespace IrcSharp.Core.Tests.Unit
         }
 
         [TestMethod]
+        public async Task A_Join_Message_Fires_A_Join_Event()
+        {
+            var mre = new ManualResetEvent(false);
+            using (var cm = new FakeSocketConnection())
+            using (var con = new IrcConnection(cm))
+            {
+                JoinMessage actual = null;
+                con.MessagePropagator.OnJoinMessageReceived += (sender, args) =>
+                {
+                    actual = args;
+                    mre.Set();
+                };
+
+                await con.ConnectAsync("foo", "bar", "baz", 0);
+                cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com JOIN #helloworld");
+                if (!mre.WaitOne(1000))
+                {
+                    Assert.Fail("The event was never received.");
+                }
+            }
+        }
+
+        [TestMethod]
         public async Task A_Numeric_Response_Message_With_A_Code_Of_001_Fires_A_GenericNumericResponse_Message()
         {
             var mre = new ManualResetEvent(false);

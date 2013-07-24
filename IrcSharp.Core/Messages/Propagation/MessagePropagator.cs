@@ -44,6 +44,7 @@ namespace IrcSharp.Core.Messages.Propagation
         #region Channel Operations (3.2)
         public event EventHandler<JoinMessage> OnJoinMessageSending;
         public event EventHandler<JoinMessage> OnJoinMessageSent;
+        public event EventHandler<JoinMessage> OnJoinMessageReceived;
 
         public event EventHandler<PartMessage> OnPartMessageSending;
         public event EventHandler<PartMessage> OnPartMessageSent;
@@ -280,6 +281,18 @@ namespace IrcSharp.Core.Messages.Propagation
                 this.OnNickMessageReceived(this, new NickMessage(identity, tokenizedArguments[0]));
             }
         }
+
+        [ReceivedMessagePropagator("JOIN")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateJoinMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnJoinMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnJoinMessageReceived(this, new JoinMessage(identity, tokenizedArguments[0]));
+            }
+        }
+        
         #endregion Message Propagation
 
         // this method belongs somewhere else, and I'm not 100% sure it will tokenize every IRC message properly
