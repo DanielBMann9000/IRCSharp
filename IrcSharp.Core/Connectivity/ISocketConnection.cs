@@ -2,6 +2,7 @@
 using System.Net;
 using System.Threading.Tasks;
 using IrcSharp.Core.Messages;
+using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Connectivity
 {

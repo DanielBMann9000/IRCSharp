@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class InviteMessage : ISendableMessage
     {
@@ -11,7 +13,7 @@
             this.Channel = channel;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("INVITE {0} {1}\r\n", this.Nick, this.Channel);
         }

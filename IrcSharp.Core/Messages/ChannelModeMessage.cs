@@ -1,6 +1,8 @@
 ﻿using System.Text;
 
-namespace IrcSharp.Core.Messages.Sendable
+using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class ChannelModeMessage : ISendableMessage
     {
@@ -21,7 +23,7 @@ namespace IrcSharp.Core.Messages.Sendable
          * E.g. a "Secret" command is +s with no target, "+b *!*@*" is a ban for all users. not important for now.
          */
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             var message = new StringBuilder();
             message.AppendFormat("MODE {0}", this.Channel);

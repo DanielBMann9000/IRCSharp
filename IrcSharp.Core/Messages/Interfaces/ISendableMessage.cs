@@ -1,4 +1,4 @@
-﻿namespace IrcSharp.Core.Messages
+﻿namespace IrcSharp.Core.Messages.Interfaces
 {
     public interface ISendableMessage
     {

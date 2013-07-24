@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class ServiceMessage : ISendableMessage
     {
@@ -12,7 +14,7 @@
             this.ServiceInfo = info;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("SERVICE {0} * {1} 0 0 :{2}\r\n", this.ServiceNickname, this.Distribution, this.ServiceInfo);
         }

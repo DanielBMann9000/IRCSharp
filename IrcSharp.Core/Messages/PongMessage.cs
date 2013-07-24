@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class PongMessage : ISendableMessage
     {
@@ -8,7 +10,7 @@
             this.ResponseValue = responseValue;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("PONG {0}\r\n", this.ResponseValue);
         }

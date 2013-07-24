@@ -2,9 +2,8 @@
 using System.Net;
 using System.Threading.Tasks;
 using IrcSharp.Core.Messages;
+using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Messages.Propagation;
-using IrcSharp.Core.Messages.Receivable;
-using IrcSharp.Core.Messages.Sendable;
 
 namespace IrcSharp.Core.Connectivity
 {
@@ -60,7 +59,7 @@ namespace IrcSharp.Core.Connectivity
         {
             if (this.connectionManager.Connected)
             {
-                await this.SendMessageInternalAsync(new Messages.Sendable.NickMessage(nick));
+                await this.SendMessageInternalAsync(new Messages.NickMessage(nick));
                 await this.SendMessageInternalAsync(new UserMessage(nick, UserMessage.Mode.None, realName));
             }
         }

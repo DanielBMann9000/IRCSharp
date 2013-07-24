@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class OperMessage : ISendableMessage
     {
@@ -10,7 +12,7 @@
             this.Password = password;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("OPER {0} {1}\r\n", this.User, this.Password);
         }

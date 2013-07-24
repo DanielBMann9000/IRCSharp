@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class PassMessage : ISendableMessage
     {
@@ -9,7 +11,7 @@
             this.Password = password;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("PASS {0}\r\n", this.Password);
         }

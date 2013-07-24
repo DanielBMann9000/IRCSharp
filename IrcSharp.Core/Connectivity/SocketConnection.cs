@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 using IrcSharp.Core.Messages;
+using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Connectivity
 {

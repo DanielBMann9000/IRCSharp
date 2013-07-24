@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-using IrcSharp.Core.Messages.Sendable;
+using IrcSharp.Core.Messages;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

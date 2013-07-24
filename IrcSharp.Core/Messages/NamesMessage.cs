@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace IrcSharp.Core.Messages.Sendable
+namespace IrcSharp.Core.Messages
 {
     public class NamesMessage : BaseMultipleChannelWithOptionalTargetMessage
     {

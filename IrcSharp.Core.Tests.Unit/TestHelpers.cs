@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using IrcSharp.Core.Connectivity;
 using IrcSharp.Core.Messages;
+using IrcSharp.Core.Messages.Interfaces;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

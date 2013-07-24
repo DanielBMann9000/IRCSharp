@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace IrcSharp.Core.Messages.Sendable
+using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class PartMessage : ISendableMessage
     {
@@ -21,7 +23,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.PartingMessage = partingMessage;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             var message = new StringBuilder();
             message.AppendFormat("PART {0}", string.Join(",", this.Channels));

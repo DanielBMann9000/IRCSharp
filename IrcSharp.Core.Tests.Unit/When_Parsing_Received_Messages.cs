@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using IrcSharp.Core.Connectivity;
-using IrcSharp.Core.Messages.Receivable;
+using IrcSharp.Core.Messages;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -61,7 +61,7 @@ namespace IrcSharp.Core.Tests.Unit
                 Assert.AreEqual("Test", actual.UserInfo.Nick);
                 Assert.AreEqual("daniel", actual.UserInfo.Identity);
                 Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("NewNick", actual.New);
+                Assert.AreEqual("NewNick", actual.Nick);
             }
         }
 

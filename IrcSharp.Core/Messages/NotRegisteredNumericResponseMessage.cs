@@ -1,4 +1,4 @@
-﻿namespace IrcSharp.Core.Messages.Receivable
+﻿namespace IrcSharp.Core.Messages
 {
     public class NotRegisteredNumericResponseMessage : NumericReponseMessageBase
     {

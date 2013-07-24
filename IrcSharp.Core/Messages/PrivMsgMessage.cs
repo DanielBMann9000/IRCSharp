@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class PrivMsgMessage : ISendableMessage
     {
@@ -10,7 +12,7 @@
             this.Message = message;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("PRIVMSG {0} :{1}\r\n", this.MessageDestination, this.Message);
         }

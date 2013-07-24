@@ -1,8 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
 using IrcSharp.Core.Messages;
-using IrcSharp.Core.Messages.Sendable;
-using IrcSharp.Core.Model;
+using IrcSharp.Core.Messages.Interfaces;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

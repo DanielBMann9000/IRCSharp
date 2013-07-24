@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using IrcSharp.Core.Connectivity;
-using IrcSharp.Core.Messages.Receivable;
+using IrcSharp.Core.Messages;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

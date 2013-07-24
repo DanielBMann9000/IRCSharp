@@ -1,6 +1,8 @@
 ﻿using System.Text;
 
-namespace IrcSharp.Core.Messages.Sendable
+using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class TopicMessage : ISendableMessage
     {
@@ -22,7 +24,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.RemoveTopic = removeTopic;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             var message = new StringBuilder();
             message.AppendFormat("TOPIC {0}", this.Channel);

@@ -1,6 +1,8 @@
 ﻿using System.Text;
 
-namespace IrcSharp.Core.Messages.Sendable
+using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class QuitMessage : ISendableMessage
     {
@@ -15,7 +17,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.Reason = reason;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             var message = new StringBuilder();
             message.Append("QUIT");

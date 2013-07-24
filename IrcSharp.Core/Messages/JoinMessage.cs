@@ -3,7 +3,9 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace IrcSharp.Core.Messages.Sendable
+using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class JoinMessage : ISendableMessage
     {
@@ -31,7 +33,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.Keys = key != null ? new ReadOnlyCollection<string>(new List<string>{key}) : new ReadOnlyCollection<string>(new string[0]);
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             var joinMessage = new StringBuilder("JOIN ");
             if (this.LeaveAllChannels)

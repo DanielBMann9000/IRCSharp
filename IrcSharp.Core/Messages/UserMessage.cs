@@ -1,6 +1,8 @@
 ﻿using System;
 
-namespace IrcSharp.Core.Messages.Sendable
+using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class UserMessage : ISendableMessage
     {
@@ -15,7 +17,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.RealName = realName;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("USER {0} {1} * :{2}\r\n", this.UserName, (int)this.UserMode, this.RealName);
         }

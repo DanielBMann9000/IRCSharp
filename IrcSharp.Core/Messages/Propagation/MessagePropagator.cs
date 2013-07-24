@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
+using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages.Propagation
@@ -8,70 +10,70 @@ namespace IrcSharp.Core.Messages.Propagation
     public class MessagePropagator
     {
         #region Events
-        public event EventHandler<Receivable.UnknownMessage> OnUnknownMessage;
+        public event EventHandler<UnknownMessage> OnUnknownMessage;
         #region Message Details (3)
         #region Connection Registration  (3.1)
 
-        public event EventHandler<Sendable.PassMessage> OnPassMessageSending;
-        public event EventHandler<Sendable.PassMessage> OnPassMessageSent;
+        public event EventHandler<PassMessage> OnPassMessageSending;
+        public event EventHandler<PassMessage> OnPassMessageSent;
 
-        public event EventHandler<Receivable.NickMessage> OnNickMessageReceived;
-        public event EventHandler<Sendable.NickMessage> OnNickMessageSending;
-        public event EventHandler<Sendable.NickMessage> OnNickMessageSent;
+        public event EventHandler<NickMessage> OnNickMessageReceived;
+        public event EventHandler<NickMessage> OnNickMessageSending;
+        public event EventHandler<NickMessage> OnNickMessageSent;
 
-        public event EventHandler<Sendable.UserMessage> OnUserMessageSending;
-        public event EventHandler<Sendable.UserMessage> OnUserMessageSent;
+        public event EventHandler<UserMessage> OnUserMessageSending;
+        public event EventHandler<UserMessage> OnUserMessageSent;
 
-        public event EventHandler<Sendable.OperMessage> OnOperMessageSending;
-        public event EventHandler<Sendable.OperMessage> OnOperMessageSent;
+        public event EventHandler<OperMessage> OnOperMessageSending;
+        public event EventHandler<OperMessage> OnOperMessageSent;
 
-        public event EventHandler<Sendable.UserModeMessage> OnUserModeMessageSending;
-        public event EventHandler<Sendable.UserModeMessage> OnUserModeMessageSent;
+        public event EventHandler<UserModeMessage> OnUserModeMessageSending;
+        public event EventHandler<UserModeMessage> OnUserModeMessageSent;
 
-        public event EventHandler<Sendable.ServiceMessage> OnServiceMessageSending;
-        public event EventHandler<Sendable.ServiceMessage> OnServiceMessageSent;
+        public event EventHandler<ServiceMessage> OnServiceMessageSending;
+        public event EventHandler<ServiceMessage> OnServiceMessageSent;
 
-        public event EventHandler<Sendable.QuitMessage> OnQuitMessageSending;
-        public event EventHandler<Sendable.QuitMessage> OnQuitMessageSent;
+        public event EventHandler<QuitMessage> OnQuitMessageSending;
+        public event EventHandler<QuitMessage> OnQuitMessageSent;
 
-        public event EventHandler<Sendable.SquitMessage> OnSquitMessageSending;
-        public event EventHandler<Sendable.SquitMessage> OnSquitMessageSent;
+        public event EventHandler<SquitMessage> OnSquitMessageSending;
+        public event EventHandler<SquitMessage> OnSquitMessageSent;
 
         #endregion Connection Registration (3.1)
 
         #region Channel Operations (3.2)
-        public event EventHandler<Sendable.JoinMessage> OnJoinMessageSending;
-        public event EventHandler<Sendable.JoinMessage> OnJoinMessageSent;
+        public event EventHandler<JoinMessage> OnJoinMessageSending;
+        public event EventHandler<JoinMessage> OnJoinMessageSent;
 
-        public event EventHandler<Sendable.PartMessage> OnPartMessageSending;
-        public event EventHandler<Sendable.PartMessage> OnPartMessageSent;
+        public event EventHandler<PartMessage> OnPartMessageSending;
+        public event EventHandler<PartMessage> OnPartMessageSent;
 
-        public event EventHandler<Sendable.ChannelModeMessage> OnChannelModeMessageSending;
-        public event EventHandler<Sendable.ChannelModeMessage> OnChannelModeMessageSent;
+        public event EventHandler<ChannelModeMessage> OnChannelModeMessageSending;
+        public event EventHandler<ChannelModeMessage> OnChannelModeMessageSent;
 
-        public event EventHandler<Sendable.TopicMessage> OnTopicMessageSending;
-        public event EventHandler<Sendable.TopicMessage> OnTopicMessageSent;
+        public event EventHandler<TopicMessage> OnTopicMessageSending;
+        public event EventHandler<TopicMessage> OnTopicMessageSent;
 
-        public event EventHandler<Sendable.NamesMessage> OnNamesMessageSending;
-        public event EventHandler<Sendable.NamesMessage> OnNamesMessageSent;
+        public event EventHandler<NamesMessage> OnNamesMessageSending;
+        public event EventHandler<NamesMessage> OnNamesMessageSent;
 
-        public event EventHandler<Sendable.ListMessage> OnListMessageSending;
-        public event EventHandler<Sendable.ListMessage> OnListMessageSent;
+        public event EventHandler<ListMessage> OnListMessageSending;
+        public event EventHandler<ListMessage> OnListMessageSent;
 
-        public event EventHandler<Sendable.InviteMessage> OnInviteMessageSending;
-        public event EventHandler<Sendable.InviteMessage> OnInviteMessageSent;
+        public event EventHandler<InviteMessage> OnInviteMessageSending;
+        public event EventHandler<InviteMessage> OnInviteMessageSent;
 
-        public event EventHandler<Sendable.KickMessage> OnKickMessageSending;
-        public event EventHandler<Sendable.KickMessage> OnKickMessageSent;
+        public event EventHandler<KickMessage> OnKickMessageSending;
+        public event EventHandler<KickMessage> OnKickMessageSent;
         
         #endregion Channel Operations (3.2)
 
         #region Sending messages (3.3)
-        public event EventHandler<Sendable.PrivMsgMessage> OnPrivMsgMessageSending;
-        public event EventHandler<Sendable.PrivMsgMessage> OnPrivMsgMessageSent;
+        public event EventHandler<PrivMsgMessage> OnPrivMsgMessageSending;
+        public event EventHandler<PrivMsgMessage> OnPrivMsgMessageSent;
 
-        public event EventHandler<Sendable.NoticeMessage> OnNoticeMessageSending;
-        public event EventHandler<Sendable.NoticeMessage> OnNoticeMessageSent;
+        public event EventHandler<NoticeMessage> OnNoticeMessageSending;
+        public event EventHandler<NoticeMessage> OnNoticeMessageSent;
         #endregion Sending messages (3.3)
 
         #region Server queries and commands (3.4)
@@ -84,19 +86,19 @@ namespace IrcSharp.Core.Messages.Propagation
         #endregion User based queries (3.6)
 
         #region Miscellaneous messages (3.7)
-        public event EventHandler<Receivable.PingMessage> OnPingMessageReceived;
-        public event EventHandler<Sendable.PongMessage> OnPongMessageSending;
-        public event EventHandler<Sendable.PongMessage> OnPongMessageSent;
+        public event EventHandler<PingMessage> OnPingMessageReceived;
+        public event EventHandler<PongMessage> OnPongMessageSending;
+        public event EventHandler<PongMessage> OnPongMessageSent;
         #endregion Miscellaneous messages (3.7)
         #endregion Message Details (3)
 
         #region Replies (5)
         #region Command responses (5.1)
-        public event EventHandler<Receivable.GenericNumericResponseMessage> OnWelcomeResponseMessageReceived;
+        public event EventHandler<GenericNumericResponseMessage> OnWelcomeResponseMessageReceived;
         #endregion Command responses (5.1)
 
         #region Error replies (5.2)
-        public event EventHandler<Receivable.NotRegisteredNumericResponseMessage> OnNotRegisteredResponseMessageReceived;
+        public event EventHandler<NotRegisteredNumericResponseMessage> OnNotRegisteredResponseMessageReceived;
         #endregion Error replies (5.2)
 
         #endregion Replies (5)
@@ -115,48 +117,48 @@ namespace IrcSharp.Core.Messages.Propagation
             //not a fan of this, but i want sending/sent message propagation in place even if it's not great. 
             this.sendingPropagators = new Dictionary<Type, Action<ISendableMessage>>
                                   {
-                                      { typeof(Sendable.PassMessage), msg => this.RouteSendableMessage(msg, this.OnPassMessageSending) },
-                                      { typeof(Sendable.NickMessage), msg => this.RouteSendableMessage(msg, this.OnNickMessageSending) },
-                                      { typeof(Sendable.UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSending) },
-                                      { typeof(Sendable.JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSending) },
-                                      { typeof(Sendable.PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSending) },
-                                      { typeof(Sendable.ChannelModeMessage), msg => this.RouteSendableMessage(msg, this.OnChannelModeMessageSending) },
-                                      { typeof(Sendable.TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSending) },
-                                      { typeof(Sendable.NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSending) },
-                                      { typeof(Sendable.ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSending) },
-                                      { typeof(Sendable.InviteMessage), msg => this.RouteSendableMessage(msg, this.OnInviteMessageSending) },
-                                      { typeof(Sendable.KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSending) },
-                                      { typeof(Sendable.PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSending) },
-                                      { typeof(Sendable.NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSending) },
-                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSending) },
-                                      { typeof(Sendable.OperMessage), msg => this.RouteSendableMessage(msg, this.OnOperMessageSending) },
-                                      { typeof(Sendable.UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSending) },
-                                      { typeof(Sendable.ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSending) },
-                                      { typeof(Sendable.QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSending) },
-                                      { typeof(Sendable.SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSending) }
+                                      { typeof(PassMessage), msg => this.RouteSendableMessage(msg, this.OnPassMessageSending) },
+                                      { typeof(NickMessage), msg => this.RouteSendableMessage(msg, this.OnNickMessageSending) },
+                                      { typeof(UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSending) },
+                                      { typeof(JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSending) },
+                                      { typeof(PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSending) },
+                                      { typeof(ChannelModeMessage), msg => this.RouteSendableMessage(msg, this.OnChannelModeMessageSending) },
+                                      { typeof(TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSending) },
+                                      { typeof(NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSending) },
+                                      { typeof(ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSending) },
+                                      { typeof(InviteMessage), msg => this.RouteSendableMessage(msg, this.OnInviteMessageSending) },
+                                      { typeof(KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSending) },
+                                      { typeof(PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSending) },
+                                      { typeof(NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSending) },
+                                      { typeof(PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSending) },
+                                      { typeof(OperMessage), msg => this.RouteSendableMessage(msg, this.OnOperMessageSending) },
+                                      { typeof(UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSending) },
+                                      { typeof(ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSending) },
+                                      { typeof(QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSending) },
+                                      { typeof(SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSending) }
                                   };
 
             this.sentPropagators = new Dictionary<Type, Action<ISendableMessage>>
                                   {
-                                      { typeof(Sendable.PassMessage), msg => this.RouteSendableMessage(msg, this.OnPassMessageSent) },
-                                      { typeof(Sendable.NickMessage), msg => this.RouteSendableMessage(msg, this.OnNickMessageSent) },
-                                      { typeof(Sendable.UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSent) },
-                                      { typeof(Sendable.JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSent) },
-                                      { typeof(Sendable.PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSent) },
-                                      { typeof(Sendable.ChannelModeMessage), msg => this.RouteSendableMessage(msg, this.OnChannelModeMessageSent) },
-                                      { typeof(Sendable.TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSent) },
-                                      { typeof(Sendable.NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSent) },
-                                      { typeof(Sendable.ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSent) },
-                                      { typeof(Sendable.InviteMessage), msg => this.RouteSendableMessage(msg, this.OnInviteMessageSent) },
-                                      { typeof(Sendable.KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSent) },
-                                      { typeof(Sendable.PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSent) },
-                                      { typeof(Sendable.NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSent) },
-                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSent) },
-                                      { typeof(Sendable.OperMessage), msg => this.RouteSendableMessage(msg, this.OnOperMessageSent) },
-                                      { typeof(Sendable.UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSent) },
-                                      { typeof(Sendable.ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSent) },
-                                      { typeof(Sendable.QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSent) },
-                                      { typeof(Sendable.SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSent) }
+                                      { typeof(PassMessage), msg => this.RouteSendableMessage(msg, this.OnPassMessageSent) },
+                                      { typeof(NickMessage), msg => this.RouteSendableMessage(msg, this.OnNickMessageSent) },
+                                      { typeof(UserMessage), msg => this.RouteSendableMessage(msg, this.OnUserMessageSent) },
+                                      { typeof(JoinMessage), msg => this.RouteSendableMessage(msg, this.OnJoinMessageSent) },
+                                      { typeof(PartMessage), msg => this.RouteSendableMessage(msg, this.OnPartMessageSent) },
+                                      { typeof(ChannelModeMessage), msg => this.RouteSendableMessage(msg, this.OnChannelModeMessageSent) },
+                                      { typeof(TopicMessage), msg => this.RouteSendableMessage(msg, this.OnTopicMessageSent) },
+                                      { typeof(NamesMessage), msg => this.RouteSendableMessage(msg, this.OnNamesMessageSent) },
+                                      { typeof(ListMessage), msg => this.RouteSendableMessage(msg, this.OnListMessageSent) },
+                                      { typeof(InviteMessage), msg => this.RouteSendableMessage(msg, this.OnInviteMessageSent) },
+                                      { typeof(KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSent) },
+                                      { typeof(PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSent) },
+                                      { typeof(NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSent) },
+                                      { typeof(PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSent) },
+                                      { typeof(OperMessage), msg => this.RouteSendableMessage(msg, this.OnOperMessageSent) },
+                                      { typeof(UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSent) },
+                                      { typeof(ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSent) },
+                                      { typeof(QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSent) },
+                                      { typeof(SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSent) }
                                   };
 
         }
@@ -201,7 +203,7 @@ namespace IrcSharp.Core.Messages.Propagation
             {
                 if (this.OnUnknownMessage != null)
                 {
-                    this.OnUnknownMessage(this, new Receivable.UnknownMessage(message));
+                    this.OnUnknownMessage(this, new UnknownMessage(message));
                 }
             }
             else
@@ -241,7 +243,7 @@ namespace IrcSharp.Core.Messages.Propagation
             if (this.OnWelcomeResponseMessageReceived != null)
             {
                 var startIndex = arguments.IndexOf(":", StringComparison.Ordinal);
-                this.OnWelcomeResponseMessageReceived(this, new Receivable.GenericNumericResponseMessage("001", arguments.Substring(startIndex + 1, arguments.Length - startIndex - 1)));
+                this.OnWelcomeResponseMessageReceived(this, new GenericNumericResponseMessage("001", arguments.Substring(startIndex + 1, arguments.Length - startIndex - 1)));
             }
         }
 
@@ -253,7 +255,7 @@ namespace IrcSharp.Core.Messages.Propagation
             if (this.OnNotRegisteredResponseMessageReceived != null)
             {
                 var args = TokenizeArguments(arguments);
-                this.OnNotRegisteredResponseMessageReceived(this, new Receivable.NotRegisteredNumericResponseMessage(args[1], args[2]));
+                this.OnNotRegisteredResponseMessageReceived(this, new NotRegisteredNumericResponseMessage(args[1], args[2]));
             }
         }
 
@@ -264,7 +266,7 @@ namespace IrcSharp.Core.Messages.Propagation
         {
             if (this.OnPingMessageReceived != null)
             {
-                this.OnPingMessageReceived(this, new Receivable.PingMessage(arguments.Remove(0, 1)));
+                this.OnPingMessageReceived(this, new PingMessage(arguments.Remove(0, 1)));
             }
         }
 
@@ -275,7 +277,7 @@ namespace IrcSharp.Core.Messages.Propagation
             if (this.OnNickMessageReceived != null)
             {
                 var tokenizedArguments = TokenizeArguments(arguments);
-                this.OnNickMessageReceived(this, new Receivable.NickMessage(identity, tokenizedArguments[0]));
+                this.OnNickMessageReceived(this, new NickMessage(identity, tokenizedArguments[0]));
             }
         }
         #endregion Message Propagation

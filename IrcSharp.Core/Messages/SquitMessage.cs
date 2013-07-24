@@ -1,4 +1,6 @@
-﻿namespace IrcSharp.Core.Messages.Sendable
+﻿using IrcSharp.Core.Messages.Interfaces;
+
+namespace IrcSharp.Core.Messages
 {
     public class SquitMessage : ISendableMessage
     {
@@ -12,7 +14,7 @@
             this.Reason = reason;
         }
 
-        public string ToMessage()
+        string ISendableMessage.ToMessage()
         {
             return string.Format("SQUIT {0} :{1}\r\n", this.Server, this.Reason);
         }
