@@ -2,5 +2,6 @@
 {
     public interface ISendableMessage
     {
+        string ToMessage();
     }
 }

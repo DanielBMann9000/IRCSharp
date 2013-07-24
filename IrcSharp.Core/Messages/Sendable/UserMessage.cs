@@ -15,7 +15,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.RealName = realName;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("USER {0} {1} * :{2}\r\n", this.UserName, (int)this.UserMode, this.RealName);
         }

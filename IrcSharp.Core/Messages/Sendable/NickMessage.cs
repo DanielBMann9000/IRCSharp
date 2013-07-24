@@ -9,7 +9,7 @@
             this.Nick = newNick;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("NICK {0}\r\n", this.Nick);
         }

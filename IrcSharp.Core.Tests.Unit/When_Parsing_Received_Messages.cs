@@ -58,9 +58,9 @@ namespace IrcSharp.Core.Tests.Unit
                 {
                     Assert.Fail("The event was never received.");
                 }
-                Assert.AreEqual("Test", actual.Original);
-                Assert.AreEqual("daniel", actual.Identity);
-                Assert.AreEqual("foo.bar.com", actual.Host);
+                Assert.AreEqual("Test", actual.UserInfo.Nick);
+                Assert.AreEqual("daniel", actual.UserInfo.Identity);
+                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
                 Assert.AreEqual("NewNick", actual.New);
             }
         }

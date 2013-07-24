@@ -9,7 +9,7 @@
             this.Password = password;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("PASS {0}\r\n", this.Password);
         }

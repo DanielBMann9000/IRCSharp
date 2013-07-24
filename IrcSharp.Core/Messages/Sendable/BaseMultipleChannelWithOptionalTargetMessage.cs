@@ -31,7 +31,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.Target = target;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             var message = new StringBuilder();
             message.Append(this.messageName);

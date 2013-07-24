@@ -22,7 +22,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.RemoveTopic = removeTopic;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             var message = new StringBuilder();
             message.AppendFormat("TOPIC {0}", this.Channel);

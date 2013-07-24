@@ -4,17 +4,13 @@ namespace IrcSharp.Core.Messages.Receivable
 {
     public class NickMessage : IReceivableMessage
     {
-        public string Original { get; private set; }
+        public IrcUserInfo UserInfo { get; private set; }
         public string New { get; private set; }
-        public string Identity { get; private set; }
-        public string Host { get; private set; }
 
         public NickMessage(IrcUserInfo userIdentity, string newNick)
         {
-            this.Original = userIdentity.Nick;
+            this.UserInfo = userIdentity;
             this.New = newNick;
-            this.Identity = userIdentity.Identity;
-            this.Host = userIdentity.Host;
         }
     }
 }

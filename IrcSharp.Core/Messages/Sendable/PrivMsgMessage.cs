@@ -10,7 +10,7 @@
             this.Message = message;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("PRIVMSG {0} :{1}\r\n", this.MessageDestination, this.Message);
         }

@@ -52,9 +52,14 @@
     <Compile Include="Messages\Sendable\ChannelModeMessage.cs" />
     <Compile Include="Messages\Sendable\NamesMessage.cs" />
     <Compile Include="Messages\Sendable\NoticeMessage.cs" />
+    <Compile Include="Messages\Sendable\OperMessage.cs" />
     <Compile Include="Messages\Sendable\PartMessage.cs" />
     <Compile Include="Messages\Sendable\PrivMsgMessage.cs" />
+    <Compile Include="Messages\Sendable\QuitMessage.cs" />
+    <Compile Include="Messages\Sendable\ServiceMessage.cs" />
+    <Compile Include="Messages\Sendable\SquitMessage.cs" />
     <Compile Include="Messages\Sendable\TopicMessage.cs" />
+    <Compile Include="Messages\Sendable\UserModeMessage.cs" />
     <Compile Include="Model\IrcUserInfo.cs" />
     <Compile Include="Messages\Propagation\ReceivedMessagePropagatorAttribute.cs" />
     <Compile Include="Messages\Receivable\GenericNumericResponseMessage.cs" />

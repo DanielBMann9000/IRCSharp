@@ -48,7 +48,7 @@ namespace IrcSharp.Core.Connectivity
 
         public async Task SendMessageAsync(ISendableMessage sendableMessage)
         {
-            var message = sendableMessage.ToString();
+            var message = sendableMessage.ToMessage();
             await this.outgoingMessageStream.WriteAsync(message);
             this.RaiseMessageSentEvent(message);
         }

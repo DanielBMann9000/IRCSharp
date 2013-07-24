@@ -47,7 +47,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.Message = message;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             var message = new StringBuilder();
             message.Append("KICK ");

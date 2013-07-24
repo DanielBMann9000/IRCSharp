@@ -10,7 +10,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.Message = message;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("NOTICE {0} :{1}\r\n", this.MessageDestination, this.Message);
         }

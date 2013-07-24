@@ -56,9 +56,9 @@ namespace IrcSharp.Core.Tests.Unit
             }
             if (this.OnMessageSent != null)
             {
-                this.OnMessageSent(this, new MessageEventArgs { Message = message.ToString() });
+                this.OnMessageSent(this, new MessageEventArgs { Message = message.ToMessage() });
             }
-            messages.Add(message.ToString());
+            messages.Add(message.ToMessage());
         }
 
 #pragma warning disable 1998

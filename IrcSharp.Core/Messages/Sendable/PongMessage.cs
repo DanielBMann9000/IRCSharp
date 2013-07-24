@@ -8,7 +8,7 @@
             this.ResponseValue = responseValue;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("PONG {0}\r\n", this.ResponseValue);
         }

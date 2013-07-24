@@ -180,5 +180,64 @@ namespace IrcSharp.Core.Tests.Unit
             await TestHelpers.RunSendableEventFiringTest(new TopicMessage("bar"), (con, mre) => con.MessagePropagator.OnTopicMessageSent += (sender, args) => mre.Set());
         }
 
+        [TestMethod]
+        public async Task OnOperMessageSending_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new OperMessage("user", "pass"), (con, mre) => con.MessagePropagator.OnOperMessageSending += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnOperMessageSent_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new OperMessage("user", "pass"), (con, mre) => con.MessagePropagator.OnOperMessageSent += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnUserModeMessageSending_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new UserModeMessage("user", "pass"), (con, mre) => con.MessagePropagator.OnUserModeMessageSending += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnUserModeMessageSent_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new UserModeMessage("user", "pass"), (con, mre) => con.MessagePropagator.OnUserModeMessageSent += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnServiceMessageSending_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new ServiceMessage("nickname", "distribution", "info"), (con, mre) => con.MessagePropagator.OnServiceMessageSending += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnServiceMessageSent_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new ServiceMessage("nickname", "distribution", "info"), (con, mre) => con.MessagePropagator.OnServiceMessageSent += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnQuitMessageSending_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new QuitMessage(), (con, mre) => con.MessagePropagator.OnQuitMessageSending += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnQuitMessageSent_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new QuitMessage(), (con, mre) => con.MessagePropagator.OnQuitMessageSent += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnSquitMessageSending_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new SquitMessage("foo", "bar"), (con, mre) => con.MessagePropagator.OnSquitMessageSending += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
+        public async Task OnSquitMessageSent_Event_Fires()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new SquitMessage("foo", "bar"), (con, mre) => con.MessagePropagator.OnSquitMessageSent += (sender, args) => mre.Set());
+        }
     }
 }

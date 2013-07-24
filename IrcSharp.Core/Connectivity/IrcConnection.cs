@@ -81,7 +81,7 @@ namespace IrcSharp.Core.Connectivity
 
             if (this.OnRawMessageSent != null)
             {
-                this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToString()));
+                this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToMessage()));
             }
             this.MessagePropagator.RouteSendingMessage(messageToSend);
             await this.connectionManager.SendMessageAsync(messageToSend);
@@ -93,7 +93,7 @@ namespace IrcSharp.Core.Connectivity
         {
             if (this.OnRawMessageSent != null)
             {
-                this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToString()));
+                this.OnRawMessageSent(this, new UnknownMessage(messageToSend.ToMessage()));
             }
             await this.connectionManager.SendMessageAsync(messageToSend);
         }

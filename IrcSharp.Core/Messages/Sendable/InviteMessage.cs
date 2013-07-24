@@ -11,7 +11,7 @@
             this.Channel = channel;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             return string.Format("INVITE {0} {1}\r\n", this.Nick, this.Channel);
         }

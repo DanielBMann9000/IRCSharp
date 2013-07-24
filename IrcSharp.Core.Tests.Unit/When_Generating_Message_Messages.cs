@@ -18,7 +18,7 @@ namespace IrcSharp.Core.Tests.Unit
         {
             var expected = "PRIVMSG DestinationUser :This sure is a message!\r\n";
             ISendableMessage testMessage = new PrivMsgMessage("DestinationUser", "This sure is a message!");
-            Assert.AreEqual(expected, testMessage.ToString());
+            Assert.AreEqual(expected, testMessage.ToMessage());
         }
 
         [TestMethod]
@@ -26,7 +26,7 @@ namespace IrcSharp.Core.Tests.Unit
         {
             var expected = "PRIVMSG #destinationchannel :This sure is a message!\r\n";
             ISendableMessage testMessage = new PrivMsgMessage("#destinationchannel", "This sure is a message!");
-            Assert.AreEqual(expected, testMessage.ToString());
+            Assert.AreEqual(expected, testMessage.ToMessage());
         }
 
         [TestMethod]
@@ -34,7 +34,7 @@ namespace IrcSharp.Core.Tests.Unit
         {
             var expected = "NOTICE DestinationUser :This sure is a notice!\r\n";
             ISendableMessage testMessage = new NoticeMessage("DestinationUser", "This sure is a notice!");
-            Assert.AreEqual(expected, testMessage.ToString());
+            Assert.AreEqual(expected, testMessage.ToMessage());
         }
 
         [TestMethod]
@@ -42,7 +42,7 @@ namespace IrcSharp.Core.Tests.Unit
         {
             var expected = "NOTICE #destinationchannel :This sure is a notice!\r\n";
             ISendableMessage testMessage = new NoticeMessage("#destinationchannel", "This sure is a notice!");
-            Assert.AreEqual(expected, testMessage.ToString());
+            Assert.AreEqual(expected, testMessage.ToMessage());
         }
     }
 }

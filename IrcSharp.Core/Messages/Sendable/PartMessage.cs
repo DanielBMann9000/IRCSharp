@@ -21,7 +21,7 @@ namespace IrcSharp.Core.Messages.Sendable
             this.PartingMessage = partingMessage;
         }
 
-        public override string ToString()
+        public string ToMessage()
         {
             var message = new StringBuilder();
             message.AppendFormat("PART {0}", string.Join(",", this.Channels));

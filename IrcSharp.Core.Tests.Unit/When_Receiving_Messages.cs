@@ -128,5 +128,6 @@ namespace IrcSharp.Core.Tests.Unit
                 }
             }
         }
+
     }
 }

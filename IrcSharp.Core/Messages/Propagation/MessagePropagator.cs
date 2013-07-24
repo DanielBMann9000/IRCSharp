@@ -22,6 +22,21 @@ namespace IrcSharp.Core.Messages.Propagation
         public event EventHandler<Sendable.UserMessage> OnUserMessageSending;
         public event EventHandler<Sendable.UserMessage> OnUserMessageSent;
 
+        public event EventHandler<Sendable.OperMessage> OnOperMessageSending;
+        public event EventHandler<Sendable.OperMessage> OnOperMessageSent;
+
+        public event EventHandler<Sendable.UserModeMessage> OnUserModeMessageSending;
+        public event EventHandler<Sendable.UserModeMessage> OnUserModeMessageSent;
+
+        public event EventHandler<Sendable.ServiceMessage> OnServiceMessageSending;
+        public event EventHandler<Sendable.ServiceMessage> OnServiceMessageSent;
+
+        public event EventHandler<Sendable.QuitMessage> OnQuitMessageSending;
+        public event EventHandler<Sendable.QuitMessage> OnQuitMessageSent;
+
+        public event EventHandler<Sendable.SquitMessage> OnSquitMessageSending;
+        public event EventHandler<Sendable.SquitMessage> OnSquitMessageSent;
+
         #endregion Connection Registration (3.1)
 
         #region Channel Operations (3.2)
@@ -113,7 +128,12 @@ namespace IrcSharp.Core.Messages.Propagation
                                       { typeof(Sendable.KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSending) },
                                       { typeof(Sendable.PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSending) },
                                       { typeof(Sendable.NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSending) },
-                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSending) }
+                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSending) },
+                                      { typeof(Sendable.OperMessage), msg => this.RouteSendableMessage(msg, this.OnOperMessageSending) },
+                                      { typeof(Sendable.UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSending) },
+                                      { typeof(Sendable.ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSending) },
+                                      { typeof(Sendable.QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSending) },
+                                      { typeof(Sendable.SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSending) }
                                   };
 
             this.sentPropagators = new Dictionary<Type, Action<ISendableMessage>>
@@ -131,7 +151,12 @@ namespace IrcSharp.Core.Messages.Propagation
                                       { typeof(Sendable.KickMessage), msg => this.RouteSendableMessage(msg, this.OnKickMessageSent) },
                                       { typeof(Sendable.PrivMsgMessage), msg => this.RouteSendableMessage(msg, this.OnPrivMsgMessageSent) },
                                       { typeof(Sendable.NoticeMessage), msg => this.RouteSendableMessage(msg, this.OnNoticeMessageSent) },
-                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSent) }
+                                      { typeof(Sendable.PongMessage), msg => this.RouteSendableMessage(msg, this.OnPongMessageSent) },
+                                      { typeof(Sendable.OperMessage), msg => this.RouteSendableMessage(msg, this.OnOperMessageSent) },
+                                      { typeof(Sendable.UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSent) },
+                                      { typeof(Sendable.ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSent) },
+                                      { typeof(Sendable.QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSent) },
+                                      { typeof(Sendable.SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSent) }
                                   };
 
         }
