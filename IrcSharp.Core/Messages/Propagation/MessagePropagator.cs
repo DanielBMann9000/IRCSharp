@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.AccessControl;
 
 using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
@@ -35,9 +36,11 @@ namespace IrcSharp.Core.Messages.Propagation
 
         public event EventHandler<QuitMessage> OnQuitMessageSending;
         public event EventHandler<QuitMessage> OnQuitMessageSent;
+        public event EventHandler<QuitMessage> OnQuitMessageReceived;
 
         public event EventHandler<SquitMessage> OnSquitMessageSending;
         public event EventHandler<SquitMessage> OnSquitMessageSent;
+        public event EventHandler<SquitMessage> OnSquitMessageReceived;
 
         #endregion Connection Registration (3.1)
 
@@ -48,12 +51,15 @@ namespace IrcSharp.Core.Messages.Propagation
 
         public event EventHandler<PartMessage> OnPartMessageSending;
         public event EventHandler<PartMessage> OnPartMessageSent;
+        public event EventHandler<PartMessage> OnPartMessageReceived;
 
         public event EventHandler<ChannelModeMessage> OnChannelModeMessageSending;
         public event EventHandler<ChannelModeMessage> OnChannelModeMessageSent;
+        public event EventHandler<ChannelModeMessage> OnChannelModeMessageReceived;
 
         public event EventHandler<TopicMessage> OnTopicMessageSending;
         public event EventHandler<TopicMessage> OnTopicMessageSent;
+        public event EventHandler<TopicMessage> OnTopicMessageReceived;
 
         public event EventHandler<NamesMessage> OnNamesMessageSending;
         public event EventHandler<NamesMessage> OnNamesMessageSent;
@@ -63,18 +69,22 @@ namespace IrcSharp.Core.Messages.Propagation
 
         public event EventHandler<InviteMessage> OnInviteMessageSending;
         public event EventHandler<InviteMessage> OnInviteMessageSent;
+        public event EventHandler<InviteMessage> OnInviteMessageReceived;
 
         public event EventHandler<KickMessage> OnKickMessageSending;
         public event EventHandler<KickMessage> OnKickMessageSent;
+        public event EventHandler<KickMessage> OnKickMessageReceived;
         
         #endregion Channel Operations (3.2)
 
         #region Sending messages (3.3)
         public event EventHandler<PrivMsgMessage> OnPrivMsgMessageSending;
         public event EventHandler<PrivMsgMessage> OnPrivMsgMessageSent;
+        public event EventHandler<PrivMsgMessage> OnPrivMsgMessageReceived;
 
         public event EventHandler<NoticeMessage> OnNoticeMessageSending;
         public event EventHandler<NoticeMessage> OnNoticeMessageSent;
+        public event EventHandler<NoticeMessage> OnNoticeMessageReceived;
         #endregion Sending messages (3.3)
 
         #region Server queries and commands (3.4)
@@ -174,7 +184,12 @@ namespace IrcSharp.Core.Messages.Propagation
             {
                 var originator = message.Substring(1, message.IndexOf(" ", StringComparison.Ordinal) - 1);
                 command = message.Split(' ').Skip(1).Take(1).First();
-                commandArguments = message.Substring(message.IndexOf(command, StringComparison.Ordinal) + command.Length + 1);
+                var commandStart = message.IndexOf(command, StringComparison.Ordinal);
+
+                if (commandStart + command.Length + 1 < message.Length)
+                {
+                    commandArguments = message.Substring(commandStart + command.Length + 1);
+                }
                 if (originator.Contains("!") && originator.Contains("@"))
                 {
                     var exclaimationLocation = originator.IndexOf("!", StringComparison.Ordinal);
@@ -290,6 +305,134 @@ namespace IrcSharp.Core.Messages.Propagation
             {
                 var tokenizedArguments = TokenizeArguments(arguments);
                 this.OnJoinMessageReceived(this, new JoinMessage(identity, tokenizedArguments[0]));
+            }
+        }
+
+        [ReceivedMessagePropagator("PART")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagatePartMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnPartMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                if (tokenizedArguments.Count > 1)
+                {
+                    this.OnPartMessageReceived(this, new PartMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+                }
+                else
+                {
+                    this.OnPartMessageReceived(this, new PartMessage(identity, tokenizedArguments[0]));
+                }
+                
+            }
+        }
+
+        [ReceivedMessagePropagator("MODE")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateChannelModeMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnChannelModeMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnChannelModeMessageReceived(this, new ChannelModeMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+            }
+        }
+
+        [ReceivedMessagePropagator("TOPIC")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateTopicMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnTopicMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                if (tokenizedArguments.Count > 1)
+                {
+                    this.OnTopicMessageReceived(this, new TopicMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+                }
+                else
+                {
+                    this.OnTopicMessageReceived(this, new TopicMessage(identity, tokenizedArguments[0], null));
+                }
+            }
+        }
+
+        [ReceivedMessagePropagator("KICK")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateKickMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnKickMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                if (tokenizedArguments.Count > 2)
+                {
+                    this.OnKickMessageReceived(this, new KickMessage(identity, tokenizedArguments[0], tokenizedArguments[1], tokenizedArguments[2]));
+                }
+                else
+                {
+                    this.OnKickMessageReceived(this, new KickMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+                }
+            }
+        }
+
+        [ReceivedMessagePropagator("QUIT")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateQuitMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnQuitMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                if (tokenizedArguments.Count > 0)
+                {
+                    this.OnQuitMessageReceived(this, new QuitMessage(identity, tokenizedArguments[0]));
+                }
+                else
+                {
+                    this.OnQuitMessageReceived(this, new QuitMessage(identity));
+                }
+            }
+        }
+
+        [ReceivedMessagePropagator("SQUIT")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateSquitMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnSquitMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnSquitMessageReceived(this, new SquitMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+            }
+        }
+
+        [ReceivedMessagePropagator("INVITE")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateInviteMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnInviteMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnInviteMessageReceived(this, new InviteMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+            }
+        }
+
+        [ReceivedMessagePropagator("NOTICE")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateNoticeMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnNoticeMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnNoticeMessageReceived(this, new NoticeMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+            }
+        }
+
+        [ReceivedMessagePropagator("PRIVMSG")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagatePrivMsgMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnPrivMsgMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnPrivMsgMessageReceived(this, new PrivMsgMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
             }
         }
         

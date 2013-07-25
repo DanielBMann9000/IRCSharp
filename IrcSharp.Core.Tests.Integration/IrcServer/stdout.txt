@@ -1,4 +1,4 @@
-Wednesday July 24 2013 -- 16:53:40 -04:00
+Thursday July 25 2013 -- 13:31:20 -04:00
    server started successfully
-Wednesday July 24 2013 -- 17:28:51 -04:00
+Thursday July 25 2013 -- 15:22:37 -04:00
    server shutdown: Received STOP signal

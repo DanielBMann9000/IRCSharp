@@ -1,13 +1,22 @@
 ﻿using System.Text;
 
 using IrcSharp.Core.Messages.Interfaces;
+using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages
 {
-    public class ChannelModeMessage : ISendableMessage
+    public class ChannelModeMessage : ISendableMessage, IReceivableMessage
     {
+        public IrcUserInfo UserInfo { get; private set; }
         public string Channel { get; private set; }
         public string RawCommand { get; private set; }
+
+        internal ChannelModeMessage(IrcUserInfo userInfo, string channel, string rawCommand)
+        {
+            this.UserInfo = userInfo;
+            this.Channel = channel;
+            this.RawCommand = rawCommand;
+        }
 
         public ChannelModeMessage(string channel)
         {

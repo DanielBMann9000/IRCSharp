@@ -3,14 +3,21 @@ using System.Collections.ObjectModel;
 using System.Text;
 
 using IrcSharp.Core.Messages.Interfaces;
+using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages
 {
-    public class KickMessage : ISendableMessage
+    public class KickMessage : ISendableMessage, IReceivableMessage
     {
+        public IrcUserInfo UserInfo { get; private set; }
         public ReadOnlyCollection<string> Channels { get; private set; }
         public ReadOnlyCollection<string> Nicks { get; private set; }
         public string Message { get; private set; }
+
+        internal KickMessage(IrcUserInfo userInfo, string channel, string nick, string message = null) : this(channel, nick, message)
+        {
+            this.UserInfo = userInfo;
+        }
 
         private KickMessage()
         {

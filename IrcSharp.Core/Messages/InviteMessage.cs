@@ -1,11 +1,18 @@
 ﻿using IrcSharp.Core.Messages.Interfaces;
+using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages
 {
-    public class InviteMessage : ISendableMessage
+    public class InviteMessage : ISendableMessage, IReceivableMessage
     {
+        public IrcUserInfo UserInfo { get; private set; }
         public string Nick { get; private set; }
         public string Channel { get; private set; }
+
+        internal InviteMessage(IrcUserInfo userInfo, string nick, string channel) : this(nick, channel)
+        {
+            this.UserInfo = userInfo;
+        }
 
         public InviteMessage(string nick, string channel)
         {
