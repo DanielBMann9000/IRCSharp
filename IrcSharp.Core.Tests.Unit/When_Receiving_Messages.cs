@@ -361,5 +361,27 @@ namespace IrcSharp.Core.Tests.Unit
             }
         }
 
+        [TestMethod]
+        public async Task A_Kill_Message_Fires_A_Kill_Event()
+        {
+            var mre = new ManualResetEvent(false);
+            using (var cm = new FakeSocketConnection())
+            using (var con = new IrcConnection(cm))
+            {
+                KillMessage actual = null;
+                con.MessagePropagator.OnKillMessageReceived += (sender, args) =>
+                {
+                    actual = args;
+                    mre.Set();
+                };
+
+                await con.ConnectAsync("foo", "bar", "baz", 0);
+                cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KILL daniel :byebye");
+                if (!mre.WaitOne(1000))
+                {
+                    Assert.Fail("The event was never received.");
+                }
+            }
+        }
     }
 }

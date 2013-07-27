@@ -498,7 +498,7 @@ namespace IrcSharp.Core.Tests.Unit
         }
 
         [TestMethod]
-        public async Task A_Parsed_A_NotRegisteredResponse_Message_Has_The_Appropriate_Properties_Filled()
+        public async Task A_Parsed_NotRegisteredResponse_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
             using (var cm = new FakeSocketConnection())
@@ -521,5 +521,35 @@ namespace IrcSharp.Core.Tests.Unit
                 Assert.AreEqual("Register first.", actual.Message);
             }
         }
+
+        [TestMethod]
+        public async Task A_Parsed_Kill_Message_Has_The_Appropriate_Properties_Filled()
+        {
+            var mre = new ManualResetEvent(false);
+            using (var cm = new FakeSocketConnection())
+            using (var con = new IrcConnection(cm))
+            {
+                KillMessage actual = null;
+                con.MessagePropagator.OnKillMessageReceived += (sender, args) =>
+                {
+                    actual = args;
+                    mre.Set();
+                };
+
+                await con.ConnectAsync("foo", "bar", "baz", 0);
+                cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KILL daniel :byebye");
+                if (!mre.WaitOne(1000))
+                {
+                    Assert.Fail("The event was never received.");
+                }
+
+                Assert.AreEqual("Test", actual.UserInfo.Nick);
+                Assert.AreEqual("daniel", actual.UserInfo.Identity);
+                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
+                Assert.AreEqual("daniel", actual.Nickname);
+                Assert.AreEqual("byebye", actual.Comment);
+            }
+        }
+
     }
 }

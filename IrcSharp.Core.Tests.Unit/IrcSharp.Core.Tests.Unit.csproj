@@ -53,6 +53,10 @@
     <Compile Include="FakeSocketConnection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestHelpers.cs" />
+    <Compile Include="When_Generating_Miscellaneous_Messages.cs" />
+    <Compile Include="When_Generating_Server_Query_And_Command_Messages.cs" />
+    <Compile Include="When_Generating_Service_Query_And_Command_Messages.cs" />
+    <Compile Include="When_Generating_User_Based_Query_Messages.cs" />
     <Compile Include="When_Parsing_Received_Messages.cs" />
     <Compile Include="When_Receiving_Messages.cs" />
     <Compile Include="When_Generating_Channel_Operation_Messages.cs" />

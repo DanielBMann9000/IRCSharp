@@ -16,14 +16,6 @@ namespace IrcSharp.Core.Tests.Unit
     [TestClass]
     public class When_Generating_Connection_Registration_Messages
     {
-        /*
-         * todo:
-         * oper
-         * user mode
-         * service message
-         * quit
-         * squit
-         */
         [TestMethod]
         public void A_Nick_Message_Is_Successfully_Generated_And_Sent()
         {
@@ -94,17 +86,6 @@ namespace IrcSharp.Core.Tests.Unit
             var expected = "SQUIT foo.bar.com :Goodbye, cruel world!\r\n";
             ISendableMessage testMessage = new SquitMessage("foo.bar.com", "Goodbye, cruel world!");
             Assert.AreEqual(expected, testMessage.ToMessage());
-        }
-
-        [TestMethod]
-        public async Task A_Ping_Message_Is_Automatically_Responded_To_With_An_Appropriate_Pong()
-        {
-            var cm = new FakeSocketConnection();
-            var con = new IrcConnection(cm);
-            await con.ConnectAsync("foo", "bar", "baz", 0);
-            var expected = "PONG 12345678\r\n";
-            cm.SimulateMessageReceipt("PING :12345678");
-            Assert.IsTrue(cm.Messages.Any(m => m == expected));
         }
     }
 }

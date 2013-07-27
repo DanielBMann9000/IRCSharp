@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 
 using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
@@ -88,16 +87,65 @@ namespace IrcSharp.Core.Messages.Propagation
         #endregion Sending messages (3.3)
 
         #region Server queries and commands (3.4)
+        public event EventHandler<MotdMessage> OnMotdMessageSending;
+        public event EventHandler<MotdMessage> OnMotdMessageSent;
+
+        public event EventHandler<LusersMessage> OnLusersMessageSending;
+        public event EventHandler<LusersMessage> OnLusersMessageSent;
+
+        public event EventHandler<VersionMessage> OnVersionMessageSending;
+        public event EventHandler<VersionMessage> OnVersionMessageSent;
+
+        public event EventHandler<StatsMessage> OnStatsMessageSending;
+        public event EventHandler<StatsMessage> OnStatsMessageSent;
+
+        public event EventHandler<LinksMessage> OnLinksMessageSending;
+        public event EventHandler<LinksMessage> OnLinksMessageSent;
+
+        public event EventHandler<TimeMessage> OnTimeMessageSending;
+        public event EventHandler<TimeMessage> OnTimeMessageSent;
+
+        public event EventHandler<ConnectMessage> OnConnectMessageSending;
+        public event EventHandler<ConnectMessage> OnConnectMessageSent;
+
+        public event EventHandler<TraceMessage> OnTraceMessageSending;
+        public event EventHandler<TraceMessage> OnTraceMessageSent;
+
+        public event EventHandler<AdminMessage> OnAdminMessageSending;
+        public event EventHandler<AdminMessage> OnAdminMessageSent;
+
+        public event EventHandler<InfoMessage> OnInfoMessageSending;
+        public event EventHandler<InfoMessage> OnInfoMessageSent;
+
         #endregion Server queries and commands (3.4)
 
         #region Service queries and commands (3.5)
+
+        public event EventHandler<ServlistMessage> OnServlistMessageSending;
+        public event EventHandler<ServlistMessage> OnServlistMessageSent;
+
+        public event EventHandler<SqueryMessage> OnSqueryMessageSending;
+        public event EventHandler<SqueryMessage> OnSqueryMessageSent;
         #endregion Service queries and commands (3.5)
 
         #region User based queries (3.6)
+        public event EventHandler<WhoMessage> OnWhoMessageSending;
+        public event EventHandler<WhoMessage> OnWhoMessageSent;
+
+        public event EventHandler<WhoisMessage> OnWhoisMessageSending;
+        public event EventHandler<WhoisMessage> OnWhoisMessageSent;
+
+        public event EventHandler<WhowasMessage> OnWhowasMessageSending;
+        public event EventHandler<WhowasMessage> OnWhowasMessageSent;
         #endregion User based queries (3.6)
 
         #region Miscellaneous messages (3.7)
+        public event EventHandler<KillMessage> OnKillMessageSending;
+        public event EventHandler<KillMessage> OnKillMessageSent;
+        public event EventHandler<KillMessage> OnKillMessageReceived;
+
         public event EventHandler<PingMessage> OnPingMessageReceived;
+
         public event EventHandler<PongMessage> OnPongMessageSending;
         public event EventHandler<PongMessage> OnPongMessageSent;
         #endregion Miscellaneous messages (3.7)
@@ -146,7 +194,24 @@ namespace IrcSharp.Core.Messages.Propagation
                                       { typeof(UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSending) },
                                       { typeof(ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSending) },
                                       { typeof(QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSending) },
-                                      { typeof(SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSending) }
+                                      { typeof(SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSending) },
+                                      { typeof(MotdMessage), msg => this.RouteSendableMessage(msg, this.OnMotdMessageSending) },
+                                      { typeof(LusersMessage), msg => this.RouteSendableMessage(msg, this.OnLusersMessageSending) },
+                                      { typeof(VersionMessage), msg => this.RouteSendableMessage(msg, this.OnVersionMessageSending) },
+                                      { typeof(StatsMessage), msg => this.RouteSendableMessage(msg, this.OnStatsMessageSending) },
+                                      { typeof(LinksMessage), msg => this.RouteSendableMessage(msg, this.OnLinksMessageSending) },
+                                      { typeof(TimeMessage), msg => this.RouteSendableMessage(msg, this.OnTimeMessageSending) },
+                                      { typeof(ConnectMessage), msg => this.RouteSendableMessage(msg, this.OnConnectMessageSending) },
+                                      { typeof(TraceMessage), msg => this.RouteSendableMessage(msg, this.OnTraceMessageSending) },
+                                      { typeof(AdminMessage), msg => this.RouteSendableMessage(msg, this.OnAdminMessageSending) },
+                                      { typeof(InfoMessage), msg => this.RouteSendableMessage(msg, this.OnInfoMessageSending) },
+                                      { typeof(ServlistMessage), msg => this.RouteSendableMessage(msg, this.OnServlistMessageSending) },
+                                      { typeof(SqueryMessage), msg => this.RouteSendableMessage(msg, this.OnSqueryMessageSending) },
+                                      { typeof(WhoMessage), msg => this.RouteSendableMessage(msg, this.OnWhoMessageSending) },
+                                      { typeof(WhoisMessage), msg => this.RouteSendableMessage(msg, this.OnWhoisMessageSending) },
+                                      { typeof(WhowasMessage), msg => this.RouteSendableMessage(msg, this.OnWhowasMessageSending) },
+                                      { typeof(KillMessage), msg => this.RouteSendableMessage(msg, this.OnKillMessageSending) }
+
                                   };
 
             this.sentPropagators = new Dictionary<Type, Action<ISendableMessage>>
@@ -169,7 +234,23 @@ namespace IrcSharp.Core.Messages.Propagation
                                       { typeof(UserModeMessage), msg => this.RouteSendableMessage(msg, this.OnUserModeMessageSent) },
                                       { typeof(ServiceMessage), msg => this.RouteSendableMessage(msg, this.OnServiceMessageSent) },
                                       { typeof(QuitMessage), msg => this.RouteSendableMessage(msg, this.OnQuitMessageSent) },
-                                      { typeof(SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSent) }
+                                      { typeof(SquitMessage), msg => this.RouteSendableMessage(msg, this.OnSquitMessageSent) },
+                                      { typeof(MotdMessage), msg => this.RouteSendableMessage(msg, this.OnMotdMessageSent) },
+                                      { typeof(LusersMessage), msg => this.RouteSendableMessage(msg, this.OnLusersMessageSent) },
+                                      { typeof(VersionMessage), msg => this.RouteSendableMessage(msg, this.OnVersionMessageSent) },
+                                      { typeof(StatsMessage), msg => this.RouteSendableMessage(msg, this.OnStatsMessageSent) },
+                                      { typeof(LinksMessage), msg => this.RouteSendableMessage(msg, this.OnLinksMessageSent) },
+                                      { typeof(TimeMessage), msg => this.RouteSendableMessage(msg, this.OnTimeMessageSent) },
+                                      { typeof(ConnectMessage), msg => this.RouteSendableMessage(msg, this.OnConnectMessageSent) },
+                                      { typeof(TraceMessage), msg => this.RouteSendableMessage(msg, this.OnTraceMessageSent) },
+                                      { typeof(AdminMessage), msg => this.RouteSendableMessage(msg, this.OnAdminMessageSent) },
+                                      { typeof(InfoMessage), msg => this.RouteSendableMessage(msg, this.OnInfoMessageSent) },
+                                      { typeof(ServlistMessage), msg => this.RouteSendableMessage(msg, this.OnServlistMessageSent) },
+                                      { typeof(SqueryMessage), msg => this.RouteSendableMessage(msg, this.OnSqueryMessageSent) },
+                                      { typeof(WhoMessage), msg => this.RouteSendableMessage(msg, this.OnWhoMessageSent) },
+                                      { typeof(WhoisMessage), msg => this.RouteSendableMessage(msg, this.OnWhoisMessageSent) },
+                                      { typeof(WhowasMessage), msg => this.RouteSendableMessage(msg, this.OnWhowasMessageSent) },
+                                      { typeof(KillMessage), msg => this.RouteSendableMessage(msg, this.OnKillMessageSent) }
                                   };
 
         }
@@ -433,6 +514,17 @@ namespace IrcSharp.Core.Messages.Propagation
             {
                 var tokenizedArguments = TokenizeArguments(arguments);
                 this.OnPrivMsgMessageReceived(this, new PrivMsgMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
+            }
+        }
+
+        [ReceivedMessagePropagator("KILL")]
+        // ReSharper disable once UnusedMember.Local
+        private void PropagateKillMessage(IrcUserInfo identity, string arguments)
+        {
+            if (this.OnKillMessageReceived != null)
+            {
+                var tokenizedArguments = TokenizeArguments(arguments);
+                this.OnKillMessageReceived(this, new KillMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
             }
         }
         
