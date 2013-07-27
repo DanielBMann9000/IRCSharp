@@ -9,7 +9,6 @@ namespace IrcSharp.Core.Connectivity
     public interface ISocketConnection : IDisposable
     {
         event EventHandler<MessageEventArgs> OnMessageReceived;
-        event EventHandler<MessageEventArgs> OnMessageSent;
         bool Connected { get; }
         Task ConnectAsync(IPAddress ipAddress, int port);
         Task ConnectAsync(string hostName, int port);

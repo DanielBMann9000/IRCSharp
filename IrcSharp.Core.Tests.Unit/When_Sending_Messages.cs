@@ -13,6 +13,12 @@ namespace IrcSharp.Core.Tests.Unit
     public class When_Sending_Messages
     {
         [TestMethod]
+        public async Task Sending_Any_Message_Fires_The_RawMessageSent_Event()
+        {
+            await TestHelpers.RunSendableEventFiringTest(new PongMessage("foo"), (con, mre) => con.OnRawMessageSent += (sender, args) => mre.Set());
+        }
+
+        [TestMethod]
         public async Task OnPassMessageSending_Event_Fires()
         {
             await TestHelpers.RunSendableEventFiringTest(new PassMessage("foo"), (con, mre) => con.MessagePropagator.OnPassMessageSending += (sender, args) => mre.Set());

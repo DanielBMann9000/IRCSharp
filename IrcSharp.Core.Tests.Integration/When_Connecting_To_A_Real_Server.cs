@@ -76,7 +76,10 @@ namespace IrcSharp.Core.Tests.Integration
                 Assert.AreEqual(false, con.Connected);
                 await con.ConnectAsync("Foo", "Bar", server, port);
                 Assert.AreEqual(true, con.Connected);
-                mre.WaitOne(1000);
+                if (!mre.WaitOne(1000))
+                {
+                    Assert.Fail("The OnRawMessageReceived event never fired");
+                }
                 Assert.AreEqual("NOTICE AUTH :*** Checking Ident", message);
             }
         }
