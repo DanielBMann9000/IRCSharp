@@ -94,6 +94,44 @@ namespace IrcSharp.Core.Tests.Integration
                 await con.ConnectAsync("Foo", "Bar", "localhostxxx", port);
                 Assert.AreEqual(false, con.Connected);
             }
-        }    
+        }
+
+        [TestMethod]
+        public async Task Can_Reconnect_If_Client_Disconnects()
+        {
+            using (var con = new IrcConnection())
+            {
+                var reconnected = new ManualResetEvent(false);
+                var disconnected = new ManualResetEvent(false);
+                try
+                {
+                    con.OnDisconnected += async (sender, e) =>
+                    {
+                        var senderCon = (IrcConnection)sender;
+                        while (senderCon.Connected)
+                        {
+                            await Task.Delay(500);
+                        }
+                        disconnected.Set();
+                    };
+                    con.OnRawMessageReceived += (sender, message) => reconnected.Set();
+                    await con.ConnectAsync("Foo", "Bar", "localhost", port);
+                    
+                    AssemblyInit.StopIrcServer();
+                    await Task.Delay(500);
+                    Assert.IsTrue(disconnected.WaitOne(5000));
+                    Assert.IsFalse(con.Connected, "Connection is still active");
+                }
+                finally
+                {
+                    AssemblyInit.StartIrcServer(null);
+                    reconnected.Reset();
+                }
+
+                Assert.IsTrue(reconnected.WaitOne(5000));
+                Assert.IsTrue(con.Connected, "Reconnect failed");
+
+            }
+        }
     }
 }

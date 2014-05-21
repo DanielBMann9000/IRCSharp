@@ -4,7 +4,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Connectivity
@@ -12,11 +11,13 @@ namespace IrcSharp.Core.Connectivity
     public class SocketConnection : ISocketConnection
     {
         public event EventHandler<MessageEventArgs> OnMessageReceived;
+        public event EventHandler<Exception> OnUnexpectedDisconnection;
 
-        private readonly TcpClient client = new TcpClient();
+        private TcpClient client = new TcpClient();
         private readonly CancellationTokenSource pollerCancellationTokenSource = new CancellationTokenSource();
         private StreamReader incomingMessageStream;
         private StreamWriter outgoingMessageStream;
+        private bool expectedToBeConnected = true;
 
         public bool Connected 
         { 
@@ -42,6 +43,7 @@ namespace IrcSharp.Core.Connectivity
 
         public async Task DisconnectAsync()
         {
+            expectedToBeConnected = false;
             this.pollerCancellationTokenSource.Cancel();
             await Task.Run(() => this.client.Close());
         }
@@ -76,6 +78,7 @@ namespace IrcSharp.Core.Connectivity
 
         private async Task InitiateConnection(Func<Task> connectionAction)
         {
+            this.client = new TcpClient();
             try
             {
                 await connectionAction();
@@ -89,7 +92,9 @@ namespace IrcSharp.Core.Connectivity
 
             //i'm 99% sure i'm not using that cancellation token properly. 
             var token = this.pollerCancellationTokenSource.Token;
-            
+
+            expectedToBeConnected = true;
+
 #pragma warning disable 4014
             Task.Run(() => this.Poll(), token);
 #pragma warning restore 4014
@@ -105,8 +110,26 @@ namespace IrcSharp.Core.Connectivity
         {
             while (this.Connected)
             {
-                var result = await this.incomingMessageStream.ReadLineAsync();
-                this.RaiseMessageReceivedEvent(result);
+                try
+                {
+                    var result = await this.incomingMessageStream.ReadLineAsync();
+                    this.RaiseMessageReceivedEvent(result);
+                }
+                catch (Exception e)
+                {
+                    if (this.OnUnexpectedDisconnection != null)
+                    {
+                        this.OnUnexpectedDisconnection(this, e);
+                    }
+                }
+            }
+
+            if (!this.Connected && this.expectedToBeConnected)
+            {
+                if (this.OnUnexpectedDisconnection != null)
+                {
+                    this.OnUnexpectedDisconnection(this, new SocketException());
+                }
             }
         }
 

@@ -11,9 +11,16 @@ namespace IrcSharp.Core.Connectivity
     {
         public event EventHandler<UnknownMessage> OnRawMessageReceived;
         public event EventHandler<UnknownMessage> OnRawMessageSent;
+        public event EventHandler OnDisconnected;
 
+        private string nick;
+        private string realName;
+        private string server;
+        private IPAddress serverIp;
+        private int port;
         private readonly ISocketConnection connectionManager;
         private bool canSend;
+        private bool reconnecting = false;
 
         public MessagePropagator MessagePropagator { get; private set; }
         public bool Connected 
@@ -27,25 +34,40 @@ namespace IrcSharp.Core.Connectivity
         {
             this.connectionManager = connectionManager;
             this.connectionManager.OnMessageReceived += this.ParseMessage;
+            this.connectionManager.OnUnexpectedDisconnection += this.Reconnect;
+
             this.MessagePropagator = new MessagePropagator();
 
             this.MessagePropagator.OnWelcomeResponseMessageReceived += this.ReadyToSendCommands;
             this.MessagePropagator.OnPingMessageReceived += SendPongResponse;
+            
         }
 
         public IrcConnection() : this(new SocketConnection())
         {
-            
         }
 
         public async Task ConnectAsync(string nick, string realName, string server, int port)
         {
+            this.nick = nick;
+            this.realName = realName;
+            this.server = server;
+            this.serverIp = null;
+            this.port = port;
+
             await this.connectionManager.ConnectAsync(server, port);
             await InitializeConnection(nick, realName);
         }
 
         public async Task ConnectAsync(string nick, string realName, IPAddress server, int port)
         {
+
+            this.nick = nick;
+            this.realName = realName;
+            this.serverIp = server;
+            this.server = null;
+            this.port = port;
+
             await this.connectionManager.ConnectAsync(server, port);
             await InitializeConnection(nick, realName);
         }
@@ -111,6 +133,40 @@ namespace IrcSharp.Core.Connectivity
             this.MessagePropagator.RouteReceivedMessage(e.Message);
         }
 
+        private async void Reconnect(object sender, Exception disconnectReason)
+        {
+            if (this.reconnecting)
+            {
+                return;
+            }
+            this.reconnecting = true;
+            if (this.OnDisconnected != null)
+            {
+                OnDisconnected(this, null);
+            }
+
+            while (reconnecting)
+            {
+                await Task.Delay(5000);
+                try
+                {
+                    if (this.server != null)
+                    {
+                        await this.ConnectAsync(this.nick, this.realName, this.server, this.port);
+                    }
+                    else
+                    {
+                        await this.ConnectAsync(this.nick, this.realName, this.serverIp, this.port);
+                    }
+                    reconnecting = false;
+                }
+                catch (ConnectionFailedException)
+                {
+                    // don't be a jackass, raise an event here or something so clients can be notified of a recurring bad connection
+                }
+            }
+        }
+
         #region IDisposable implementation
         public void Dispose()
         {
@@ -123,6 +179,7 @@ namespace IrcSharp.Core.Connectivity
             if (disposing)
             {
                 this.connectionManager.OnMessageReceived -= this.ParseMessage;
+                this.connectionManager.OnUnexpectedDisconnection -= this.Reconnect;
                 this.MessagePropagator.OnPingMessageReceived -= this.SendPongResponse;
                 this.connectionManager.Dispose();
             }

@@ -24,6 +24,7 @@ namespace IrcSharp.Core.Tests.Unit
         }
 
         public event EventHandler<MessageEventArgs> OnMessageReceived;
+        public event EventHandler<Exception> OnUnexpectedDisconnection;
         public event EventHandler<MessageEventArgs> OnMessageSent;
         public bool Connected { get; private set; }
 
