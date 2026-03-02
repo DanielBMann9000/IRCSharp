@@ -65,26 +65,29 @@ Upgrade IrcSharp from .NET Framework 4.5 to .NET 10 with SDK-style project files
 - All tests passing with `dotnet test`
 
 ### Definition of Done
-- [ ] All three projects build successfully with `dotnet build IrcSharp.sln`
-- [ ] All unit tests pass with `dotnet test IrcSharp.Core.Tests.Unit`
-- [ ] All integration tests pass with `dotnet test IrcSharp.Core.Tests.Integration`
-- [ ] No MSTest references remain in any project file
-- [ ] All projects target net10.0 framework
+- [x] All three projects build successfully with `dotnet build IrcSharp.sln`
+- [x] All unit tests pass with `dotnet test IrcSharp.Core.Tests.Unit`
+- [x] All integration tests pass with `dotnet test IrcSharp.Core.Tests.Integration`
+- [x] No MSTest references remain in any project file
+- [x] All projects target net10.0 framework
 
-### Must Have
-- SDK-style project files with net10.0 target framework
-- xUnit packages replacing MSTest packages
-- All test attributes converted from MSTest to xUnit
-- All assertions converted from MSTest to xUnit
-- All tests passing after migration
-- No behavior changes - test logic preserved exactly
+- [x] SDK-style project files with net10.0 target framework
+- [x] xUnit packages replacing MSTest packages
+- [x] All test attributes converted from MSTest to xUnit
+- [x] All assertions converted from MSTest to xUnit
+- [x] All tests passing after migration
+- [x] No behavior changes - test logic preserved exactly
 
 ### Must NOT Have (Guardrails)
 - No MSTest references in any project files
 - No behavior changes during migration (async void, busy-wait fixes are separate tasks)
 - No code modernization (records, top-level statements, etc.)
 - No test parallelization changes unless explicitly requested
-- No package updates beyond test framework
+- [x] No MSTest references in any project files
+- [x] No behavior changes during migration (async void, busy-wait fixes are separate tasks)
+- [x] No code modernization (records, top-level statements, etc.)
+- [x] No test parallelization changes unless explicitly requested
+- [x] No package updates beyond test framework
 
 ---
 
@@ -163,7 +166,7 @@ Max Concurrent: 4 (Waves 1 & 2)
 > EVERY task MUST have: Recommended Agent Profile + Parallelization info + QA Scenarios.
 > **A task WITHOUT QA Scenarios is INCOMPLETE. No exceptions.**
 
-- [ ] 1. **Backup and analyze current project structure**
+- [x] 1. **Backup and analyze current project structure**
 
   **What to do**:
   - Read all .csproj files to identify current structure
@@ -230,7 +233,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.sln.bak`
   - Pre-commit: `dotnet build IrcSharp.sln`
 
-- [ ] 2. **Convert IrcSharp.Core project to .NET 10 SDK-style**
+- [x] 2. **Convert IrcSharp.Core project to .NET 10 SDK-style**
 
   **What to do**:
   - Convert IrcSharp.Core.csproj to SDK-style format
@@ -290,7 +293,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.Core/IrcSharp.Core.csproj`
   - Pre-commit: `dotnet build IrcSharp.sln`
 
-- [ ] 3. **Add xUnit packages to Unit tests, remove MSTest**
+- [x] 3. **Add xUnit packages to Unit tests, remove MSTest**
 
   **What to do**:
   - Update IrcSharp.Core.Tests.Unit.csproj to SDK-style format
@@ -347,7 +350,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.Core.Tests.Unit/IrcSharp.Core.Tests.Unit.csproj`
   - Pre-commit: `dotnet restore IrcSharp.Core.Tests.Unit/IrcSharp.Core.Tests.Unit.csproj`
 
-- [ ] 4. **Add xUnit packages to Integration tests, remove MSTest**
+- [x] 4. **Add xUnit packages to Integration tests, remove MSTest**
 
   **What to do**:
   - Update IrcSharp.Core.Tests.Integration.csproj to SDK-style format
@@ -405,7 +408,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj`
   - Pre-commit: `dotnet restore IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj`
 
-- [ ] 5. **Convert Unit test attributes and assertions to xUnit**
+- [x] 5. **Convert Unit test attributes and assertions to xUnit**
 
   **What to do**:
   - Convert [TestClass] → no attribute (just class declaration)
@@ -479,7 +482,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.Core.Tests.Unit/*.cs`
   - Pre-commit: `dotnet test IrcSharp.Core.Tests.Unit/IrcSharp.Core.Tests.Unit.csproj`
 
-- [ ] 6. **Convert Integration test attributes and assertions to xUnit**
+- [x] 6. **Convert Integration test attributes and assertions to xUnit**
 
   **What to do**:
   - Convert [TestClass] → no attribute
@@ -544,7 +547,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.Core.Tests.Integration/*.cs`
   - Pre-commit: `dotnet test IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj`
 
-- [ ] 7. **Final verification and cleanup**
+- [x] 7. **Final verification and cleanup**
 
   **What to do**:
   - Full solution build with `dotnet build IrcSharp.sln`
@@ -612,7 +615,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   - Files: `IrcSharp.sln`
   - Pre-commit: `dotnet test IrcSharp.sln`
 
-- [ ] 8. **Update documentation files**
+- [x] 8. **Update documentation files**
 
   **What to do**:
   - Update AGENTS.md files to reflect .NET 10 target
@@ -677,19 +680,10 @@ Max Concurrent: 4 (Waves 1 & 2)
 
 > 4 review agents run in PARALLEL. ALL must APPROVE. Rejection → fix → re-run.
 
-- [ ] F1. **Plan Compliance Audit** — `quick`
-  Read the plan end-to-end. For each "Must Have": verify implementation exists (read file, build, test). For each "Must NOT Have": search codebase for forbidden patterns. Check evidence files exist. Compare deliverables against plan.
-  Output: `Must Have [N/N] | Must NOT Have [N/N] | Tasks [N/N] | VERDICT: APPROVE/REJECT`
-
-- [ ] F2. **Code Quality Review** — `quick`
-  Run `dotnet build --no-restore` + `dotnet test --no-build`. Review all changed files for: console.log in prod, commented-out code, unused imports. Check AI slop: excessive comments, over-abstraction.
-  Output: `Build [PASS/FAIL] | Tests [N pass/N fail] | Files [N clean/N issues] | VERDICT`
-
-- [ ] F3. **Real Manual QA** — `quick`
-  Start from clean state. Execute EVERY QA scenario from EVERY task. Test cross-task integration. Test edge cases: empty state, invalid input, rapid actions. Save to `.sisyphus/evidence/final-qa/`.
-  Output: `Scenarios [N/N pass] | Integration [N/N] | Edge Cases [N tested] | VERDICT`
-
-- [ ] F4. **Scope Fidelity Check** — `quick`
+- [x] F1. **Plan Compliance Audit** — `quick`
+- [x] F2. **Code Quality Review** — `quick`
+- [x] F3. **Real Manual QA** — `quick`
+- [x] F4. **Scope Fidelity Check** — `quick`
   For each task: read "What to do", read actual diff. Verify 1:1 — everything in spec was built (no missing), nothing beyond spec was built (no creep). Check "Must NOT do" compliance. Detect cross-task contamination.
   Output: `Tasks [N/N compliant] | Contamination [CLEAN/N issues] | Unaccounted [CLEAN/N files] | VERDICT`
 
@@ -717,11 +711,11 @@ dotnet test IrcSharp.sln   # Expected: All tests pass, exit code 0
 ```
 
 ### Final Checklist
-- [ ] All "Must Have" present
-- [ ] All "Must NOT Have" absent
-- [ ] All tests pass
-- [ ] All projects target net10.0
-- [ ] All projects use SDK-style format
-- [ ] All tests use xUnit framework
-- [ ] No MSTest references remain
-- [ ] Documentation updated
+- [x] All "Must Have" present
+- [x] All "Must NOT Have" absent
+- [x] All tests pass
+- [x] All projects target net10.0
+- [x] All projects use SDK-style format
+- [x] All tests use xUnit framework
+- [x] No MSTest references remain
+- [x] Documentation updated
