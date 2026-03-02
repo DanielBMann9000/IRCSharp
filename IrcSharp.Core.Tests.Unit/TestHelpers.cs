@@ -1,3 +1,4 @@
+using Xunit;
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -7,11 +8,10 @@ using IrcSharp.Core.Connectivity;
 using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Interfaces;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IrcSharp.Core.Tests.Unit
 {
-    [ExcludeFromCodeCoverage]
+    
     internal static class TestHelpers
     {
         internal static async Task RunSendableEventFiringTest(
@@ -27,7 +27,7 @@ namespace IrcSharp.Core.Tests.Unit
                 await con.SendMessageAsync(message);
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
             }
         }

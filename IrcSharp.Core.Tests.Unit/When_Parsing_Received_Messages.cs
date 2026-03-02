@@ -1,3 +1,5 @@
+using System;
+using Xunit;
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -5,16 +7,15 @@ using System.Threading.Tasks;
 using IrcSharp.Core.Connectivity;
 using IrcSharp.Core.Messages;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IrcSharp.Core.Tests.Unit
 {
     // ReSharper disable InconsistentNaming
-    [ExcludeFromCodeCoverage]
-    [TestClass]
+    
+    
     public class When_Parsing_Received_Messages
     {
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Ping_Message_Has_The_Value_Property_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -32,13 +33,13 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt("PING :12345678");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
-                Assert.AreEqual("12345678", actual.Value);
+                Assert.Equal("12345678", actual.Value);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Nick_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -56,16 +57,16 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com NICK NewNick");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("NewNick", actual.Nick);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("NewNick", actual.Nick);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Join_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -83,16 +84,16 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com JOIN #helloworld");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channels[0]);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channels[0]);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Part_Message_With_A_Parting_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -110,18 +111,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com PART #helloworld :byebye");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channels[0]);
-                Assert.AreEqual("byebye", actual.PartingMessage);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channels[0]);
+                Assert.Equal("byebye", actual.PartingMessage);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Part_Message_With_No_Parting_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -139,18 +140,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com PART #helloworld");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channels[0]);
-                Assert.IsNull(actual.PartingMessage);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channels[0]);
+                Assert.Null(actual.PartingMessage);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_ChannelMode_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -168,18 +169,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com MODE #helloworld +s");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channel);
-                Assert.AreEqual("+s", actual.RawCommand);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channel);
+                Assert.Equal("+s", actual.RawCommand);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Topic_Message_With_A_New_Topic_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -197,19 +198,19 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com TOPIC #helloworld :New Topic!");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channel);
-                Assert.AreEqual("New Topic!", actual.Topic);
-                Assert.IsFalse(actual.RemoveTopic);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channel);
+                Assert.Equal("New Topic!", actual.Topic);
+                Assert.False(actual.RemoveTopic);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Topic_Message_For_Removing_The_Current_TopicHas_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -227,19 +228,19 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com TOPIC #helloworld :");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channel);
-                Assert.IsNull(actual.Topic);
-                Assert.IsTrue(actual.RemoveTopic);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channel);
+                Assert.Null(actual.Topic);
+                Assert.True(actual.RemoveTopic);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Kick_Message_With_A_Reason_Provided_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -257,19 +258,19 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KICK #helloworld Daniel :get out!");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channels[0]);
-                Assert.AreEqual("Daniel", actual.Nicks[0]);
-                Assert.AreEqual("get out!", actual.Message);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channels[0]);
+                Assert.Equal("Daniel", actual.Nicks[0]);
+                Assert.Equal("get out!", actual.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Kick_Message_With_No_Reason_Provided_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -287,19 +288,19 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KICK #helloworld Daniel");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channels[0]);
-                Assert.AreEqual("Daniel", actual.Nicks[0]);
-                Assert.IsNull(actual.Message);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channels[0]);
+                Assert.Equal("Daniel", actual.Nicks[0]);
+                Assert.Null(actual.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Quit_Message_With_No_Reason_Provided_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -317,17 +318,17 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com QUIT");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.IsNull(actual.Reason);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Null(actual.Reason);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Quit_Message_With_A_Reason_Provided_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -345,17 +346,17 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com QUIT :bye bye!");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("bye bye!", actual.Reason);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("bye bye!", actual.Reason);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Squit_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -373,18 +374,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com SQUIT whatever.com :bye bye!");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("whatever.com", actual.Server);
-                Assert.AreEqual("bye bye!", actual.Reason);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("whatever.com", actual.Server);
+                Assert.Equal("bye bye!", actual.Reason);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Invite_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -402,18 +403,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com INVITE Daniel #helloworld");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.Channel);
-                Assert.AreEqual("Daniel", actual.Nick);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.Channel);
+                Assert.Equal("Daniel", actual.Nick);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Notice_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -431,18 +432,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com NOTICE #helloworld :oh god what's happening");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("#helloworld", actual.MessageDestination);
-                Assert.AreEqual("oh god what's happening", actual.Message);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("#helloworld", actual.MessageDestination);
+                Assert.Equal("oh god what's happening", actual.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_PrivMsg_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -460,18 +461,18 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com PRIVMSG Daniel :oh god what's happening");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("Daniel", actual.MessageDestination);
-                Assert.AreEqual("oh god what's happening", actual.Message);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("Daniel", actual.MessageDestination);
+                Assert.Equal("oh god what's happening", actual.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Generic_Numeric_Response_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -489,15 +490,15 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
-                Assert.AreEqual("001", actual.ResponseCode);
-                Assert.AreEqual("Welcome to the Internet Relay Network DBM", actual.ResponseText);
+                Assert.Equal("001", actual.ResponseCode);
+                Assert.Equal("Welcome to the Internet Relay Network DBM", actual.ResponseText);
             }
 
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_NotRegisteredResponse_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -515,14 +516,14 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":localhost.com 451 DBM JOIN :Register first.");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
-                Assert.AreEqual("JOIN", actual.Command);
-                Assert.AreEqual("Register first.", actual.Message);
+                Assert.Equal("JOIN", actual.Command);
+                Assert.Equal("Register first.", actual.Message);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task A_Parsed_Kill_Message_Has_The_Appropriate_Properties_Filled()
         {
             var mre = new ManualResetEvent(false);
@@ -540,14 +541,14 @@ namespace IrcSharp.Core.Tests.Unit
                 cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KILL daniel :byebye");
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The event was never received.");
+                    throw new Exception("The event was never received.");
                 }
 
-                Assert.AreEqual("Test", actual.UserInfo.Nick);
-                Assert.AreEqual("daniel", actual.UserInfo.Identity);
-                Assert.AreEqual("foo.bar.com", actual.UserInfo.Host);
-                Assert.AreEqual("daniel", actual.Nickname);
-                Assert.AreEqual("byebye", actual.Comment);
+                Assert.Equal("Test", actual.UserInfo.Nick);
+                Assert.Equal("daniel", actual.UserInfo.Identity);
+                Assert.Equal("foo.bar.com", actual.UserInfo.Host);
+                Assert.Equal("daniel", actual.Nickname);
+                Assert.Equal("byebye", actual.Comment);
             }
         }
 

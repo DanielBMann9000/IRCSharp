@@ -1,0 +1,173 @@
+# Task 1 Analysis - Project Structure Backup and Analysis
+**Generated:** 2026-03-02
+**Task:** Backup and analyze current project structure
+
+---
+
+## SOLUTION FILE BACKUP
+- **Source:** `C:\Users\dbman\repos\IRCSharp\IrcSharp.sln`
+- **Backup:** `C:\Users\dbman\repos\IRCSharp\IrcSharp.sln.bak`
+- **Status:** ✅ Completed
+
+---
+
+## PROJECT STRUCTURE
+
+### Solution Projects (3 total)
+| Project | Path | GUID | Type |
+|---------|------|------|------|
+| IrcSharp.Core | IrcSharp.Core\IrcSharp.Core.csproj | {B44F5F1A-4028-4E77-8E5C-82F0CDD65665} | Class Library |
+| IrcSharp.Core.Tests.Unit | IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj | {330D6E9C-F2D3-4A51-AED7-D1C145334F51} | Unit Test |
+| IrcSharp.Core.Tests.Integration | IrcSharp.Core.Tests.Integration\IrcSharp.Core.Tests.Integration.csproj | {356998F7-42AF-4358-9686-2C08BF0A71B8} | Unit Test |
+
+---
+
+## MSTEST REFERENCES
+
+### Unit Test Project (`IrcSharp.Core.Tests.Unit.csproj`)
+```xml
+<ItemGroup>
+  <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+</ItemGroup>
+```
+- **Condition:** Uses conditional reference based on VisualStudioVersion
+- **Version 10.0 (v3.5 target):** Version=10.1.0.0, PublicKeyToken=b03f5f7f11d50a3a
+- **Other versions:** No explicit version (uses installed version)
+
+### Integration Test Project (`IrcSharp.Core.Tests.Integration.csproj`)
+```xml
+<ItemGroup>
+  <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+</ItemGroup>
+```
+- **Same conditional pattern as Unit tests**
+
+### MSTest Framework Files
+- **Reference:** `Microsoft.VisualStudio.QualityTools.UnitTestFramework`
+- **Test Project Type:** UnitTest ({3AC096D0-A1C2-E12C-1390-A8335801FDAB})
+- **Coded UI Support:** Present but disabled (IsCodedUITest=False)
+
+---
+
+## EXTERNAL NUGET PACKAGES
+
+### Core Library (`IrcSharp.Core.csproj`)
+**NO external NuGet packages.** Only .NET Framework references:
+- System
+- System.Core
+- System.Xml.Linq
+- System.Data.DataSetExtensions
+- Microsoft.CSharp
+- System.Data
+- System.Xml
+
+### Unit Test Project (`IrcSharp.Core.Tests.Unit.csproj`)
+**NO external NuGet packages.** Only:
+- System
+- Microsoft.VisualStudio.QualityTools.UnitTestFramework
+- IrcSharp.Core (project reference)
+
+### Integration Test Project (`IrcSharp.Core.Tests.Integration.csproj`)
+**NO external NuGet packages.** Only:
+- System
+- System.Configuration
+- Microsoft.VisualStudio.QualityTools.UnitTestFramework
+- IrcSharp.Core (project reference)
+
+---
+
+## TEST INFRASTRUCTURE DEPENDENCIES
+
+### FakeSocketConnection
+- **Location:** `IrcSharp.Core.Tests.Unit/FakeSocketConnection.cs`
+- **Purpose:** Custom mock socket implementation for testing
+- **Status:** Internal test infrastructure (not external dependency)
+
+### TestHelpers
+- **Location:** `IrcSharp.Core.Tests.Unit/TestHelpers.cs`
+- **Purpose:** Shared async test runner utilities
+- **Status:** Internal test infrastructure
+
+### Integration Test Server
+- **Embedded binary:** `IrcServer\bircd.exe`
+- **Configuration files:**
+  - bircd-qnet.ini
+  - bircd.ini
+  - ircd.conf
+  - ircd.motd
+  - rehash.bat, restart.bat, stop.bat
+- **Purpose:** Real IRC server for integration testing
+- **Status:** Embedded in test project (CopyToOutputDirectory=PreserveNewest)
+
+---
+
+## BUILD VERIFICATION
+
+### Current Build Status
+**dotnet build failed** - Expected behavior on .NET-only systems
+
+**Error:** MSB3644 - Reference assemblies for .NETFramework,Version=v4.5 not found
+
+**Reason:** 
+- Project targets .NET Framework 4.5 (not .NET Core/.NET 5+)
+- Reference assemblies not installed on system
+- This is a legacy MSBuild project format
+
+**Alternative:** Visual Studio 2013+ or MSBuild with .NET Framework 4.5 Developer Pack required
+
+---
+
+## KEY FINDINGS SUMMARY
+
+| Category | Finding |
+|----------|---------|
+| Solution files | 3 projects (1 core, 2 test) |
+| MSTest usage | Both test projects use MSTest (Microsoft.VisualStudio.QualityTools) |
+| External packages | None - all dependencies are framework references |
+| Test infrastructure | FakeSocketConnection (custom), embedded bircd.exe |
+| Target framework | .NET Framework 4.5 (legacy) |
+| Build tool | Legacy MSBuild format (pre-SDK style) |
+| Build status | Requires .NET Framework 4.5 Developer Pack |
+
+---
+
+## ANTIPATTERNS DETECTED (per AGENTS.md)
+
+1. **MSTest framework** - Microsoft.VisualStudio.QualityTools (not open-source)
+2. **Legacy project format** - Pre-SDK style .csproj files
+3. **Embedded binary** - bircd.exe in integration tests
+4. **Target framework** - .NET Framework 4.5 is outdated
+
+---
+
+## NEXT STEPS
+
+Based on plan structure, next tasks will:
+- Wave 1: Update test project files to use xUnit
+- Wave 2: Update source files to use xUnit attributes
+- Wave 3: Remove MSTest dependencies
+- Wave 4: Update CI/CD configuration
+
+---
+
+## FILES ANALYZED
+
+```
+IrcSharp.sln.bak (BACKUP CREATED)
+├── IrcSharp.Core/
+│   ├── IrcSharp.Core.csproj
+│   ├── Connectivity/
+│   ├── Messages/
+│   ├── Model/
+│   └── Properties/
+├── IrcSharp.Core.Tests.Unit/
+│   ├── IrcSharp.Core.Tests.Unit.csproj
+│   ├── FakeSocketConnection.cs
+│   ├── TestHelpers.cs
+│   └── *.cs (13 test files)
+└── IrcSharp.Core.Tests.Integration/
+    ├── IrcSharp.Core.Tests.Integration.csproj
+    ├── AssemblyInit.cs
+    ├── When_Connecting_To_A_Real_Server.cs
+    └── IrcServer/ (bircd.exe + configs)
+```

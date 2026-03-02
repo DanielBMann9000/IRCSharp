@@ -1,24 +1,37 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace IrcSharp.Core.Tests.Integration
 {
-    [ExcludeFromCodeCoverage]
-    [TestClass]
     internal class AssemblyInit
     {
-        [AssemblyInitialize]
-        public static void StartIrcServer(TestContext context)
+        private static bool _isInitialized;
+
+        static AssemblyInit()
         {
-            StopIrcServer();
-            var psi = new ProcessStartInfo(@".\IrcServer\bircd.exe") { CreateNoWindow = true };
-            Process.Start(psi);
+            StartIrcServerInternal();
         }
 
-        [AssemblyCleanup]
+        private static void StartIrcServerInternal()
+        {
+            StopIrcServerInternal();
+            var psi = new ProcessStartInfo(@".\IrcServer\bircd.exe") { CreateNoWindow = true };
+            Process.Start(psi);
+            _isInitialized = true;
+        }
+
         public static void StopIrcServer()
+        {
+            StopIrcServerInternal();
+            _isInitialized = false;
+        }
+
+        public static void StartIrcServer()
+        {
+            StartIrcServerInternal();
+        }
+
+        private static void StopIrcServerInternal()
         {
             var psi = new ProcessStartInfo(@".\IrcServer\bircd.exe") { CreateNoWindow = true, Arguments = "signal stop" };
             Process.Start(psi);

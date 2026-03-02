@@ -1,65 +1,69 @@
-﻿using System.Configuration;
+using System.Configuration;
+using Xunit;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using IrcSharp.Core.Connectivity;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace IrcSharp.Core.Tests.Integration
 {
     // ReSharper disable InconsistentNaming
-    [ExcludeFromCodeCoverage]
-    [TestClass]
     public class When_Interacting_With_A_Real_Server
     {
         private static string server;
         private static int port;
+        private static bool _isInitialized;
 
-        [ClassInitialize]
-        public static void ClassInit(TestContext context)
+        static When_Interacting_With_A_Real_Server()
         {
-            server = ConfigurationManager.AppSettings["Server"];
-            port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            Initialize();
         }
 
-        [TestMethod]
+        private static void Initialize()
+        {
+            if (_isInitialized) return;
+            server = ConfigurationManager.AppSettings["Server"];
+            port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+            _isInitialized = true;
+        }
+
+        [Fact]
         public async Task Can_Initiate_A_Connection_By_Providing_A_Hostname()
         {
             using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, con.Connected);
+                Assert.Equal(false, con.Connected);
                 await con.ConnectAsync("Foo", "Bar", server, port);
-                Assert.AreEqual(true, con.Connected);
+                Assert.Equal(true, con.Connected);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_Initiate_A_Connection_By_Providing_An_IP()
         {
             using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, con.Connected);
+                Assert.Equal(false, con.Connected);
                 await con.ConnectAsync("Foo", "Bar", IPAddress.Parse("127.0.0.1"), port);
-                Assert.AreEqual(true, con.Connected);
+                Assert.Equal(true, con.Connected);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_Disconnect()
         {
             using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, con.Connected);
+                Assert.Equal(false, con.Connected);
                 await con.ConnectAsync("Foo", "Bar", server, port);
-                Assert.AreEqual(true, con.Connected);
+                Assert.Equal(true, con.Connected);
                 await con.DisconnectAsync();
-                Assert.AreEqual(false, con.Connected);
+                Assert.Equal(false, con.Connected);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_Receive_A_Message()
         {
             using (var con = new IrcConnection())
@@ -73,30 +77,29 @@ namespace IrcSharp.Core.Tests.Integration
                     mre.Set();
                 };
 
-                Assert.AreEqual(false, con.Connected);
+                Assert.Equal(false, con.Connected);
                 await con.ConnectAsync("Foo", "Bar", server, port);
-                Assert.AreEqual(true, con.Connected);
+                Assert.Equal(true, con.Connected);
                 if (!mre.WaitOne(1000))
                 {
-                    Assert.Fail("The OnRawMessageReceived event never fired");
+                    throw new Xunit.Sdk.XunitException("The OnRawMessageReceived event never fired");
                 }
-                Assert.AreEqual("NOTICE AUTH :*** Checking Ident", message);
+                Assert.Equal("NOTICE AUTH :*** Checking Ident", message);
             }
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(ConnectionFailedException))]
+        [Fact]
         public async Task Throws_An_Appropriate_Exception_If_The_Server_Is_Not_Available()
         {
             using (var con = new IrcConnection())
             {
-                Assert.AreEqual(false, con.Connected);
-                await con.ConnectAsync("Foo", "Bar", "localhostxxx", port);
-                Assert.AreEqual(false, con.Connected);
+                Assert.Equal(false, con.Connected);
+                await Assert.ThrowsAsync<ConnectionFailedException>(() => con.ConnectAsync("Foo", "Bar", "localhostxxx", port));
+                Assert.Equal(false, con.Connected);
             }
         }
 
-        [TestMethod]
+        [Fact]
         public async Task Can_Reconnect_If_Client_Disconnects()
         {
             using (var con = new IrcConnection())
@@ -116,21 +119,20 @@ namespace IrcSharp.Core.Tests.Integration
                     };
                     con.OnRawMessageReceived += (sender, message) => reconnected.Set();
                     await con.ConnectAsync("Foo", "Bar", "localhost", port);
-                    
+
                     AssemblyInit.StopIrcServer();
                     await Task.Delay(500);
-                    Assert.IsTrue(disconnected.WaitOne(5000));
-                    Assert.IsFalse(con.Connected, "Connection is still active");
+                    Assert.True(disconnected.WaitOne(5000));
+                    Assert.False(con.Connected, "Connection is still active");
                 }
                 finally
                 {
-                    AssemblyInit.StartIrcServer(null);
+                    AssemblyInit.StartIrcServer();
                     reconnected.Reset();
                 }
 
-                Assert.IsTrue(reconnected.WaitOne(5000));
-                Assert.IsTrue(con.Connected, "Reconnect failed");
-
+                Assert.True(reconnected.WaitOne(5000));
+                Assert.True(con.Connected, "Reconnect failed");
             }
         }
     }

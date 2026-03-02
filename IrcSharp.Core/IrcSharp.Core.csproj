@@ -1,106 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B44F5F1A-4028-4E77-8E5C-82F0CDD65665}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net10.0</TargetFramework>
     <RootNamespace>IrcSharp.Core</RootNamespace>
     <AssemblyName>IrcSharp.Core</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Connectivity\ConnectionFailedException.cs" />
-    <Compile Include="Connectivity\SocketConnection.cs" />
-    <Compile Include="Connectivity\ISocketConnection.cs" />
-    <Compile Include="Connectivity\MessageEventArgs.cs" />
-    <Compile Include="Connectivity\IrcConnection.cs" />
-    <Compile Include="Messages\AdminMessage.cs" />
-    <Compile Include="Messages\BaseMessageWithOnlyTarget.cs" />
-    <Compile Include="Messages\ConnectMessage.cs" />
-    <Compile Include="Messages\InfoMessage.cs" />
-    <Compile Include="Messages\KillMessage.cs" />
-    <Compile Include="Messages\LinksMessage.cs" />
-    <Compile Include="Messages\LusersMessage.cs" />
-    <Compile Include="Messages\MotdMessage.cs" />
-    <Compile Include="Messages\Propagation\MessagePropagator.cs" />
-    <Compile Include="Messages\BaseMultipleChannelWithOptionalTargetMessage.cs" />
-    <Compile Include="Messages\InviteMessage.cs" />
-    <Compile Include="Messages\KickMessage.cs" />
-    <Compile Include="Messages\ListMessage.cs" />
-    <Compile Include="Messages\ChannelModeMessage.cs" />
-    <Compile Include="Messages\NamesMessage.cs" />
-    <Compile Include="Messages\NoticeMessage.cs" />
-    <Compile Include="Messages\OperMessage.cs" />
-    <Compile Include="Messages\PartMessage.cs" />
-    <Compile Include="Messages\PrivMsgMessage.cs" />
-    <Compile Include="Messages\QuitMessage.cs" />
-    <Compile Include="Messages\ServiceMessage.cs" />
-    <Compile Include="Messages\ServlistMessage.cs" />
-    <Compile Include="Messages\SqueryMessage.cs" />
-    <Compile Include="Messages\SquitMessage.cs" />
-    <Compile Include="Messages\StatsMessage.cs" />
-    <Compile Include="Messages\TimeMessage.cs" />
-    <Compile Include="Messages\TopicMessage.cs" />
-    <Compile Include="Messages\TraceMessage.cs" />
-    <Compile Include="Messages\UserModeMessage.cs" />
-    <Compile Include="Messages\VersionMessage.cs" />
-    <Compile Include="Messages\WhoisMessage.cs" />
-    <Compile Include="Messages\WhoMessage.cs" />
-    <Compile Include="Messages\WhowasMessage.cs" />
-    <Compile Include="Model\IrcUserInfo.cs" />
-    <Compile Include="Messages\Propagation\ReceivedMessagePropagatorAttribute.cs" />
-    <Compile Include="Messages\GenericNumericResponseMessage.cs" />
-    <Compile Include="Messages\NotRegisteredNumericResponseMessage.cs" />
-    <Compile Include="Messages\NumericReponseMessageBase.cs" />
-    <Compile Include="Messages\Propagation\MessagePropagatorReflector.cs" />
-    <Compile Include="Messages\JoinMessage.cs" />
-    <Compile Include="Messages\Interfaces\IReceivableMessage.cs" />
-    <Compile Include="Messages\PassMessage.cs" />
-    <Compile Include="Messages\PingMessage.cs" />
-    <Compile Include="Messages\PongMessage.cs" />
-    <Compile Include="Messages\UserMessage.cs" />
-    <Compile Include="Messages\Interfaces\ISendableMessage.cs" />
-    <Compile Include="Messages\UnknownMessage.cs" />
-    <Compile Include="Messages\NickMessage.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

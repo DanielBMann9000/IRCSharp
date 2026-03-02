@@ -1,3 +1,4 @@
+using Xunit;
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,7 +11,7 @@ using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Tests.Unit
 {
-    [ExcludeFromCodeCoverage]
+    
     public class FakeSocketConnection : ISocketConnection
     {
         private readonly List<string> messages = new List<string>();
