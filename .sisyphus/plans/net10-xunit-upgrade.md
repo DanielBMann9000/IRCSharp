@@ -198,35 +198,13 @@ Max Concurrent: 4 (Waves 1 & 2)
   **References**:
   - `IrcSharp.sln` - Solution file to backup
   - `IrcSharp.Core/IrcSharp.Core.csproj` - Core library project
-  - `IrcSharp.Core.Tests.Unit/IrcSharp.Core.Tests.Unit.csproj` - Unit test project
-  - `IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj` - Integration test project
-
-  **Acceptance Criteria**:
-  - [ ] Solution file backed up to `IrcSharp.sln.bak`
-  - [ ] MSTest references identified in all project files
-  - [ ] External NuGet packages documented
-  - [ ] Test infrastructure dependencies identified
-  - [ ] Current build verified with `dotnet build IrcSharp.sln`
-
-  **QA Scenarios**:
-
-  ```
-  Scenario: Project structure analysis
-    Tool: Bash
-    Preconditions: Current working directory is project root
-    Steps:
-      1. Run: dotnet sln IrcSharp.sln list
-      2. Run: grep -r "MSTest" *.csproj
-      3. Run: grep -r "Microsoft.VisualStudio.QualityTools" *.csproj
-      4. Run: grep -r "PackageReference" IrcSharp.Core/*.csproj
-    Expected Result: All project references listed, MSTest references found, package references identified
-    Failure Indicators: Any command fails, unexpected output format
-    Evidence: .sisyphus/evidence/task-1-analysis.txt
-  ```
-
-  **Evidence to Capture**:
-  - [ ] task-1-analysis.txt - Analysis output
-  - [ ] IrcSharp.sln.bak - Backup of solution file
+  - [x] Solution file backed up to `IrcSharp.sln.bak`
+- [x] MSTest references identified in all project files
+- [x] External NuGet packages documented
+- [x] Test infrastructure dependencies identified
+- [x] Current build verified with `dotnet build IrcSharp.sln`
+- [x] task-1-analysis.txt - Analysis output
+- [x] IrcSharp.sln.bak - Backup of solution file
 
   **Commit**: YES
   - Message: `chore: backup project structure before migration`
@@ -265,11 +243,11 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `IrcSharp.Core/IrcSharp.Core.csproj` - Target file for conversion
 
   **Acceptance Criteria**:
-  - [ ] Project file converted to SDK-style format
-  - [ ] TargetFramework set to net10.0
-  - [ ] Build succeeds with `dotnet build IrcSharp.sln`
-  - [ ] No warnings about target framework
-  - [ ] No MSTest references in project file
+  - [x] Project file converted to SDK-style format
+  - [x] TargetFramework set to net10.0
+  - [x] Build succeeds with `dotnet build IrcSharp.sln`
+  - [x] No warnings about target framework
+  - [x] No MSTest references in project file
 
   **QA Scenarios**:
 
@@ -285,8 +263,8 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-2-build-output.txt - Build output
-  - [ ] IrcSharp.Core/bin/Debug/net10.0/IrcSharp.Core.dll - Built assembly
+  - [x] task-2-build-output.txt - Build output
+  - [x] IrcSharp.Core/bin/Debug/net10.0/IrcSharp.Core.dll - Built assembly
 
   **Commit**: YES
   - Message: `refactor: convert Core project to .NET 10 SDK-style`
@@ -323,11 +301,11 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `IrcSharp.Core.Tests.Unit/IrcSharp.Core.Tests.Unit.csproj` - Target file for conversion
 
   **Acceptance Criteria**:
-  - [ ] Project file converted to SDK-style format
-  - [ ] xUnit packages added (xunit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk)
-  - [ ] MSTest packages removed
-  - [ ] Restore succeeds with `dotnet restore`
-  - [ ] Project references Core library correctly
+  - [x] Project file converted to SDK-style format
+  - [x] xUnit packages added (xunit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk)
+  - [x] MSTest packages removed
+  - [x] Restore succeeds with `dotnet restore`
+  - [x] Project references Core library correctly
 
   **QA Scenarios**:
 
@@ -343,7 +321,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-3-restore-output.txt - Restore output
+  - [x] task-3-restore-output.txt - Restore output
 
   **Commit**: YES
   - Message: `chore: add xUnit packages to Unit test project`
@@ -381,11 +359,11 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj` - Target file for conversion
 
   **Acceptance Criteria**:
-  - [ ] Project file converted to SDK-style format
-  - [ ] xUnit packages added
-  - [ ] MSTest packages removed
-  - [ ] Embedded bircd.exe content references preserved
-  - [ ] Restore succeeds with `dotnet restore`
+  - [x] Project file converted to SDK-style format
+  - [x] xUnit packages added
+  - [x] MSTest packages removed
+  - [x] Embedded bircd.exe content references preserved
+  - [x] Restore succeeds with `dotnet restore`
 
   **QA Scenarios**:
 
@@ -401,7 +379,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-4-restore-output.txt - Restore output
+  - [x] task-4-restore-output.txt - Restore output
 
   **Commit**: YES
   - Message: `chore: add xUnit packages to Integration test project`
@@ -454,11 +432,11 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `IrcSharp.Core.Tests.Unit/Properties/AssemblyInfo.cs`
 
   **Acceptance Criteria**:
-  - [ ] All test files converted from MSTest to xUnit
-  - [ ] No MSTest attributes remain in any test file
-  - [ ] All assertions converted to xUnit equivalents
-  - [ ] Build succeeds with `dotnet build`
-  - [ ] Tests run with `dotnet test`
+  - [x] All test files converted from MSTest to xUnit
+  - [x] No MSTest attributes remain in any test file
+  - [x] All assertions converted to xUnit equivalents
+  - [x] Build succeeds with `dotnet build`
+  - [x] Tests run with `dotnet test`
 
   **QA Scenarios**:
 
@@ -475,7 +453,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-5-unit-tests.txt - Build and test output
+  - [x] task-5-unit-tests.txt - Build and test output
 
   **Commit**: YES
   - Message: `refactor: convert Unit tests from MSTest to xUnit`
@@ -518,12 +496,12 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `IrcSharp.Core.Tests.Integration/Properties/AssemblyInfo.cs`
 
   **Acceptance Criteria**:
-  - [ ] All integration test files converted from MSTest to xUnit
-  - [ ] No MSTest attributes remain in any test file
-  - [ ] All assertions converted to xUnit equivalents
-  - [ ] Embedded bircd.exe references preserved
-  - [ ] Build succeeds with `dotnet build`
-  - [ ] Tests run with `dotnet test`
+  - [x] All integration test files converted from MSTest to xUnit
+  - [x] No MSTest attributes remain in any test file
+  - [x] All assertions converted to xUnit equivalents
+  - [x] Embedded bircd.exe references preserved
+  - [x] Build succeeds with `dotnet build`
+  - [x] Tests run with `dotnet test`
 
   **QA Scenarios**:
 
@@ -540,7 +518,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-6-integration-tests.txt - Build and test output
+  - [x] task-6-integration-tests.txt - Build and test output
 
   **Commit**: YES
   - Message: `refactor: convert Integration tests from MSTest to xUnit`
@@ -583,12 +561,12 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj`
 
   **Acceptance Criteria**:
-  - [ ] Solution builds successfully with `dotnet build IrcSharp.sln`
-  - [ ] All unit tests pass with `dotnet test IrcSharp.Core.Tests.Unit`
-  - [ ] All integration tests pass with `dotnet test IrcSharp.Core.Tests.Integration`
-  - [ ] No MSTest references remain in any project file
-  - [ ] All projects target net10.0 framework
-  - [ ] All tests use xUnit framework
+  - [x] Solution builds successfully with `dotnet build IrcSharp.sln`
+  - [x] All unit tests pass with `dotnet test IrcSharp.Core.Tests.Unit`
+  - [x] All integration tests pass with `dotnet test IrcSharp.Core.Tests.Integration`
+  - [x] No MSTest references remain in any project file
+  - [x] All projects target net10.0 framework
+  - [x] All tests use xUnit framework
 
   **QA Scenarios**:
 
@@ -607,8 +585,8 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-7-verification.txt - Full verification output
-  - [ ] IrcSharp.sln - Solution file (updated)
+  - [x] task-7-verification.txt - Full verification output
+  - [x] IrcSharp.sln - Solution file (updated)
 
   **Commit**: YES
   - Message: `build: final verification - all tests passing with .NET 10 and xUnit`
@@ -647,10 +625,10 @@ Max Concurrent: 4 (Waves 1 & 2)
   - `.gitignore` - Git ignore rules
 
   **Acceptance Criteria**:
-  - [ ] README.md updated to reflect .NET 10 target
-  - [ ] README.md updated to reference xUnit
-  - [ ] AGENTS.md files updated to reflect migration
-  - [ ] .gitignore updated for SDK-style projects if needed
+  - [x] README.md updated to reflect .NET 10 target
+  - [x] README.md updated to reference xUnit
+  - [x] AGENTS.md files updated to reflect migration
+  - [x] .gitignore updated for SDK-style projects if needed
 
   **QA Scenarios**:
 
@@ -667,7 +645,7 @@ Max Concurrent: 4 (Waves 1 & 2)
   ```
 
   **Evidence to Capture**:
-  - [ ] task-8-documentation.txt - Documentation verification output
+  - [x] task-8-documentation.txt - Documentation verification output
 
   **Commit**: YES
   - Message: `docs: update documentation for .NET 10 and xUnit migration`
