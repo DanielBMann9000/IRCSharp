@@ -2,20 +2,18 @@
 
 using IrcSharp.Core.Messages.Interfaces;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class TraceMessage : BaseMessageWithOptionalTarget, ISendableMessage 
 {
-    public class TraceMessage : BaseMessageWithOptionalTarget, ISendableMessage 
+    public TraceMessage(){}
+
+    public TraceMessage(string target) : base(target)
     {
-        public TraceMessage(){}
+        this.Target = target;
+    }
 
-        public TraceMessage(string target) : base(target)
-        {
-            this.Target = target;
-        }
-
-        public string ToMessage()
-        {
-            return base.ToMessage("TRACE");
-        }
+    public string ToMessage()
+    {
+        return base.ToMessage("TRACE");
     }
 }

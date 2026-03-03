@@ -1,11 +1,9 @@
-﻿namespace IrcSharp.Core.Messages
+﻿namespace IrcSharp.Core.Messages;
+public class GenericNumericResponseMessage : NumericReponseMessageBase
 {
-    public class GenericNumericResponseMessage : NumericReponseMessageBase
+    public string ResponseText { get; private set; }
+    public GenericNumericResponseMessage(string responseCode, string responseText) : base(responseCode)
     {
-        public string ResponseText { get; private set; }
-        public GenericNumericResponseMessage(string responseCode, string responseText) : base(responseCode)
-        {
-            this.ResponseText = responseText;
-        }
+        this.ResponseText = responseText;
     }
 }

@@ -2,42 +2,40 @@
 
 using IrcSharp.Core.Messages.Interfaces;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class LinksMessage : ISendableMessage
 {
-    public class LinksMessage : ISendableMessage
+    public string RemoteServer { get; private set; }
+    public string ServerMask { get; private set; }
+    public LinksMessage() { }
+
+    public LinksMessage(string serverMask)
     {
-        public string RemoteServer { get; private set; }
-        public string ServerMask { get; private set; }
-        public LinksMessage() { }
+        this.ServerMask = serverMask;
+        
+    }
 
-        public LinksMessage(string serverMask)
+    public LinksMessage(string serverMask, string remoteServer) : this(serverMask)
+    {
+        this.RemoteServer = remoteServer;
+    }
+
+    public string ToMessage()
+    {
+        var message = new StringBuilder();
+        message.Append("LINKS");
+        if (!string.IsNullOrWhiteSpace(this.RemoteServer))
         {
-            this.ServerMask = serverMask;
-            
+            message.AppendFormat(" {0}", this.RemoteServer);
         }
 
-        public LinksMessage(string serverMask, string remoteServer) : this(serverMask)
+        if (!string.IsNullOrWhiteSpace(this.ServerMask))
         {
-            this.RemoteServer = remoteServer;
+            message.AppendFormat(" {0}", this.ServerMask);
         }
 
-        public string ToMessage()
-        {
-            var message = new StringBuilder();
-            message.Append("LINKS");
-            if (!string.IsNullOrWhiteSpace(this.RemoteServer))
-            {
-                message.AppendFormat(" {0}", this.RemoteServer);
-            }
+        message.Append("\r\n");
 
-            if (!string.IsNullOrWhiteSpace(this.ServerMask))
-            {
-                message.AppendFormat(" {0}", this.ServerMask);
-            }
-
-            message.Append("\r\n");
-
-            return message.ToString();
-        }
+        return message.ToString();
     }
 }

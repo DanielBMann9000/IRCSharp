@@ -1,13 +1,11 @@
-﻿namespace IrcSharp.Core.Messages
+﻿namespace IrcSharp.Core.Messages;
+public class NotRegisteredNumericResponseMessage : NumericReponseMessageBase
 {
-    public class NotRegisteredNumericResponseMessage : NumericReponseMessageBase
+    public string Command { get; private set; }
+    public string Message { get; private set; }
+    public NotRegisteredNumericResponseMessage(string command, string message) : base("451")
     {
-        public string Command { get; private set; }
-        public string Message { get; private set; }
-        public NotRegisteredNumericResponseMessage(string command, string message) : base("451")
-        {
-            this.Command = command;
-            this.Message = message;
-        }
+        this.Command = command;
+        this.Message = message;
     }
 }

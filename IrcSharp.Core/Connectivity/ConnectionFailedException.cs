@@ -1,11 +1,9 @@
 ﻿using System;
 
-namespace IrcSharp.Core.Connectivity
+namespace IrcSharp.Core.Connectivity;
+public class ConnectionFailedException : Exception
 {
-    public class ConnectionFailedException : Exception
+    public ConnectionFailedException(string message, Exception innerException) : base(message, innerException)
     {
-        public ConnectionFailedException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
     }
 }

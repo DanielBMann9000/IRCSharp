@@ -2,41 +2,39 @@
 
 using IrcSharp.Core.Messages.Interfaces;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class LusersMessage : ISendableMessage
 {
-    public class LusersMessage : ISendableMessage
+    public string Mask { get; private set; }
+    public string Target { get; private set; }
+    public LusersMessage() {}
+
+    public LusersMessage(string mask)
     {
-        public string Mask { get; private set; }
-        public string Target { get; private set; }
-        public LusersMessage() {}
+        this.Mask = mask;
+    }
 
-        public LusersMessage(string mask)
+    public LusersMessage(string mask, string target) : this(mask)
+    {
+        this.Target = target;
+    }
+    
+    public string ToMessage()
+    {
+        var message = new StringBuilder();
+        message.Append("LUSERS");
+        if (!string.IsNullOrWhiteSpace(this.Mask))
         {
-            this.Mask = mask;
+            message.AppendFormat(" {0}", this.Mask);
         }
 
-        public LusersMessage(string mask, string target) : this(mask)
+        if (!string.IsNullOrWhiteSpace(this.Target))
         {
-            this.Target = target;
+            message.AppendFormat(" {0}", this.Target);
         }
-        
-        public string ToMessage()
-        {
-            var message = new StringBuilder();
-            message.Append("LUSERS");
-            if (!string.IsNullOrWhiteSpace(this.Mask))
-            {
-                message.AppendFormat(" {0}", this.Mask);
-            }
 
-            if (!string.IsNullOrWhiteSpace(this.Target))
-            {
-                message.AppendFormat(" {0}", this.Target);
-            }
+        message.Append("\r\n");
 
-            message.Append("\r\n");
-
-            return message.ToString();
-        }
+        return message.ToString();
     }
 }

@@ -1,7 +1,5 @@
-﻿namespace IrcSharp.Core.Messages.Interfaces
+﻿namespace IrcSharp.Core.Messages.Interfaces;
+public interface ISendableMessage
 {
-    public interface ISendableMessage
-    {
-        string ToMessage();
-    }
+    string ToMessage();
 }

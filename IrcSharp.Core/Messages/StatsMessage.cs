@@ -2,42 +2,40 @@
 
 using IrcSharp.Core.Messages.Interfaces;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class StatsMessage : ISendableMessage
 {
-    public class StatsMessage : ISendableMessage
+    public string Query { get; private set; }
+    public string Target { get; private set; }
+    public StatsMessage() { }
+
+    public StatsMessage(string target)
     {
-        public string Query { get; private set; }
-        public string Target { get; private set; }
-        public StatsMessage() { }
+        this.Target = target;
+        
+    }
 
-        public StatsMessage(string target)
+    public StatsMessage(string target, string query) : this(target)
+    {
+        this.Query = query;
+    }
+
+    public string ToMessage()
+    {
+        var message = new StringBuilder();
+        message.Append("STATS");
+        if (!string.IsNullOrWhiteSpace(this.Query))
         {
-            this.Target = target;
-            
+            message.AppendFormat(" {0}", this.Query);
         }
 
-        public StatsMessage(string target, string query) : this(target)
+        if (!string.IsNullOrWhiteSpace(this.Target))
         {
-            this.Query = query;
+            message.AppendFormat(" {0}", this.Target);
         }
 
-        public string ToMessage()
-        {
-            var message = new StringBuilder();
-            message.Append("STATS");
-            if (!string.IsNullOrWhiteSpace(this.Query))
-            {
-                message.AppendFormat(" {0}", this.Query);
-            }
+        message.Append("\r\n");
 
-            if (!string.IsNullOrWhiteSpace(this.Target))
-            {
-                message.AppendFormat(" {0}", this.Target);
-            }
-
-            message.Append("\r\n");
-
-            return message.ToString();
-        }
+        return message.ToString();
     }
 }

@@ -1,27 +1,25 @@
 ﻿using System.Text;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public abstract class BaseMessageWithOptionalTarget
 {
-    public abstract class BaseMessageWithOptionalTarget
+    public string Target { get; protected set; }
+
+    protected BaseMessageWithOptionalTarget(){}
+    protected BaseMessageWithOptionalTarget(string target)
     {
-        public string Target { get; protected set; }
+        this.Target = target;
+    }
 
-        protected BaseMessageWithOptionalTarget(){}
-        protected BaseMessageWithOptionalTarget(string target)
+    protected string ToMessage(string type)
+    {
+        var message = new StringBuilder();
+        message.Append(type);
+        if (!string.IsNullOrWhiteSpace(this.Target))
         {
-            this.Target = target;
+            message.AppendFormat(" {0}", this.Target);
         }
-
-        protected string ToMessage(string type)
-        {
-            var message = new StringBuilder();
-            message.Append(type);
-            if (!string.IsNullOrWhiteSpace(this.Target))
-            {
-                message.AppendFormat(" {0}", this.Target);
-            }
-            message.Append("\r\n");
-            return message.ToString();
-        }
+        message.Append("\r\n");
+        return message.ToString();
     }
 }

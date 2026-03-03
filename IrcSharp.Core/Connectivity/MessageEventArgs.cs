@@ -1,9 +1,7 @@
 ﻿using System;
 
-namespace IrcSharp.Core.Connectivity
+namespace IrcSharp.Core.Connectivity;
+public class MessageEventArgs : EventArgs
 {
-    public class MessageEventArgs : EventArgs
-    {
-        public string Message { get; set; }
-    }
+    public string Message { get; set; }
 }

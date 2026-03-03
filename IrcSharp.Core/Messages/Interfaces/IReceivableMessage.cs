@@ -1,9 +1,7 @@
 ﻿using IrcSharp.Core.Model;
 
-namespace IrcSharp.Core.Messages.Interfaces
+namespace IrcSharp.Core.Messages.Interfaces;
+public interface IReceivableMessage
 {
-    public interface IReceivableMessage
-    {
-        IrcUserInfo UserInfo { get; }
-    }
+    IrcUserInfo UserInfo { get; }
 }

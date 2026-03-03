@@ -1,23 +1,21 @@
 ﻿using System.Collections.Generic;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class ListMessage : BaseMultipleChannelWithOptionalTargetMessage
 {
-    public class ListMessage : BaseMultipleChannelWithOptionalTargetMessage
+    private const string MessageName = "LIST";
+    public ListMessage()
+        : base(MessageName)
     {
-        private const string MessageName = "LIST";
-        public ListMessage()
-            : base(MessageName)
-        {
-        }
+    }
 
-        public ListMessage(string channel, string target = null)
-            : base(MessageName, channel, target)
-        {
-        }
+    public ListMessage(string channel, string target = null)
+        : base(MessageName, channel, target)
+    {
+    }
 
-        public ListMessage(IList<string> channels, string target = null)
-            : base(MessageName, channels, target)
-        {
-        }
+    public ListMessage(IList<string> channels, string target = null)
+        : base(MessageName, channels, target)
+    {
     }
 }

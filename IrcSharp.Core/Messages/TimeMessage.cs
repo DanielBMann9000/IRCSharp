@@ -2,18 +2,16 @@
 
 using IrcSharp.Core.Messages.Interfaces;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class TimeMessage: BaseMessageWithOptionalTarget, ISendableMessage 
 {
-    public class TimeMessage: BaseMessageWithOptionalTarget, ISendableMessage 
+    public TimeMessage(){}
+    public TimeMessage(string target) : base(target)
     {
-        public TimeMessage(){}
-        public TimeMessage(string target) : base(target)
-        {
-        }
+    }
 
-        public string ToMessage()
-        {
-            return base.ToMessage("TIME");
-        }
+    public string ToMessage()
+    {
+        return base.ToMessage("TIME");
     }
 }

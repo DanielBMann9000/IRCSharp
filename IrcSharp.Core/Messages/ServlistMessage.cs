@@ -2,42 +2,40 @@
 
 using IrcSharp.Core.Messages.Interfaces;
 
-namespace IrcSharp.Core.Messages
+namespace IrcSharp.Core.Messages;
+public class ServlistMessage : ISendableMessage
 {
-    public class ServlistMessage : ISendableMessage
+    public string Mask { get; private set; }
+    public string Type { get; private set; }
+
+    public ServlistMessage(){}
+
+    public ServlistMessage(string mask)
     {
-        public string Mask { get; private set; }
-        public string Type { get; private set; }
+        this.Mask = mask;
+    }
 
-        public ServlistMessage(){}
+    public ServlistMessage(string mask, string type) : this(mask)
+    {
+        this.Type = type;
+    }
 
-        public ServlistMessage(string mask)
+    public string ToMessage()
+    {
+        var message = new StringBuilder();
+        message.Append("SERVLIST");
+        if (!string.IsNullOrWhiteSpace(this.Mask))
         {
-            this.Mask = mask;
+            message.AppendFormat(" {0}", this.Mask);
         }
 
-        public ServlistMessage(string mask, string type) : this(mask)
+        if (!string.IsNullOrWhiteSpace(this.Type))
         {
-            this.Type = type;
+            message.AppendFormat(" {0}", this.Type);
         }
 
-        public string ToMessage()
-        {
-            var message = new StringBuilder();
-            message.Append("SERVLIST");
-            if (!string.IsNullOrWhiteSpace(this.Mask))
-            {
-                message.AppendFormat(" {0}", this.Mask);
-            }
+        message.Append("\r\n");
 
-            if (!string.IsNullOrWhiteSpace(this.Type))
-            {
-                message.AppendFormat(" {0}", this.Type);
-            }
-
-            message.Append("\r\n");
-
-            return message.ToString();
-        }
+        return message.ToString();
     }
 }
