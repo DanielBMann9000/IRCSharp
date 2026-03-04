@@ -1,6 +1,6 @@
 # IRCSharp Core
 
-**Generated:** 2026-03-02
+**Generated:** 2026-03-04
 **Target Framework:** .NET Framework 4.5
 
 ## OVERVIEW
@@ -45,7 +45,7 @@ IrcSharp.Core/
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
-- `async void` in `Reconnect()` method — error handling anti-pattern
+- `async void` in `Reconnect()` method, error handling anti-pattern
 - Busy waiting with `while (!canSend)` + `Task.Delay` — polling vs event-based
 - Legacy MSBuild .csproj format (pre-SDK style)
 - Microsoft.VisualStudio.QualityTools MSTest framework (not open-source)
