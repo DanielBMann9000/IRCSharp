@@ -33,7 +33,7 @@ public class IrcConnection : IDisposable
     {
         this.connectionManager = connectionManager;
         this.connectionManager.OnMessageReceived += this.ParseMessage;
-        this.connectionManager.OnUnexpectedDisconnection += this.Reconnect;
+        this.connectionManager.OnUnexpectedDisconnection += (s, e) => Task.Run(() => ReconnectAsync(s, e));
 
         this.MessagePropagator = new MessagePropagator();
 
@@ -133,6 +133,39 @@ public class IrcConnection : IDisposable
     }
 
     private async void Reconnect(object sender, Exception disconnectReason)
+    {
+        if (this.reconnecting)
+        {
+            return;
+        }
+        this.reconnecting = true;
+        if (this.OnDisconnected != null)
+        {
+            OnDisconnected(this, null);
+        }
+
+        while (reconnecting)
+        {
+            await Task.Delay(5000);
+            try
+            {
+                if (this.server != null)
+                {
+                    await this.ConnectAsync(this.nick, this.realName, this.server, this.port);
+                }
+                else
+                {
+                    await this.ConnectAsync(this.nick, this.realName, this.serverIp, this.port);
+                }
+                reconnecting = false;
+            }
+            catch (ConnectionFailedException)
+            {
+                // don't be a jackass, raise an event here or something so clients can be notified of a recurring bad connection
+            }
+        }
+    }
+    private async Task ReconnectAsync(object sender, Exception disconnectReason)
     {
         if (this.reconnecting)
         {
