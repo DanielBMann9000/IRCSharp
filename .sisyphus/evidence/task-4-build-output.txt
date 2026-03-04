@@ -1,0 +1,17 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  IrcSharp.Core -> C:\Users\dbman\repos\IRCSharp\IrcSharp.Core\bin\Debug\net10.0\IrcSharp.Core.dll
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\When_Generating_Miscellaneous_Messages.cs(2,7): warning CS0105: The using directive for 'Xunit' appeared previously in this namespace [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\FakeSocketConnection.cs(27,46): warning CS0067: The event 'FakeSocketConnection.OnUnexpectedDisconnection' is never used [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\When_Generating_Miscellaneous_Messages.cs(44,17): warning xUnit2012: Do not use Assert.True() to check if a value exists in a collection. Use Assert.Contains instead. (https://xunit.net/xunit.analyzers/rules/xUnit2012) [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+  IrcSharp.Core.Tests.Unit -> C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\bin\Debug\net10.0\IrcSharp.Core.Tests.Unit.dll
+
+Build succeeded.
+
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\When_Generating_Miscellaneous_Messages.cs(2,7): warning CS0105: The using directive for 'Xunit' appeared previously in this namespace [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\FakeSocketConnection.cs(27,46): warning CS0067: The event 'FakeSocketConnection.OnUnexpectedDisconnection' is never used [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\When_Generating_Miscellaneous_Messages.cs(44,17): warning xUnit2012: Do not use Assert.True() to check if a value exists in a collection. Use Assert.Contains instead. (https://xunit.net/xunit.analyzers/rules/xUnit2012) [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+    3 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.86

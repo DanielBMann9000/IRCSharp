@@ -1,0 +1,67 @@
+# Task 5: Integration Test Namespace Conversion - Verification Evidence
+
+## Conversion Summary
+- **Date**: 2026-03-03
+- **Files Modified**: 2
+- **Target**: IrcSharp.Core.Tests.Integration
+
+## Files Converted
+1. `IrcSharp.Core.Tests.Integration/AssemblyInit.cs`
+2. `IrcSharp.Core.Tests.Integration/When_Connecting_To_A_Real_Server.cs`
+
+## Verification Results
+
+### File-scoped namespace count
+```bash
+grep -r "^namespace.*;$" IrcSharp.Core.Tests.Integration --include="*.cs" | wc -l
+```
+**Result**: 2 ✓
+
+### Traditional namespace block count
+```bash
+grep -r "^namespace.*{$" IrcSharp.Core.Tests.Integration --include="*.cs" | wc -l
+```
+**Result**: 0 ✓
+
+## Changes Made
+- Converted `namespace IrcSharp.Core.Tests.Integration {` to `namespace IrcSharp.Core.Tests.Integration;`
+- Removed opening namespace brace (line after namespace declaration)
+- Removed closing namespace brace (end of file)
+- Preserved all class-level braces and test logic
+
+## Git Diff Summary
+```diff
+namespace IrcSharp.Core.Tests.Integration
+-{
++namespace IrcSharp.Core.Tests.Integration;
++
+```
+- 2 files changed
+- 4 lines removed (2 opening braces, 2 closing braces)
+- 2 lines added (2 file-scoped namespace declarations)
+
+## Build Status
+### Build Command
+### Build Command
+```bash
+dotnet build IrcSharp.Core.Tests.Integration/IrcSharp.Core.Tests.Integration.csproj
+```
+
+### Build Result
+✅ **SUCCESS**
+
+```
+Build succeeded.
+1 Warning(s)
+0 Error(s)
+Time Elapsed 00:00:00.98
+```
+
+### Namespace Count Verification
+```bash
+# File-scoped namespace count (should be 2)
+grep -r "^namespace.*;$" IrcSharp.Core.Tests.Integration --include="*.cs" | wc -l
+
+# Result: 2 ✓
+```
+Pending Task 6 verification.

@@ -1,0 +1,39 @@
+# Task 5: Logic Verification
+
+## Transformation Pattern
+**From**: Traditional namespace blocks
+```csharp
+namespace IrcSharp.Core.Tests.Integration
+{
+    internal class AssemblyInit { ... }
+}
+```
+
+**To**: File-scoped namespaces
+```csharp
+namespace IrcSharp.Core.Tests.Integration;
+
+internal class AssemblyInit { ... }
+```
+
+## Key Changes
+1. **Namespace declaration**: Changed from `namespace X.Y {` (multi-line) to `namespace X.Y;` (single line with semicolon)
+2. **Opening brace removed**: The `{` on the line after namespace declaration was deleted
+3. **Closing brace removed**: The final `}` that closed the namespace block was deleted
+4. **Class braces preserved**: All `{` and `}` for classes and methods remain unchanged
+
+## Why This Works
+- File-scoped namespaces (C# 10+) eliminate the need for namespace block braces
+- The semicolon terminates the namespace declaration
+- All nested code (classes, methods) remains at the same indentation level
+- No functional changes to test logic or behavior
+
+## Pattern Consistency
+This conversion matches the pattern used in:
+- Wave 1: IrcSharp.Core (53 files)
+- Wave 2: IrcSharp.Core.Tests.Unit (12 files)
+
+All three waves follow the same transformation:
+- `namespace X.Y {` → `namespace X.Y;`
+- Remove matching opening/closing braces
+- Preserve all internal code structure
