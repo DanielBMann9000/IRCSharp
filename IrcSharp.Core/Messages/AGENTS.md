@@ -1,11 +1,20 @@
 # Messages
 
-**Generated:** 2026-03-02
+**Generated:** 2026-03-04
 **Context:** Core library submodule
 
 ## OVERVIEW
 
 IRC message types (RFC 2812 compliant) with typed event propagation. 42 message classes handling all IRC commands.
+
+## STRUCTURE
+
+```
+Messages/
+├── *.cs                      # 42 message type classes
+├── Interfaces/               # ISendableMessage, IReceivableMessage
+└── Propagation/              # MessagePropagator event routing
+```
 
 ## WHERE TO LOOK
 
@@ -24,8 +33,9 @@ IRC message types (RFC 2812 compliant) with typed event propagation. 42 message 
 - Propagation events: `On*MessageSending`, `On*MessageSent`, `On*MessageReceived`
 - Numeric responses: GenericNumericResponseMessage, NotRegisteredNumericResponseMessage
 - MessagePropagator routes by command string (e.g., "PRIVMSG", "JOIN")
+- Event-driven design with separate sending/sent phases for observability
 
 ## ANTI-PATTERNS
 
-- `TokenizeArguments` method (line 534 MessagePropagator.cs) — may not tokenize all IRC messages correctly
+- `TokenizeArguments` method (line 534 MessagePropagator.cs) may not tokenize all IRC messages correctly
 - Large MessagePropagator class (547 lines) — consider splitting by category

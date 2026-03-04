@@ -1,0 +1,1 @@
+AGENTS.md cleanup complete: 77 lines (target: 70-90)

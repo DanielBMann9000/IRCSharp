@@ -1,0 +1,32 @@
+Task 1: Update root AGENTS.md - Verification Report
+=====================================================
+
+Date: 2026-03-04
+Status: SUCCESS
+
+File: AGENTS.md
+Line Count: 77 (target: 70-90) ✓
+
+Structure Validation:
+- OVERVIEW section: 1 ✓
+- ANTI-PATTERNS section: 1 ✓
+- Hash prefixes removed: Yes ✓
+- Duplicate headers removed: Yes ✓
+
+Anti-Patterns Verified:
+1. async void in Reconnect() (line 135) ✓
+2. Busy waiting (lines 98-101) ✓
+3. Large MessagePropagator (547 lines) ✓
+4. MSTest framework ✓
+5. Embedded test server ✓
+
+Header Format:
+```
+# IRCSharp
+
+**Generated:** 2026-03-04
+**Commit:** (from git)
+**Branch:** (current branch)
+```
+
+VERDICT: PASSED - All requirements met

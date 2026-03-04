@@ -1,7 +1,7 @@
 # IRCSharp Core
 
 **Generated:** 2026-03-04
-**Target Framework:** .NET Framework 4.5
+**Target Framework:** .NET 10.0
 
 ## OVERVIEW
 

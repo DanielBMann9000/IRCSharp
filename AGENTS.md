@@ -13,7 +13,7 @@ Event-driven, asynchronous IRC library. Core functionality: connection managemen
 ```
 IRCSharp/
 ├── IrcSharp.sln                          # Visual Studio solution
-├── IrcSharp.Core/                        # Main library (.NET Framework 4.5)
+├── IrcSharp.Core/                        # Main library (.NET 10.0)
 │   ├── Connectivity/                       # Socket I/O, connection lifecycle
 │   ├── Messages/                           # 42 RFC 2812 message classes
 │   │   └── Propagation/                    # Event-based message routing
@@ -75,4 +75,4 @@ Test → Run → All Tests
 - No CI/CD configured
 - Integration tests require real IRC server (bircd.exe embedded)
 - No external config files (.eslintrc, .editorconfig, etc.)
-- Target framework: .NET Framework 4.5 (legacy)
+- Target framework: .NET 10.0
