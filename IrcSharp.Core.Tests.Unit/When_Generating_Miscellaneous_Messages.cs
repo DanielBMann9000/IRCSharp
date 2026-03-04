@@ -9,8 +9,7 @@ using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Interfaces;
 
 
-namespace IrcSharp.Core.Tests.Unit
-{
+namespace IrcSharp.Core.Tests.Unit;
     // ReSharper disable InconsistentNaming
     // ReSharper disable ConvertToConstant.Local
     
@@ -46,4 +45,3 @@ namespace IrcSharp.Core.Tests.Unit
             }
         }
     }
-}

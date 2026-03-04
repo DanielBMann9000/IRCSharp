@@ -9,8 +9,7 @@ using IrcSharp.Core.Messages;
 using IrcSharp.Core.Messages.Interfaces;
 
 
-namespace IrcSharp.Core.Tests.Unit
-{
+namespace IrcSharp.Core.Tests.Unit;
     
     internal static class TestHelpers
     {
@@ -32,4 +31,3 @@ namespace IrcSharp.Core.Tests.Unit
             }
         }
     }
-}

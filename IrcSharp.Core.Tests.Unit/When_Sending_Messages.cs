@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 using IrcSharp.Core.Messages;
 
 
-namespace IrcSharp.Core.Tests.Unit
-{
+namespace IrcSharp.Core.Tests.Unit;
     // ReSharper disable InconsistentNaming
     
     
@@ -437,4 +436,3 @@ namespace IrcSharp.Core.Tests.Unit
 
 
     }
-}
