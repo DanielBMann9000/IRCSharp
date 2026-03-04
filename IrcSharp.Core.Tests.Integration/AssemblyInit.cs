@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace IrcSharp.Core.Tests.Integration
-{
+namespace IrcSharp.Core.Tests.Integration;
     internal class AssemblyInit
     {
         private static bool _isInitialized;
@@ -37,4 +36,3 @@ namespace IrcSharp.Core.Tests.Integration
             Process.Start(psi);
         }
     }
-}

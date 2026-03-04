@@ -5,8 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using IrcSharp.Core.Connectivity;
 
-namespace IrcSharp.Core.Tests.Integration
-{
+namespace IrcSharp.Core.Tests.Integration;
     public class When_Interacting_With_A_Real_Server
     {
         private static string server;
@@ -134,4 +133,3 @@ namespace IrcSharp.Core.Tests.Integration
             }
         }
     }
-}
