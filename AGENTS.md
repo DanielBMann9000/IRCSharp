@@ -1,6 +1,6 @@
 # IRCSharp
 
-**Generated:** 2026-03-02
+**Generated:** 2026-03-04
 **Commit:** (from git)
 **Branch:** (current branch)
 
@@ -14,6 +14,10 @@ Event-driven, asynchronous IRC library. Core functionality: connection managemen
 IRCSharp/
 ├── IrcSharp.sln                          # Visual Studio solution
 ├── IrcSharp.Core/                        # Main library (.NET Framework 4.5)
+│   ├── Connectivity/                       # Socket I/O, connection lifecycle
+│   ├── Messages/                           # 42 RFC 2812 message classes
+│   │   └── Propagation/                    # Event-based message routing
+│   └── Model/                              # Data models
 ├── IrcSharp.Core.Tests.Unit/             # Unit tests (MSTest)
 ├── IrcSharp.Core.Tests.Integration/      # Integration tests
 └── README.md                             # Project overview
@@ -50,15 +54,15 @@ IRCSharp/
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
-- `async void` in `Reconnect()` — error handling anti-pattern (line 136)
-- Busy waiting with `while (!canSend)` + `Task.Delay(500)` — polling vs event-based (line 98-101)
-- Large MessagePropagator class (547 lines) — consider splitting
+- `async void` in `Reconnect()` - error handling anti-pattern (line 135)
+- Busy waiting with `while (!canSend)` + `Task.Delay(500)` - polling vs event-based (lines 98-101)
+- Large MessagePropagator class (547 lines) - consider splitting
 - Microsoft MSTest framework (not open-source)
 - Embedded test server binary in integration tests
 
 ## COMMANDS
 
-```bash
+```
 # Build
 msbuild IrcSharp.sln
 
