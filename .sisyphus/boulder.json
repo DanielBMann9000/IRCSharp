@@ -1,10 +1,10 @@
 {
-  "active_plan": "C:\\Users\\dbman\\repos\\IRCSharp\\.sisyphus\\plans\\moq-migration.md",
-  "started_at": "2026-03-05T02:58:09.991Z",
+  "active_plan": "C:\\Users\\dbman\\repos\\IRCSharp\\.sisyphus\\plans\\irc-guess-bot.md",
+  "started_at": "2026-03-05T05:06:50.203Z",
   "session_ids": [
-    "ses_3443be951ffeJ04G2n58Z1hhnz"
-  "worktree_path": "C:/Users/dbman/repos/IRCSharp"
+    "ses_3439bc92bffeTkKf1TJVewBZkU"
   ],
-  "plan_name": "moq-migration",
-  "agent": "atlas"
+  "plan_name": "irc-guess-bot",
+  "agent": "atlas",
+  "worktree_path": "C:/Users/dbman/repos/IRCSharp"
 }

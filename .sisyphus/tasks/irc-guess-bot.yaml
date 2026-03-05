@@ -1,0 +1,359 @@
+# IRC Number Guessing Bot - Work Plan
+# Target: Build a game bot that works with the IRCSharp library
+# Framework: .NET 10.0, Event-driven, Async/await
+# Anti-patterns to avoid: async void, busy waiting (while loops with Task.Delay)
+
+---
+
+tasks:
+  # ========================================================================
+  # PHASE 1: Infrastructure and Foundation (Tasks 1-4)
+  # ========================================================================
+  - id: 1
+    title: "Create game state model classes"
+    description: "Define data structures for game state per user. Need GameSession class with properties: TargetNumber (1-100), Attempts, IsActive, StartedAt, UserId/Nick."
+    category: "model"
+    dependencies: []
+    parallel_group: "A"
+    effort: "1h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Creating_GameSession'"
+    notes: "Create in IrcSharp.Core/Model/GuessGame.cs. Use immutable patterns where possible. Ensure thread-safe access patterns for per-nick state storage."
+
+  - id: 2
+    title: "Create game state manager service"
+    description: "Implement IGameStateManager interface with methods: StartGame(nick), SubmitGuess(nick, number), GetHint(nick), EndGame(nick), GetGameState(nick). Use ConcurrentDictionary<string, GameSession> for storage."
+    category: "service"
+    dependencies: [1]
+    parallel_group: "A"
+    effort: "2h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Creating_GameStateManager'"
+    notes: "Place in IrcSharp.Core/Services/. Avoid async void. Use proper locking or concurrent collections. Include validation for game not active, number out of range (1-100), attempts exceeded."
+
+  - id: 3
+    title: "Define PrivMsgMessage parsing extensions"
+    description: "Add extension methods or helper class to parse PRIVMSG content. Need method to extract command (/guess start, /guess <number>, /guess hint, /guess end) and arguments from message body."
+    category: "parsing"
+    dependencies: []
+    parallel_group: "B"
+    effort: "1.5h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Parsing_Guess_Command'"
+    notes: "Create in IrcSharp.Core/Messages/Extensions/GuessCommandParser.cs. Handle edge cases: case-insensitive commands, extra whitespace, invalid number format. Use string.Split and Trim."
+
+  - id: 4
+    title: "Create command enum and validation types"
+    description: "Define GuessCommand enum (Start, Guess, Hint, End, Invalid). Create GuessResult class for validation outcomes: IsValid, ErrorMessage, NumberValue, HintDirection (Higher/Lower)."
+    category: "model"
+    dependencies: [3]
+    parallel_group: "B"
+    effort: "1h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Validating_Guess_Command'"
+    notes: "Include boundary cases: 0, 1, 100, 101, negative numbers, non-numeric strings. Ensure clean separation between parsing (idempotent) and validation (state-dependent)."
+
+  # ========================================================================
+  # PHASE 2: Core Game Logic (Tasks 5-9)
+  # ========================================================================
+  - id: 5
+    title: "Implement game logic - start new game"
+    description: "Implement StartGame method in IGameStateManager. Generate random number 1-100 using Random class or RNG. Set IsActive=true, Attempts=0. Return confirmation message template."
+    category: "game-logic"
+    dependencies: [1, 2]
+    parallel_group: "C"
+    effort: "1h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Storing_GameState'"
+    notes: "Use proper Random instance (avoid static to prevent same sequence). Test: multiple concurrent games, verify each user gets different number."
+
+  - id: 6
+    title: "Implement game logic - submit guess validation"
+    description: "Implement SubmitGuess method. Validate: game active, number in range 1-100, not already guessed (optional). Update attempts. Return GuessResult with success/failure and hint if applicable."
+    category: "game-logic"
+    dependencies: [2, 4]
+    parallel_group: "C"
+    effort: "1.5h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Submitting_Guess'"
+    notes: "Track guessed numbers to prevent repeat guesses. Return appropriate error messages for edge cases. Verify: game not started returns error, out of range returns error."
+
+  - id: 7
+    title: "Implement game logic - hint generation"
+    description: "Implement GetHint method. Compare guess to target. Return 'Higher' or 'Lower' hint. Track if hint was requested. Consider hint cost (e.g., reveal if attempts > 3)."
+    category: "game-logic"
+    dependencies: [1, 2]
+    parallel_group: "C"
+    effort: "1h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Getting_Hint'"
+    notes: "Edge cases: game not active, no current guess, game already won/lost. Document hint policy in code comments."
+
+  - id: 8
+    title: "Implement game logic - win/loss detection"
+    description: "Add logic to detect game end conditions: correct guess (win), attempts exceeded (loss - default 10 attempts). Set IsActive=false, record outcome. Trigger end-game message."
+    category: "game-logic"
+    dependencies: [2, 5, 6]
+    parallel_group: "C"
+    effort: "1.5h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Detecting_GameOutcome'"
+    notes: "Default 10 attempts, make configurable. Win message includes attempts used. Loss message reveals target number."
+
+  - id: 9
+    title: "Implement game logic - manual end and cleanup"
+    description: "Implement EndGame method. Allow users to end current game manually. Clear game state or mark as abandoned. Handle cleanup of guessed numbers list."
+    category: "game-logic"
+    dependencies: [2]
+    parallel_group: "C"
+    effort: "1h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Ending_Game_Manually'"
+    notes: "Consider auto-cleanup of inactive games after timeout. Document cleanup policy. Prevent starting new game immediately after end (cooldown optional)."
+
+  # ========================================================================
+  # PHASE 3: Message Integration (Tasks 10-14)
+  # ========================================================================
+  - id: 10
+    title: "Create game response message types"
+    description: "Define internal message response classes: GameStartedMessage, GuessResultMessage, HintMessage, GameEndedMessage. Each implements ISendableMessage for consistent formatting."
+    category: "messages"
+    dependencies: [1]
+    parallel_group: "D"
+    effort: "2h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Generating_Game_Messages'"
+    notes: "Follow existing PrivMsgMessage pattern. Include templates for all game states. Test ToMessage() output format matches IRC PRIVMSG spec."
+
+  - id: 11
+    title: "Build message handler for guess commands"
+    description: "Create GuessCommandHandler class that subscribes to OnPrivMsgMessageReceived. Parse incoming PRIVMSG, route to appropriate game logic methods, send response messages."
+    category: "handler"
+    dependencies: [4, 10]
+    parallel_group: "E"
+    effort: "3h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Handling_Guess_Command'"
+    notes: "Event handler should be async Task (not async void). Use MessagePropagator routing. Handle both private messages and channel messages (distinguish by destination prefix #)."
+
+  - id: 12
+    title: "Add automatic guess response feature"
+    description: "Implement auto-detection of plain number guesses in PRIVMSG. If message is numeric and game active, automatically submit as guess. Respond with hint/outcome."
+    category: "handler"
+    dependencies: [6, 11]
+    parallel_group: "E"
+    effort: "2h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Auto_Responding_To_Number'"
+    notes: "Parse message body for integers. Validate range. Skip if command prefix present (/guess). Ensure auto-response doesn't interfere with explicit commands."
+
+  - id: 13
+    title: "Implement user-friendly error messages"
+    description: "Create localized error message templates: GameNotStarted, NumberOutOfRange, InvalidFormat, GameAlreadyEnded, AttemptsExceeded, AlreadyGuessed."
+    category: "messages"
+    dependencies: [4]
+    parallel_group: "D"
+    effort: "1.5h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Formatting_Error_Messages'"
+    notes: "Keep messages concise (IRC limit ~450 chars). Use clear, friendly tone. Include helpful hints where appropriate (e.g., 'Try a number between 1 and 100')."
+
+  - id: 14
+    title: "Add game status query feature"
+    description: "Implement /guess status command. Return current game state: attempts used, remaining attempts, active status. Do not reveal target number."
+    category: "handler"
+    dependencies: [2, 7]
+    parallel_group: "E"
+    effort: "2h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Querying_Game_Status'"
+    notes: "Format: 'Game in progress: 3/10 attempts. Target: ?'. If no game active: 'No active game. Use /guess start to begin.'"
+
+  # ========================================================================
+  # PHASE 4: Unit Tests - Game Logic (Tasks 15-19)
+  # ========================================================================
+  - id: 15
+    title: "Write unit tests for game state management"
+    description: "Create When_Storing_GameState test class. Test: StartGame creates session, EndGame removes session, concurrent games don't interfere, game state persists across operations."
+    category: "unit-test"
+    dependencies: [2]
+    parallel_group: "F"
+    effort: "3h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Storing_GameState' --verbosity normal"
+    notes: "Use FakeSocketConnection pattern. Test with Mock<IGameStateManager>. Include race condition scenarios with ConcurrentDictionary."
+
+  - id: 16
+    title: "Write unit tests for guess validation"
+    description: "Create When_Validating_Guess test class. Test: valid numbers (1-100), invalid numbers (0, 101, negative, non-numeric), boundary conditions, duplicate guesses."
+    category: "unit-test"
+    dependencies: [4, 6]
+    parallel_group: "F"
+    effort: "2.5h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Validating_Guess' --verbosity normal"
+    notes: "Follow BDD naming: When_Guessing_ValidNumber_ThenAccepted, When_Guessing_OutOfRange_ThenRejected. Cover all edge cases from validation logic."
+
+  - id: 17
+    title: "Write unit tests for win/loss detection"
+    description: "Create When_Detecting_GameOutcome test class. Test: win on correct guess, loss on attempts exceeded, correct attempt counting, outcome message formatting."
+    category: "unit-test"
+    dependencies: [8]
+    parallel_group: "F"
+    effort: "2h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Detecting_GameOutcome' --verbosity normal"
+    notes: "Test with configurable attempt limits. Verify outcome triggers are correct. Include tests for partial games (not finished yet)."
+
+  - id: 18
+    title: "Write unit tests for command parsing"
+    description: "Create When_Parsing_Guess_Command test class. Test: all command variants (start, hint, end), case insensitivity, extra whitespace handling, invalid command detection."
+    category: "unit-test"
+    dependencies: [3, 4]
+    parallel_group: "F"
+    effort: "2h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Parsing_Guess_Command' --verbosity normal"
+    notes: "Test parser in isolation from game logic. Use string inputs, verify enum outputs. Include malformed input tests."
+
+  - id: 19
+    title: "Write unit tests for message generation"
+    description: "Create When_Generating_Game_Messages test class. Test: ToMessage() output for all game response types. Verify IRC PRIVMSG format, message content accuracy."
+    category: "unit-test"
+    dependencies: [10]
+    parallel_group: "F"
+    effort: "2h"
+    verification: "dotnet test IrcSharp.Core.Tests.Unit/ --filter 'FullyQualifiedName~When_Generating_Game_Messages' --verbosity normal"
+    notes: "Follow existing When_Generating_Message_Messages.cs pattern. Use Assert.Equal for exact string matches on IRC protocol output."
+
+  # ========================================================================
+  # PHASE 5: Integration Tests (Tasks 20-23)
+  # ========================================================================
+  - id: 20
+    title: "Create integration test infrastructure"
+    description: "Set up integration test base class similar to When_Interacting_With_A_Real_Server.cs. Add helper methods for connecting to test server, sending commands, receiving messages."
+    category: "integration-test"
+    dependencies: []
+    parallel_group: "G"
+    effort: "2h"
+    verification: "dotnet test IrcSharp.Core.Tests.Integration/ --filter 'FullyQualifiedName~When_GameBot' --list-tests"
+    notes: "Reuse AssemblyInit for bircd.exe lifecycle. Create test fixture that manages test server per test class. Ensure proper cleanup."
+
+  - id: 21
+    title: "Write integration tests for game flow"
+    description: "Create When_GameBot_StartsGame integration test. Test: full game flow via real server - connect, send /guess start, receive confirmation, submit guess, receive outcome."
+    category: "integration-test"
+    dependencies: [11, 20]
+    parallel_group: "G"
+    effort: "3h"
+    verification: "dotnet test IrcSharp.Core.Tests.Integration/ --filter 'FullyQualifiedName~When_GameBot_StartsGame' --verbosity normal"
+    notes: "Use real IRC traffic through bircd.exe. Verify end-to-end message flow. Include timing considerations for async message handling."
+
+  - id: 22
+    title: "Write integration tests for error handling"
+    description: "Create When_GameBot_Handles_Errors integration test. Test: game not started errors, out of range guesses, invalid commands, auto-reconnect behavior during game."
+    category: "integration-test"
+    dependencies: [11, 13, 20]
+    parallel_group: "G"
+    effort: "2.5h"
+    verification: "dotnet test IrcSharp.Core.Tests.Integration/ --filter 'FullyQualifiedName~When_GameBot_Handles_Errors' --verbosity normal"
+    notes: "Verify error messages reach client correctly. Test server disconnect/reconnect during active game."
+
+  - id: 23
+    title: "Write integration tests for concurrent players"
+    description: "Create When_MultiplePlayers_PlayGame integration test. Test: multiple users playing simultaneously, verify isolated game states, no cross-contamination of guesses."
+    category: "integration-test"
+    dependencies: [2, 20]
+    parallel_group: "G"
+    effort: "3h"
+    verification: "dotnet test IrcSharp.Core.Tests.Integration/ --filter 'FullyQualifiedName~When_MultiplePlayers_PlayGame' --verbosity normal"
+    notes: "Spawn multiple IrcConnection instances. Each with different nick. Verify per-nick state isolation. Test race conditions in state storage."
+
+  # ========================================================================
+  # PHASE 6: Documentation and Polish (Tasks 24-26)
+  # ========================================================================
+  - id: 24
+    title: "Create bot usage documentation"
+    description: "Write usage guide: command reference (/guess start, hint, end, status), game rules, examples, error message explanations. Include in README or separate BOT_USAGE.md."
+    category: "documentation"
+    dependencies: [11, 13, 14]
+    parallel_group: "H"
+    effort: "2h"
+    verification: "Review for clarity, completeness, accuracy. Ensure all commands documented with examples."
+    notes: "Keep documentation in sync with implementation. Use code blocks for command examples."
+
+  - id: 25
+    title: "Add code comments and XML documentation"
+    description: "Document public APIs with XML comments. Add inline comments for complex logic (random generation, validation rules, state transitions). Follow project conventions."
+    category: "documentation"
+    dependencies: [1, 2, 5, 6, 7, 8, 9]
+    parallel_group: "H"
+    effort: "2h"
+    verification: "msbuild IrcSharp.sln (no warnings), verify XML docs generated in IntelliSense."
+    notes: "Focus on IGameStateManager interface, GuessCommandParser, GuessCommandHandler. Avoid obvious comments, explain 'why' not 'what'."
+
+  - id: 26
+    title: "Final verification and code review prep"
+    description: "Run full test suite (unit + integration). Check for code smells, anti-patterns, unused code. Ensure no async void, no busy waiting. Prepare changelog notes."
+    category: "verification"
+    dependencies: [25]
+    parallel_group: "H"
+    effort: "2h"
+    verification: "msbuild IrcSharp.sln && dotnet test IrcSharp.Core.Tests.Unit/ && dotnet test IrcSharp.Core.Tests.Integration/"
+    notes: "Check: lsp_diagnostics clean, all tests pass, no warnings. Verify anti-patterns are absent (lines 98-101, 136 in IrcConnection.cs are known issues, don't introduce new ones)."
+
+---
+
+# Parallelization Groups
+# Group A: Infrastructure (can run in parallel)
+#   Task 1: Game state model
+#   Task 2: Game state manager service
+#
+# Group B: Parsing (can run in parallel)
+#   Task 3: PrivMsg parsing extensions
+#   Task 4: Command enum and validation
+#
+# Group C: Game Logic (sequential - dependencies on previous tasks)
+#   Task 5: Start game logic
+#   Task 6: Submit guess logic
+#   Task 7: Hint logic
+#   Task 8: Win/loss detection
+#   Task 9: Manual end logic
+#
+# Group D: Message Types (can run in parallel)
+#   Task 10: Game response message types
+#   Task 13: Error message templates
+#
+# Group E: Message Handlers (sequential)
+#   Task 11: Main command handler
+#   Task 12: Auto-guess response
+#   Task 14: Status query
+#
+# Group F: Unit Tests (can run in parallel within group)
+#   Task 15: Game state tests
+#   Task 16: Validation tests
+#   Task 17: Win/loss tests
+#   Task 18: Parser tests
+#   Task 19: Message generation tests
+#
+# Group G: Integration Tests (sequential dependencies)
+#   Task 20: Infrastructure
+#   Task 21: Game flow tests
+#   Task 22: Error handling tests
+#   Task 23: Concurrent players tests
+#
+# Group H: Documentation (can run in parallel)
+#   Task 24: Usage documentation
+#   Task 25: Code documentation
+#   Task 26: Final verification
+
+# Estimated Total Effort: 55-60 hours
+# Recommended Timeline: 2-3 weeks (part-time), 1 week (full-time)
+
+# Key Dependencies Summary
+# - All game logic depends on: Game state model (1), Game state manager (2)
+# - Handlers depend on: Parsing (3,4), Message types (10), Game logic (5-9)
+# - Unit tests depend on: Implementation of corresponding features
+# - Integration tests depend on: All implementation + unit tests passing
+# - Documentation depends on: All features complete
+
+# Anti-Pattern Checklist (do NOT introduce)
+# [ ] async void methods (use async Task)
+# [ ] Busy waiting with while loops + Task.Delay
+# [ ] Blocking calls in async methods (.Result, .Wait())
+# [ ] Unhandled exceptions in event handlers
+# [ ] Race conditions in state management
+# [ ] Magic numbers without constants
+# [ ] Vague error messages
+# [ ] Missing validation
+
+# Success Criteria
+# [ ] All unit tests pass (100% coverage on game logic)
+# [ ] All integration tests pass
+# [ ] No build warnings
+# [ ] Clean lsp_diagnostics output
+# [ ] Documentation complete
+# [ ] No anti-patterns introduced
+# [ ] Code follows project conventions (async/await, event-driven)
