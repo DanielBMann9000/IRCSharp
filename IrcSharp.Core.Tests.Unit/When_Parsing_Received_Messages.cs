@@ -1,5 +1,6 @@
 using System;
 using Xunit;
+using Moq;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,8 +19,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Ping_Message_Has_The_Value_Property_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             PingMessage actual = null;
             con.MessagePropagator.OnPingMessageReceived += (sender, args) =>
@@ -29,7 +30,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt("PING :12345678");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = "PING :12345678" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -42,8 +43,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Nick_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             NickMessage actual = null;
             con.MessagePropagator.OnNickMessageReceived += (sender, args) =>
@@ -53,7 +54,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com NICK NewNick");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com NICK NewNick" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -69,8 +70,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Join_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             JoinMessage actual = null;
             con.MessagePropagator.OnJoinMessageReceived += (sender, args) =>
@@ -80,7 +81,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com JOIN #helloworld");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com JOIN #helloworld" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -96,8 +97,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Part_Message_With_A_Parting_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             PartMessage actual = null;
             con.MessagePropagator.OnPartMessageReceived += (sender, args) =>
@@ -107,7 +108,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com PART #helloworld :byebye");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com PART #helloworld :byebye" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -125,8 +126,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Part_Message_With_No_Parting_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             PartMessage actual = null;
             con.MessagePropagator.OnPartMessageReceived += (sender, args) =>
@@ -136,7 +137,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com PART #helloworld");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com PART #helloworld" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -154,8 +155,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_ChannelMode_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             ChannelModeMessage actual = null;
             con.MessagePropagator.OnChannelModeMessageReceived += (sender, args) =>
@@ -165,7 +166,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com MODE #helloworld +s");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com MODE #helloworld +s" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -183,8 +184,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Topic_Message_With_A_New_Topic_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             TopicMessage actual = null;
             con.MessagePropagator.OnTopicMessageReceived += (sender, args) =>
@@ -194,7 +195,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com TOPIC #helloworld :New Topic!");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com TOPIC #helloworld :New Topic!" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -213,8 +214,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Topic_Message_For_Removing_The_Current_TopicHas_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             TopicMessage actual = null;
             con.MessagePropagator.OnTopicMessageReceived += (sender, args) =>
@@ -224,7 +225,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com TOPIC #helloworld :");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com TOPIC #helloworld :" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -243,8 +244,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Kick_Message_With_A_Reason_Provided_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             KickMessage actual = null;
             con.MessagePropagator.OnKickMessageReceived += (sender, args) =>
@@ -254,7 +255,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KICK #helloworld Daniel :get out!");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com KICK #helloworld Daniel :get out!" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -273,8 +274,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Kick_Message_With_No_Reason_Provided_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             KickMessage actual = null;
             con.MessagePropagator.OnKickMessageReceived += (sender, args) =>
@@ -284,7 +285,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KICK #helloworld Daniel");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com KICK #helloworld Daniel" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -303,8 +304,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Quit_Message_With_No_Reason_Provided_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             QuitMessage actual = null;
             con.MessagePropagator.OnQuitMessageReceived += (sender, args) =>
@@ -314,7 +315,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com QUIT");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com QUIT" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -331,8 +332,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Quit_Message_With_A_Reason_Provided_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             QuitMessage actual = null;
             con.MessagePropagator.OnQuitMessageReceived += (sender, args) =>
@@ -342,7 +343,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com QUIT :bye bye!");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com QUIT :bye bye!" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -359,8 +360,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Squit_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             SquitMessage actual = null;
             con.MessagePropagator.OnSquitMessageReceived += (sender, args) =>
@@ -370,7 +371,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com SQUIT whatever.com :bye bye!");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com SQUIT whatever.com :bye bye!" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -388,8 +389,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Invite_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             InviteMessage actual = null;
             con.MessagePropagator.OnInviteMessageReceived += (sender, args) =>
@@ -399,7 +400,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com INVITE Daniel #helloworld");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com INVITE Daniel #helloworld" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -417,8 +418,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Notice_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             NoticeMessage actual = null;
             con.MessagePropagator.OnNoticeMessageReceived += (sender, args) =>
@@ -428,7 +429,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com NOTICE #helloworld :oh god what's happening");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com NOTICE #helloworld :oh god what's happening" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -446,8 +447,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_PrivMsg_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             PrivMsgMessage actual = null;
             con.MessagePropagator.OnPrivMsgMessageReceived += (sender, args) =>
@@ -457,7 +458,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com PRIVMSG Daniel :oh god what's happening");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com PRIVMSG Daniel :oh god what's happening" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -475,8 +476,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Generic_Numeric_Response_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             GenericNumericResponseMessage actual = null;
             con.MessagePropagator.OnWelcomeResponseMessageReceived += (sender, args) =>
@@ -486,7 +487,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -501,8 +502,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_NotRegisteredResponse_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             NotRegisteredNumericResponseMessage actual = null;
             con.MessagePropagator.OnNotRegisteredResponseMessageReceived += (sender, args) =>
@@ -512,7 +513,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":localhost.com 451 DBM JOIN :Register first.");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":localhost.com 451 DBM JOIN :Register first." });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");
@@ -526,8 +527,8 @@ public class When_Parsing_Received_Messages
     public async Task A_Parsed_Kill_Message_Has_The_Appropriate_Properties_Filled()
     {
         var mre = new ManualResetEvent(false);
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             KillMessage actual = null;
             con.MessagePropagator.OnKillMessageReceived += (sender, args) =>
@@ -537,7 +538,7 @@ public class When_Parsing_Received_Messages
             };
 
             await con.ConnectAsync("foo", "bar", "baz", 0);
-            cm.SimulateMessageReceipt(":Test!daniel@foo.bar.com KILL daniel :byebye");
+            mockSocket.Raise(x => x.OnMessageReceived += null, new MessageEventArgs { Message = ":Test!daniel@foo.bar.com KILL daniel :byebye" });
             if (!mre.WaitOne(1000))
             {
                 throw new Exception("The event was never received.");

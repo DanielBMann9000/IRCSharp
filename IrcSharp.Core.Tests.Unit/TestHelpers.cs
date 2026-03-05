@@ -1,5 +1,6 @@
 using Xunit;
 using System;
+using Moq;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,8 +19,23 @@ internal static class TestHelpers
         Action<IrcConnection, ManualResetEvent> registrationAction)
     {
         var mre = new ManualResetEvent(false);
-        var cm = new FakeSocketConnection();
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+
+        mockSocket.Setup(x => x.ConnectAsync(It.IsAny<string>(), It.IsAny<int>()))
+                  .Returns(Task.CompletedTask)
+                  .Callback(() =>
+                  {
+                      // Fire welcome message on connect
+                      mockSocket.Raise(x => x.OnMessageReceived += null,
+                          new MessageEventArgs { Message = ":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM" });
+                  });
+
+        mockSocket.Setup(x => x.SendMessageAsync(It.IsAny<ISendableMessage>()))
+                  .Returns(Task.CompletedTask);
+        mockSocket.Setup(x => x.DisconnectAsync())
+                  .Returns(Task.CompletedTask);
+
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             await con.ConnectAsync("foo", "bar", "baz", 0);
             registrationAction(con, mre);

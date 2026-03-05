@@ -1,7 +1,9 @@
 using Xunit;
+using Moq;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using IrcSharp.Core.Connectivity;
 using IrcSharp.Core.Messages;
@@ -34,13 +36,31 @@ public class When_Generating_Miscellaneous_Messages
     [Fact]
     public async Task A_Ping_Message_Is_Automatically_Responded_To_With_An_Appropriate_Pong()
     {
-        using (var cm = new FakeSocketConnection())
-        using (var con = new IrcConnection(cm))
+        var mockSocket = new Mock<ISocketConnection>();
+
+        var sentMessages = new List<string>();
+        mockSocket.Setup(x => x.SendMessageAsync(It.IsAny<ISendableMessage>()))
+                  .Returns(Task.CompletedTask)
+                  .Callback((ISendableMessage m) => sentMessages.Add(m.ToMessage()));
+
+        mockSocket.Setup(x => x.ConnectAsync(It.IsAny<string>(), It.IsAny<int>()))
+                  .Returns(Task.CompletedTask)
+                  .Callback(() =>
+                  {
+                      mockSocket.Raise(x => x.OnMessageReceived += null,
+                          new MessageEventArgs { Message = ":localhost.com 001 DBM :Welcome to the Internet Relay Network DBM" });
+                  });
+
+        mockSocket.Setup(x => x.DisconnectAsync())
+                  .Returns(Task.CompletedTask);
+
+        using (var con = new IrcConnection(mockSocket.Object))
         {
             await con.ConnectAsync("foo", "bar", "baz", 0);
             var expected = "PONG 12345678\r\n";
-            cm.SimulateMessageReceipt("PING :12345678");
-            Assert.Contains(expected, cm.Messages);
+            mockSocket.Raise(x => x.OnMessageReceived += null,
+                             new MessageEventArgs { Message = "PING :12345678" });
+            Assert.Contains(expected, sentMessages);
         }
     }
 }

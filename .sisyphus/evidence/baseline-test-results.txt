@@ -1,0 +1,12 @@
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+  IrcSharp.Core -> C:\Users\dbman\repos\IRCSharp\IrcSharp.Core\bin\Release\net10.0\IrcSharp.Core.dll
+C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\FakeSocketConnection.cs(27,42): warning CS0067: The event 'FakeSocketConnection.OnUnexpectedDisconnection' is never used [C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\IrcSharp.Core.Tests.Unit.csproj]
+  IrcSharp.Core.Tests.Unit -> C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\bin\Release\net10.0\IrcSharp.Core.Tests.Unit.dll
+Test run for C:\Users\dbman\repos\IRCSharp\IrcSharp.Core.Tests.Unit\bin\Release\net10.0\IrcSharp.Core.Tests.Unit.dll (.NETCoreApp,Version=v10.0)
+VSTest version 18.0.1 (x64)
+
+Starting test execution, please wait...
+A total of 1 test files matched the specified pattern.
+
+Passed!  - Failed:     0, Passed:   196, Skipped:     0, Total:   196, Duration: 95 ms - IrcSharp.Core.Tests.Unit.dll (net10.0)
