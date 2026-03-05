@@ -60,7 +60,7 @@ public class GameCommands
                     var totalWins = _winTracker.GetWins(command.Username) + 1;
                     _winTracker.RecordWin(command.Username);
                     await _sendMessageAsync(
-                        $"\u0001ACTION {command.Username} won in 1 guess! Total wins: {totalWins}\u0001");
+                        $"\u0001ACTION {command.Username} won! Total wins: {totalWins}\u0001");
                     _gameSession.EndCurrentGame();
                     break;
             }
