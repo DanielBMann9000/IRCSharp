@@ -34,6 +34,7 @@ class Program
             // Create IRC connection
             _connection = new IrcConnection();
             _connection.MessagePropagator.OnPrivMsgMessageReceived += OnPrivMsgMessageReceived;
+            _connection.OnRawMessageReceived += OnRawMessageReceived;
 
             // Connect to server
             Console.WriteLine($"Connecting to {config.Server}:{config.Port}...");
@@ -103,6 +104,11 @@ class Program
         {
             Console.WriteLine($"Error processing message: {ex.Message}");
         }
+    }
+
+    private static void OnRawMessageReceived(object? sender, UnknownMessage e)
+    {
+        Console.WriteLine($"[RAW] {e.UnparsedMessage} from {e.UserInfo?.Nick ?? "unknown"}");
     }
 
     private static string ExtractUsername(string ircUser)
