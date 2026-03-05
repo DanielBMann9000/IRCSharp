@@ -1,0 +1,8 @@
+ M .sisyphus/boulder.json
+ D .sisyphus/drafts/moq-migration.md
+?? .sisyphus/evidence/task-1-build-success.txt
+?? .sisyphus/evidence/task-1-package-add.txt
+?? .sisyphus/evidence/task-2-verification.md
+?? .sisyphus/evidence/task-3-git-status-before.txt
+?? .sisyphus/plans/moq-migration.md
+?? nul
