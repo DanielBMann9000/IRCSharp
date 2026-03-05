@@ -1,8 +1,0 @@
-=== Task 2: Build Verification Summary ===
-Build Command: dotnet build IrcSharp.Core/IrcSharp.Core.csproj
-Result: Build succeeded
-Warnings: 0
-Errors: 0
-Exit Code: 0
-Namespace Warnings: None
-Status: PASSED

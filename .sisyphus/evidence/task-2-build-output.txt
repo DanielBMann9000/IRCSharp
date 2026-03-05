@@ -1,9 +1,0 @@
-  Determining projects to restore...
-  Restored C:\Users\dbman\repos\IRCSharp\IrcSharp.Core\IrcSharp.Core.csproj (in 71 ms).
-  IrcSharp.Core -> C:\Users\dbman\repos\IRCSharp\IrcSharp.Core\bin\Debug\net10.0\IrcSharp.Core.dll
-
-Build succeeded.
-    0 Warning(s)
-    0 Error(s)
-
-Time Elapsed 00:00:00.61
