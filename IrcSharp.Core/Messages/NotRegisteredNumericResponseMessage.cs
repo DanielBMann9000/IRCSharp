@@ -1,4 +1,5 @@
 ﻿namespace IrcSharp.Core.Messages;
+
 public class NotRegisteredNumericResponseMessage : NumericReponseMessageBase
 {
     public string Command { get; private set; }

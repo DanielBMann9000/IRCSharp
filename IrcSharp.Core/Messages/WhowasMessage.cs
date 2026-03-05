@@ -6,6 +6,7 @@ using System.Text;
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class WhowasMessage : ISendableMessage
 {
     public ReadOnlyCollection<string> Nicknames { get; private set; }
@@ -14,7 +15,7 @@ public class WhowasMessage : ISendableMessage
 
     public WhowasMessage(string nickname)
     {
-        this.Nicknames = new ReadOnlyCollection<string>(new [] { nickname });
+        this.Nicknames = new ReadOnlyCollection<string>(new[] { nickname });
     }
 
     public WhowasMessage(string nickname, int count) : this(nickname)

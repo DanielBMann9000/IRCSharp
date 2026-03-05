@@ -1,6 +1,7 @@
 ﻿using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class PongMessage : ISendableMessage
 {
     public string ResponseValue { get; private set; }

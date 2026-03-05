@@ -3,6 +3,7 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class VersionMessage : BaseMessageWithOptionalTarget, ISendableMessage
 {
     public VersionMessage()

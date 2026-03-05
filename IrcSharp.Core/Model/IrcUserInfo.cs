@@ -1,4 +1,5 @@
 ﻿namespace IrcSharp.Core.Model;
+
 public class IrcUserInfo
 {
     public string Nick { get; private set; }

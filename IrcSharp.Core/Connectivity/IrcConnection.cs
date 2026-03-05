@@ -6,6 +6,7 @@ using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Messages.Propagation;
 
 namespace IrcSharp.Core.Connectivity;
+
 public class IrcConnection : IDisposable
 {
     public event EventHandler<UnknownMessage> OnRawMessageReceived;
@@ -22,7 +23,7 @@ public class IrcConnection : IDisposable
     private bool reconnecting = false;
 
     public MessagePropagator MessagePropagator { get; private set; }
-    public bool Connected 
+    public bool Connected
     {
         get
         {
@@ -39,7 +40,7 @@ public class IrcConnection : IDisposable
 
         this.MessagePropagator.OnWelcomeResponseMessageReceived += this.ReadyToSendCommands;
         this.MessagePropagator.OnPingMessageReceived += SendPongResponse;
-        
+
     }
 
     public IrcConnection() : this(new SocketConnection())

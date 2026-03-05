@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 
 namespace IrcSharp.Core.Messages.Propagation;
+
 internal static class MessagePropagatorReflector
 {
     internal static IEnumerable<Tuple<string, TDelegate>> GetReceivedMessagePropagators<TAttribute, TDelegate>(this object obj)

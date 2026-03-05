@@ -6,6 +6,7 @@ using System.Text;
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public abstract class BaseMultipleChannelWithOptionalTargetMessage : ISendableMessage
 {
     private readonly string messageName;
@@ -25,7 +26,7 @@ public abstract class BaseMultipleChannelWithOptionalTargetMessage : ISendableMe
         this.Target = target;
     }
 
-    internal BaseMultipleChannelWithOptionalTargetMessage(string messageName, IList<string> channels, string target = null) 
+    internal BaseMultipleChannelWithOptionalTargetMessage(string messageName, IList<string> channels, string target = null)
         : this(messageName)
     {
         this.Channels = new ReadOnlyCollection<string>(channels);

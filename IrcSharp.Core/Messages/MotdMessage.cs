@@ -3,10 +3,11 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class MotdMessage : BaseMessageWithOptionalTarget, ISendableMessage
 {
     public MotdMessage()
-    {    
+    {
     }
 
     public MotdMessage(string target) : base(target)

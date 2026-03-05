@@ -1,6 +1,7 @@
 ﻿using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class PassMessage : ISendableMessage
 {
     public string Password { get; private set; }

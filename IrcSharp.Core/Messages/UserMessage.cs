@@ -3,6 +3,7 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class UserMessage : ISendableMessage
 {
     public string UserName { get; private set; }

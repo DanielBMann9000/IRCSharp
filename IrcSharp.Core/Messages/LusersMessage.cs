@@ -3,11 +3,12 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class LusersMessage : ISendableMessage
 {
     public string Mask { get; private set; }
     public string Target { get; private set; }
-    public LusersMessage() {}
+    public LusersMessage() { }
 
     public LusersMessage(string mask)
     {
@@ -18,7 +19,7 @@ public class LusersMessage : ISendableMessage
     {
         this.Target = target;
     }
-    
+
     public string ToMessage()
     {
         var message = new StringBuilder();

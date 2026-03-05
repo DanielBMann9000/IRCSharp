@@ -2,6 +2,7 @@
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages;
+
 public abstract class NumericReponseMessageBase : IReceivableMessage
 {
     public IrcUserInfo UserInfo { get; private set; }

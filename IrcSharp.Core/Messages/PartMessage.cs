@@ -7,6 +7,7 @@ using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages;
+
 public class PartMessage : ISendableMessage, IReceivableMessage
 {
     public IrcUserInfo UserInfo { get; private set; }
@@ -16,7 +17,7 @@ public class PartMessage : ISendableMessage, IReceivableMessage
     internal PartMessage(IrcUserInfo userInfo, string channel, string partingMessage = null)
     {
         this.UserInfo = userInfo;
-        this.Channels = new ReadOnlyCollection<string>(new [] {channel});
+        this.Channels = new ReadOnlyCollection<string>(new[] { channel });
         this.PartingMessage = partingMessage;
     }
 
@@ -29,7 +30,7 @@ public class PartMessage : ISendableMessage, IReceivableMessage
 
     public PartMessage(string channel, string partingMessage = null)
     {
-        this.Channels = new ReadOnlyCollection<string>(new List<string>{channel});
+        this.Channels = new ReadOnlyCollection<string>(new List<string> { channel });
         this.PartingMessage = partingMessage;
     }
 

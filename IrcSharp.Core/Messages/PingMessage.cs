@@ -2,6 +2,7 @@
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages;
+
 public class PingMessage : IReceivableMessage
 {
     public IrcUserInfo UserInfo { get; private set; }
@@ -12,5 +13,5 @@ public class PingMessage : IReceivableMessage
         this.Value = value;
     }
 
-    
+
 }

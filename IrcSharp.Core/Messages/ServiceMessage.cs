@@ -1,6 +1,7 @@
 ﻿using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class ServiceMessage : ISendableMessage
 {
     public string ServiceNickname { get; private set; }

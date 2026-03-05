@@ -2,6 +2,7 @@ using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages;
+
 public class NoticeMessage : ISendableMessage, IReceivableMessage
 {
     public IrcUserInfo UserInfo { get; private set; }

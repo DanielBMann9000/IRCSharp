@@ -1,7 +1,8 @@
 ﻿using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
-public class SqueryMessage : ISendableMessage 
+
+public class SqueryMessage : ISendableMessage
 {
     public string ServiceName { get; private set; }
     public string QueryText { get; private set; }

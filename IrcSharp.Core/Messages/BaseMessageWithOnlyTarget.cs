@@ -1,11 +1,12 @@
 ﻿using System.Text;
 
 namespace IrcSharp.Core.Messages;
+
 public abstract class BaseMessageWithOptionalTarget
 {
     public string Target { get; protected set; }
 
-    protected BaseMessageWithOptionalTarget(){}
+    protected BaseMessageWithOptionalTarget() { }
     protected BaseMessageWithOptionalTarget(string target)
     {
         this.Target = target;

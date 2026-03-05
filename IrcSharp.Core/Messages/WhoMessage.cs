@@ -3,12 +3,13 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
-public class WhoMessage : ISendableMessage 
+
+public class WhoMessage : ISendableMessage
 {
     public string Mask { get; private set; }
     public bool OperatorsOnly { get; private set; }
 
-    public WhoMessage() {}
+    public WhoMessage() { }
 
     public WhoMessage(string mask, bool operatorsOnly = false)
     {

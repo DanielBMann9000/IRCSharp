@@ -3,12 +3,13 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class ServlistMessage : ISendableMessage
 {
     public string Mask { get; private set; }
     public string Type { get; private set; }
 
-    public ServlistMessage(){}
+    public ServlistMessage() { }
 
     public ServlistMessage(string mask)
     {

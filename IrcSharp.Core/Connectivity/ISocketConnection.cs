@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Connectivity;
+
 public interface ISocketConnection : IDisposable
 {
     event EventHandler<MessageEventArgs> OnMessageReceived;

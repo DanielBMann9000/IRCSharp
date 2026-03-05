@@ -4,6 +4,7 @@ using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages;
+
 public class TopicMessage : ISendableMessage, IReceivableMessage
 {
     public IrcUserInfo UserInfo { get; private set; }

@@ -6,6 +6,7 @@ using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages;
+
 public class KickMessage : ISendableMessage, IReceivableMessage
 {
     public IrcUserInfo UserInfo { get; private set; }
@@ -20,14 +21,14 @@ public class KickMessage : ISendableMessage, IReceivableMessage
 
     private KickMessage()
     {
-        this.Channels = new ReadOnlyCollection<string>(new string[] {});
+        this.Channels = new ReadOnlyCollection<string>(new string[] { });
         this.Nicks = new ReadOnlyCollection<string>(new string[] { });
     }
 
     public KickMessage(string channel, string nick, string message = null) : this()
     {
-        this.Channels = new ReadOnlyCollection<string>(new [] { channel });
-        this.Nicks = new ReadOnlyCollection<string>(new [] { nick });
+        this.Channels = new ReadOnlyCollection<string>(new[] { channel });
+        this.Nicks = new ReadOnlyCollection<string>(new[] { nick });
         this.Message = message;
     }
 

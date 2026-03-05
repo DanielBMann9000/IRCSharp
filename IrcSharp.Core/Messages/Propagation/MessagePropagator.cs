@@ -6,6 +6,7 @@ using IrcSharp.Core.Messages.Interfaces;
 using IrcSharp.Core.Model;
 
 namespace IrcSharp.Core.Messages.Propagation;
+
 public class MessagePropagator
 {
     #region Events
@@ -72,7 +73,7 @@ public class MessagePropagator
     public event EventHandler<KickMessage> OnKickMessageSending;
     public event EventHandler<KickMessage> OnKickMessageSent;
     public event EventHandler<KickMessage> OnKickMessageReceived;
-    
+
     #endregion Channel Operations (3.2)
 
     #region Sending messages (3.3)
@@ -163,11 +164,11 @@ public class MessagePropagator
     #endregion Events
 
     internal delegate void ReceivedPropagator(IrcUserInfo identity, string arguments);
-    
+
     private readonly IEnumerable<Tuple<string, ReceivedPropagator>> receivedPropagators;
     private readonly Dictionary<Type, Action<ISendableMessage>> sendingPropagators;
     private readonly Dictionary<Type, Action<ISendableMessage>> sentPropagators;
-    
+
     internal MessagePropagator()
     {
         this.receivedPropagators = this.GetReceivedMessagePropagators<ReceivedMessagePropagatorAttribute, ReceivedPropagator>();
@@ -403,7 +404,7 @@ public class MessagePropagator
             {
                 this.OnPartMessageReceived(this, new PartMessage(identity, tokenizedArguments[0]));
             }
-            
+
         }
     }
 
@@ -526,7 +527,7 @@ public class MessagePropagator
             this.OnKillMessageReceived(this, new KillMessage(identity, tokenizedArguments[0], tokenizedArguments[1]));
         }
     }
-    
+
     #endregion Message Propagation
 
     // this method belongs somewhere else, and I'm not 100% sure it will tokenize every IRC message properly

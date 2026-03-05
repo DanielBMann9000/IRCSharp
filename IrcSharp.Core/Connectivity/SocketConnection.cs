@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Connectivity;
+
 public class SocketConnection : ISocketConnection
 {
     public event EventHandler<MessageEventArgs> OnMessageReceived;
@@ -18,12 +19,12 @@ public class SocketConnection : ISocketConnection
     private StreamWriter outgoingMessageStream;
     private bool expectedToBeConnected = true;
 
-    public bool Connected 
-    { 
+    public bool Connected
+    {
         get
         {
             return this.client.Connected;
-        } 
+        }
     }
 
     internal SocketConnection()
@@ -102,7 +103,7 @@ public class SocketConnection : ISocketConnection
     private void CreateStreams(Stream ns)
     {
         this.incomingMessageStream = new StreamReader(ns);
-        this.outgoingMessageStream = new StreamWriter(ns) {AutoFlush = true};
+        this.outgoingMessageStream = new StreamWriter(ns) { AutoFlush = true };
     }
 
     private async Task Poll()

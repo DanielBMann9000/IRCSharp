@@ -3,6 +3,7 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class LinksMessage : ISendableMessage
 {
     public string RemoteServer { get; private set; }
@@ -12,7 +13,7 @@ public class LinksMessage : ISendableMessage
     public LinksMessage(string serverMask)
     {
         this.ServerMask = serverMask;
-        
+
     }
 
     public LinksMessage(string serverMask, string remoteServer) : this(serverMask)

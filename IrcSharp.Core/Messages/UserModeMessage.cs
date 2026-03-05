@@ -1,6 +1,7 @@
 ﻿using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class UserModeMessage : ISendableMessage
 {
     public string User { get; private set; }

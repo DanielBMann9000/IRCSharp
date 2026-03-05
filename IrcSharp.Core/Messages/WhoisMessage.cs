@@ -6,14 +6,15 @@ using System.Text;
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
-public class WhoisMessage : ISendableMessage 
+
+public class WhoisMessage : ISendableMessage
 {
     public ReadOnlyCollection<string> Masks { get; private set; }
     public string Target { get; private set; }
 
     public WhoisMessage(string mask)
     {
-        this.Masks = new ReadOnlyCollection<string>(new [] { mask });
+        this.Masks = new ReadOnlyCollection<string>(new[] { mask });
     }
 
     public WhoisMessage(string mask, string target) : this(mask)

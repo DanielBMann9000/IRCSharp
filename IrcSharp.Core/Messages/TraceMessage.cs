@@ -3,9 +3,10 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
-public class TraceMessage : BaseMessageWithOptionalTarget, ISendableMessage 
+
+public class TraceMessage : BaseMessageWithOptionalTarget, ISendableMessage
 {
-    public TraceMessage(){}
+    public TraceMessage() { }
 
     public TraceMessage(string target) : base(target)
     {

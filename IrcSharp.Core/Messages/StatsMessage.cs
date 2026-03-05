@@ -3,6 +3,7 @@
 using IrcSharp.Core.Messages.Interfaces;
 
 namespace IrcSharp.Core.Messages;
+
 public class StatsMessage : ISendableMessage
 {
     public string Query { get; private set; }
@@ -12,7 +13,7 @@ public class StatsMessage : ISendableMessage
     public StatsMessage(string target)
     {
         this.Target = target;
-        
+
     }
 
     public StatsMessage(string target, string query) : this(target)

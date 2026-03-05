@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace IrcSharp.Core.Messages;
+
 public class ListMessage : BaseMultipleChannelWithOptionalTargetMessage
 {
     private const string MessageName = "LIST";

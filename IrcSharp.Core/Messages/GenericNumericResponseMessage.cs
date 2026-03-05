@@ -1,4 +1,5 @@
 ﻿namespace IrcSharp.Core.Messages;
+
 public class GenericNumericResponseMessage : NumericReponseMessageBase
 {
     public string ResponseText { get; private set; }
